@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grading Stats Report 3.0 — DAV Team, UGAC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<script>/*__CHARTJS_INLINE__*/</script>
+<style>
+:root{
+  --cream:#FDF6D9;
+  --cream-deep:#FBEFAF;
+  --pink:#FFC7C7;
+  --pink-deep:#FF9E9E;
+  --pink-pale:#FFE7E7;
+  --blue:#BFE6FB;
+  --blue-deep:#8FCBEF;
+  --blue-pale:#E6F6FE;
+  --green:#B7E4C7;
+  --yellow:#F7DE72;
+  --ink:#241C3D;
+  --ink-soft:#4A4266;
+  --paper:#FFFFFF;
+  --line:#EDE6C8;
+  --radius:22px;
+  --radius-sm:14px;
+  --shadow: 0 6px 24px rgba(36,28,61,0.08);
+  --shadow-lift: 0 14px 34px rgba(36,28,61,0.14);
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  font-family:'Inter',system-ui,sans-serif;
+  color:var(--ink);
+  background:var(--cream);
+  background-image:
+    repeating-linear-gradient(135deg, rgba(255,255,255,0.55) 0 26px, transparent 26px 60px);
+  min-height:100vh;
+}
+h1,h2,h3,h4{font-family:'Baloo 2',system-ui,sans-serif; margin:0; letter-spacing:.2px;}
+p{line-height:1.6;}
+a{color:inherit;}
+.mono{font-family:'JetBrains Mono',monospace;}
+
+/* ---------- LAYOUT ---------- */
+.app{display:flex; min-height:100vh;}
+.sidebar{
+  width:280px; flex:0 0 280px;
+  background:var(--paper);
+  border-right:3px solid var(--ink);
+  position:sticky; top:0; height:100vh; overflow-y:auto;
+  padding:22px 18px 30px;
+  z-index:50;
+}
+.brand{
+  display:flex; gap:10px; align-items:center;
+  padding:6px 8px 18px;
+  border-bottom:2px dashed var(--line);
+  margin-bottom:14px;
+}
+.brand-badge{
+  width:44px;height:44px;border-radius:14px;
+  background:linear-gradient(135deg,var(--pink),var(--yellow));
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px; border:2px solid var(--ink);
+  flex:0 0 44px;
+}
+.brand-text{line-height:1.15;}
+.brand-text .t1{font-family:'Baloo 2'; font-weight:700; font-size:15.5px;}
+.brand-text .t2{font-size:11.5px; color:var(--ink-soft); font-weight:600;}
+.navlabel{
+  font-size:11px; text-transform:uppercase; letter-spacing:1.2px;
+  color:var(--ink-soft); font-weight:700; margin:16px 4px 8px;
+}
+.navlist{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:3px;}
+.navlist a{
+  display:flex; gap:10px; align-items:flex-start;
+  text-decoration:none; padding:9px 10px; border-radius:11px;
+  font-size:13.6px; font-weight:600; color:var(--ink);
+  transition:background .15s ease, transform .15s ease;
+}
+.navlist a:hover{background:var(--pink-pale); transform:translateX(2px);}
+.navlist a.active{background:var(--ink); color:var(--cream);}
+.navnum{
+  font-family:'JetBrains Mono'; font-size:11px; font-weight:700;
+  width:20px;height:20px;border-radius:7px;flex:0 0 20px;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--pink); color:var(--ink); margin-top:1px;
+}
+.navlist a.active .navnum{background:var(--yellow); color:var(--ink);}
+.sidebar-foot{margin-top:22px; font-size:11px; color:var(--ink-soft); padding:10px 8px; border-top:2px dashed var(--line);}
+
+.menutoggle{
+  display:none; position:fixed; top:14px; right:14px; z-index:100;
+  width:46px;height:46px;border-radius:13px; border:2px solid var(--ink);
+  background:var(--yellow); font-size:20px; align-items:center; justify-content:center;
+  box-shadow:var(--shadow);
+}
+
+.main{flex:1; min-width:0; padding:40px 48px 90px; max-width:1180px; margin:0 auto;}
+
+/* ---------- HERO ---------- */
+.hero{
+  border-radius:28px; border:3px solid var(--ink);
+  background:linear-gradient(135deg, var(--pink) 0%, var(--pink-pale) 55%, var(--cream-deep) 100%);
+  padding:52px 44px; margin-bottom:26px; position:relative; overflow:hidden;
+  box-shadow:var(--shadow-lift);
+}
+.hero::after{
+  content:""; position:absolute; inset:0;
+  background:repeating-linear-gradient(135deg, rgba(255,255,255,0.4) 0 18px, transparent 18px 40px);
+  pointer-events:none;
+}
+.hero-eyebrow{
+  display:inline-flex; align-items:center; gap:8px;
+  background:var(--paper); border:2px solid var(--ink); border-radius:999px;
+  padding:6px 14px; font-size:12.5px; font-weight:700; letter-spacing:.6px;
+  text-transform:uppercase; position:relative; z-index:1;
+}
+.hero h1{font-size:clamp(34px,5vw,58px); font-weight:800; margin:18px 0 6px; position:relative; z-index:1; line-height:1.02;}
+.hero .sub{font-size:18px; font-weight:600; color:var(--ink-soft); position:relative; z-index:1;}
+.hero-meta{display:flex; flex-wrap:wrap; gap:12px; margin-top:26px; position:relative; z-index:1;}
+.pill{
+  background:var(--paper); border:2px solid var(--ink); border-radius:14px;
+  padding:10px 16px; font-size:13px; font-weight:600;
+}
+.pill b{font-family:'Baloo 2'; display:block; font-size:14.5px; margin-bottom:1px;}
+
+/* ---------- TOC GRID (intro) ---------- */
+.toc-grid{
+  display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-top:8px;
+}
+@media (max-width:900px){.toc-grid{grid-template-columns:repeat(2,1fr);}}
+.toc-card{
+  background:var(--paper); border:2.5px solid var(--ink); border-radius:16px;
+  padding:16px 14px; text-decoration:none; color:var(--ink);
+  display:flex; flex-direction:column; gap:10px;
+  box-shadow:4px 4px 0 var(--ink);
+  transition:transform .15s ease, box-shadow .15s ease;
+}
+.toc-card:hover{transform:translate(-2px,-2px); box-shadow:6px 6px 0 var(--ink);}
+.toc-num{
+  width:30px;height:30px;border-radius:9px; background:var(--blue);
+  border:2px solid var(--ink); display:flex; align-items:center; justify-content:center;
+  font-family:'JetBrains Mono'; font-weight:700; font-size:13px;
+}
+.toc-card span.label{font-weight:700; font-size:14px; line-height:1.3;}
+
+/* ---------- SECTIONS ---------- */
+section.block{
+  scroll-margin-top:24px;
+  margin:34px 0;
+}
+.card{
+  background:var(--paper); border:3px solid var(--ink); border-radius:var(--radius);
+  box-shadow:var(--shadow); overflow:hidden; margin-bottom:18px;
+}
+.card-header{
+  padding:18px 26px; border-bottom:3px solid var(--ink);
+  display:flex; align-items:center; gap:12px; flex-wrap:wrap; justify-content:space-between;
+}
+.card-header.pink{background:linear-gradient(120deg,var(--pink),var(--pink-pale));}
+.card-header.blue{background:linear-gradient(120deg,var(--blue),var(--blue-pale));}
+.card-header.yellow{background:linear-gradient(120deg,var(--yellow),var(--cream-deep));}
+.card-header h2{font-size:22px; font-weight:700;}
+.card-header .tag{
+  font-size:11.5px; font-weight:700; text-transform:uppercase; letter-spacing:.8px;
+  background:var(--paper); border:2px solid var(--ink); padding:5px 11px; border-radius:999px;
+}
+.card-body{padding:26px;}
+.card-body.tight{padding:16px 20px;}
+.sec-kicker{
+  font-size:12.5px; font-weight:700; text-transform:uppercase; letter-spacing:1px;
+  color:var(--ink-soft); margin-bottom:6px;
+}
+.sec-title{font-size:29px; font-weight:800; margin-bottom:4px;}
+.sec-sub{color:var(--ink-soft); font-size:15px; margin-bottom:18px; font-weight:500;}
+
+.two-col{display:grid; grid-template-columns:1.3fr 1fr; gap:20px; align-items:start;}
+@media (max-width:900px){.two-col{grid-template-columns:1fr;}}
+.note-box{
+  background:var(--cream-deep); border:2.5px dashed var(--ink); border-radius:16px;
+  padding:16px 18px; font-size:14px;
+}
+.note-box h4{font-size:14.5px; margin-bottom:8px;}
+.note-box ul{margin:0; padding-left:18px;}
+.note-box li{margin-bottom:8px;}
+.note-box p{margin:0 0 8px;}
+.note-box p:last-child{margin-bottom:0;}
+
+.bullet-list{margin:0; padding-left:20px;}
+.bullet-list li{margin-bottom:11px; line-height:1.55;}
+.bullet-list b{font-weight:700;}
+
+.formula-box{
+  background:var(--cream-deep); border:2px solid var(--ink); border-radius:16px;
+  padding:18px 20px; font-family:'JetBrains Mono',monospace; font-size:14.5px;
+  overflow-x:auto; text-align:center;
+}
+.formula-box .frac{display:inline-block; vertical-align:middle;}
+
+.chart-wrap{
+  background:var(--paper); border:2px solid var(--line); border-radius:16px;
+  padding:16px; margin-bottom:14px;
+}
+.chart-wrap h4{font-size:14px; font-weight:700; margin-bottom:10px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.5px;}
+canvas{max-width:100%;}
+
+.grid-2{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+@media (max-width:860px){.grid-2{grid-template-columns:1fr;}}
+
+/* heatmap tables */
+table.heatmap{border-collapse:collapse; width:100%; font-size:13.5px;}
+table.heatmap th{font-family:'Baloo 2'; font-weight:700; text-align:center; padding:8px 6px; font-size:13px;}
+table.heatmap td.hm-cell{text-align:center; padding:9px 6px; border:2px solid var(--paper); font-weight:700; border-radius:6px;}
+table.heatmap td.hm-empty{background:#f1eee0 !important; color:#b6b0a0 !important; font-weight:500;}
+table.heatmap th.rowlabel{text-align:left; padding-left:10px; background:var(--ink); color:var(--cream); border-radius:8px;}
+table.heatmap.minors td.hm-cell{font-size:12px; line-height:1.3;}
+.n-tag{font-weight:500; opacity:.85; font-size:10.5px;}
+.table-scroll{overflow-x:auto; padding-bottom:4px;}
+
+/* course grid */
+.course-grid{display:grid; grid-template-columns:repeat(6,1fr); gap:8px;}
+@media (max-width:900px){.course-grid{grid-template-columns:repeat(3,1fr);}}
+.course-tile{
+  border-radius:12px; padding:10px 6px; text-align:center; border:2px solid var(--ink);
+}
+.course-code{font-family:'JetBrains Mono'; font-weight:700; font-size:12px;}
+.course-n{font-size:16px; font-weight:800; font-family:'Baloo 2'; margin-top:2px;}
+.course-legend{font-size:12px; color:var(--ink-soft); margin-top:10px; font-style:italic;}
+
+/* stat cards */
+.stat-row{display:flex; gap:14px; flex-wrap:wrap; margin-bottom:16px;}
+.stat-card{
+  flex:1; min-width:130px; background:var(--paper); border:2.5px solid var(--ink); border-radius:14px;
+  padding:14px 16px; box-shadow:3px 3px 0 var(--ink);
+}
+.stat-card .lbl{font-size:11.5px; text-transform:uppercase; letter-spacing:.6px; color:var(--ink-soft); font-weight:700;}
+.stat-card .val{font-family:'Baloo 2'; font-size:24px; font-weight:800; margin-top:2px;}
+
+/* legend swatches */
+.legend-row{display:flex; gap:16px; flex-wrap:wrap; margin:8px 0 16px; font-size:12.5px; font-weight:600;}
+.legend-row span{display:inline-flex; align-items:center; gap:6px;}
+.sw{width:13px;height:13px;border-radius:4px; display:inline-block; border:1.5px solid var(--ink);}
+
+footer{
+  text-align:center; padding:40px 20px 60px; color:var(--ink-soft); font-size:13px;
+}
+.thankyou{
+  text-align:center; padding:70px 30px; border-radius:28px; border:3px solid var(--ink);
+  background:linear-gradient(135deg,var(--pink),var(--cream-deep));
+  box-shadow:var(--shadow-lift); position:relative; overflow:hidden;
+}
+.thankyou h2{font-size:48px; font-weight:800;}
+.thankyou p{margin-top:10px; color:var(--ink-soft); font-weight:600; font-size:15px;}
+.icon-orb{
+  width:90px;height:90px; border-radius:50%; background:var(--paper); border:3px solid var(--ink);
+  display:flex; align-items:center; justify-content:center; margin:22px auto 0; font-size:38px;
+}
+
+.credit-tag{font-size:11.5px; background:var(--paper); border:2px solid var(--ink); border-radius:999px; padding:4px 12px; font-weight:700;}
+
+@media (max-width:980px){
+  .sidebar{position:fixed; left:0; top:0; transform:translateX(-105%); transition:transform .25s ease; width:78vw; max-width:320px; box-shadow:var(--shadow-lift);}
+  .sidebar.open{transform:translateX(0);}
+  .main{padding:80px 18px 70px;}
+  .menutoggle{display:flex;}
+  .hero{padding:34px 22px;}
+  .card-body{padding:18px;}
+  .course-grid{grid-template-columns:repeat(2,1fr);}
+}
+@media print{
+  .sidebar,.menutoggle{display:none;}
+  .main{max-width:100%; padding:0;}
+  body{background:#fff;}
+}
+</style>
+</head>
+<body>
+
+<button class="menutoggle" id="menuToggle" aria-label="Toggle navigation">☰</button>
+
+<div class="app">
+  <nav class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-badge">📊</div>
+      <div class="brand-text">
+        <div class="t1">Grading Stats 3.0</div>
+        <div class="t2">Data Analytics &amp; Visualization Team</div>
+      </div>
+    </div>
+
+    <div class="navlabel">Overview</div>
+    <ul class="navlist">
+      <li><a href="#home">🏠 Home</a></li>
+      <li><a href="#methodology">🧮 Methodology</a></li>
+    </ul>
+
+    <div class="navlabel">Topics Covered</div>
+    <ul class="navlist" id="tocnav">
+      <li><a href="#freshies"><span class="navnum">1</span> Average Grades of Freshies</a></li>
+      <li><a href="#sophies"><span class="navnum">2</span> Average Grades of Sophies</a></li>
+      <li><a href="#thirdies"><span class="navnum">3</span> Average Grades of Thirdies</a></li>
+      <li><a href="#electives"><span class="navnum">4</span> Dept-wise Electives Avg Grades</a></li>
+      <li><a href="#minors"><span class="navnum">5</span> Dept-wise Minors Avg Grades</a></li>
+      <li><a href="#cbs"><span class="navnum">6</span> CBS Analysis &amp; Top 30 Courses</a></li>
+      <li><a href="#deptavg"><span class="navnum">7</span> Dept-wise Average Grades</a></li>
+      <li><a href="#autumnspring"><span class="navnum">8</span> Autumn &amp; Spring Avg Grades</a></li>
+      <li><a href="#apgrades"><span class="navnum">9</span> AP Grade Distribution</a></li>
+      <li><a href="#aapercent"><span class="navnum">10</span> Courses vs % of AAs</a></li>
+      <li><a href="#coursesavg"><span class="navnum">11</span> Courses vs Average Grades</a></li>
+      <li><a href="#recommender"><span class="navnum">12</span> Course Recommender</a></li>
+    </ul>
+
+    <div class="sidebar-foot">
+      Contributed by Harsh, Ummehani, Vishakha &amp; Zubair · Project led by Rakshana<br><br>
+      <em>Web edition — data faithfully reproduced from the original PDF report.</em>
+    </div>
+  </nav>
+
+  <main class="main">
+
+    <!-- HERO -->
+    <section id="home" class="block">
+      <div class="hero">
+        <span class="hero-eyebrow">📈 UGAC · Undergraduate Academic Council</span>
+        <h1>Grading Stats<br>Report 3.0</h1>
+        <div class="sub">Data Analytics and Visualization Team</div>
+        <div class="hero-meta">
+          <div class="pill"><b>Contributed by</b>Harsh, Ummehani, Vishakha, Zubair</div>
+          <div class="pill"><b>Project Led By</b>Rakshana</div>
+          <div class="pill"><b>Source</b>Internal ASC · UG-open courses only</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header yellow">
+          <h2>Topics Covered</h2>
+          <span class="tag">Click any card to jump</span>
+        </div>
+        <div class="card-body">
+          <div class="toc-grid">
+            <a class="toc-card" href="#freshies"><span class="toc-num">1</span><span class="label">Average Grades of Freshies</span></a>
+            <a class="toc-card" href="#sophies"><span class="toc-num">2</span><span class="label">Average Grades of Sophies</span></a>
+            <a class="toc-card" href="#thirdies"><span class="toc-num">3</span><span class="label">Average Grades of Thirdies</span></a>
+            <a class="toc-card" href="#electives"><span class="toc-num">4</span><span class="label">Dept wise Electives Average Grades</span></a>
+            <a class="toc-card" href="#minors"><span class="toc-num">5</span><span class="label">Dept wise Minors Average Grades</span></a>
+            <a class="toc-card" href="#cbs"><span class="toc-num">6</span><span class="label">CBS Analysis &amp; Top 30 Courses</span></a>
+            <a class="toc-card" href="#deptavg"><span class="toc-num">7</span><span class="label">Dept wise Average Grades</span></a>
+            <a class="toc-card" href="#autumnspring"><span class="toc-num">8</span><span class="label">Dept wise Autumn &amp; Spring Average Grades</span></a>
+            <a class="toc-card" href="#apgrades"><span class="toc-num">9</span><span class="label">AP Grade Distribution</span></a>
+            <a class="toc-card" href="#aapercent"><span class="toc-num">10</span><span class="label">Number of Courses Vs % of AAs</span></a>
+            <a class="toc-card" href="#coursesavg"><span class="toc-num">11</span><span class="label">Number of Courses Vs Average Grades</span></a>
+            <a class="toc-card" href="#recommender"><span class="toc-num">12</span><span class="label">Course Recommender</span></a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- METHODOLOGY -->
+    <section id="methodology" class="block">
+      <div class="card">
+        <div class="card-header pink"><h2>Methodology</h2></div>
+        <div class="card-body">
+          <ul class="bullet-list">
+            <li>We have used <b>Internal ASC</b> for collecting data and creating all the databases used in this report.</li>
+            <li>We have used only the courses that are open to the <b>Undergraduate</b> students for all our analyses.</li>
+          </ul>
+          <div class="grid-2" style="margin-top:18px;">
+            <div class="formula-box">CourseAverage&nbsp;=&nbsp;Σ(GradePoint × StudentCount)&nbsp;/&nbsp;TotalStudents&nbsp;(excluding NP | PP)</div>
+            <div class="formula-box">Dept. Average&nbsp;=&nbsp;Σ(CourseAverage × Credits)&nbsp;/&nbsp;Σ(Credits)</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 1 & 2 & 3: FRESHIE / SOPHIE / THIRDIE -->
+    <section id="freshies" class="block">
+      <div class="card">
+        <div class="card-header pink"><h2>① First Year Average Grades of Common Courses</h2></div>
+        <div class="card-body">
+          <div class="two-col">
+            <div>
+              <div class="table-scroll">__FRESHIE_TABLE__</div>
+              <div class="legend-row"><span><i class="sw" style="background:#c6efce"></i>lower</span><span><i class="sw" style="background:#ffeb9c"></i>mid</span><span><i class="sw" style="background:#f8696b"></i>higher</span> average grade (out of 10)</div>
+            </div>
+            <div class="note-box">
+              <h4>What changed</h4>
+              <p>The 2024 batch experienced significant grade inflation across several high-credit freshman courses (MA105, MA110, MS101, and CS101). Averages peaked across the board, driven heavily by the mathematics department, where MA105 increased by 1.56 points and MA110 climbed by nearly a full point compared to 2023.</p>
+              <p>In contrast, the 2025 batch saw a distinct downward shift. Averages dropped across all major core courses: MA105 fell by 1.31 points, MA110 reverted to its 2023 baseline, BB101 hit a three-year low, and both CS101 and MS101 registered notable declines.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="sophies" class="block">
+      <div class="card">
+        <div class="card-header pink"><h2>② Mandatory Core Courses — Sophomores</h2></div>
+        <div class="card-body">
+          <div class="two-col">
+            <div class="table-scroll">__SOPH_TABLE__</div>
+            <div class="note-box">
+              <h4>Reading this heatmap</h4>
+              <p>Compares the average grades of second-year students across the 2024 and 2025 academic batches. Averages are calculated exclusively using mandatory department core courses.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="thirdies" class="block">
+      <div class="card">
+        <div class="card-header pink"><h2>③ Mandatory Core Courses — Thirdies</h2></div>
+        <div class="card-body">
+          <div class="two-col">
+            <div class="table-scroll">__THIRD_TABLE__</div>
+            <div class="note-box">
+              <h4>Reading this heatmap</h4>
+              <p>Compares the average grades of third-year students across the 2024 and 2025 academic batches, again using mandatory department core courses only.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4: ELECTIVES -->
+    <section id="electives" class="block">
+      <div class="card">
+        <div class="card-header blue">
+          <h2>④ Department-wise Electives Average Grades</h2>
+          <span class="tag">Autumn · Spring · Std. Deviation</span>
+        </div>
+        <div class="card-body">
+          <div class="sec-kicker">Autumn Semester</div>
+          <div class="grid-2">
+            <div class="chart-wrap"><h4>Group 1</h4><canvas id="chartElecAutumnG1" height="260"></canvas></div>
+            <div class="chart-wrap"><h4>Group 2</h4><canvas id="chartElecAutumnG2" height="260"></canvas></div>
+          </div>
+          <div class="sec-kicker" style="margin-top:22px;">Spring Semester</div>
+          <div class="grid-2">
+            <div class="chart-wrap"><h4>Group 1</h4><canvas id="chartElecSpringG1" height="260"></canvas></div>
+            <div class="chart-wrap"><h4>Group 2</h4><canvas id="chartElecSpringG2" height="260"></canvas></div>
+          </div>
+
+          <div class="note-box" style="margin-top:6px;">
+            <h4>Analysis</h4>
+            <ul style="margin:0;padding-left:18px;">
+              <li>Departments such as Earth Sciences, IDC Design, Entrepreneurship, Humanities &amp; Social Sciences, Management and Biosciences &amp; Bioengineering consistently represent the highest-scoring bracket, maintaining strong elective averages between 8.0 and 8.6.</li>
+              <li>Average grades in electives of Chemistry, Physics, Metallurgical Engineering &amp; Materials Science, Environmental Science, Electrical Engineering, Computer Science &amp; Engineering, Economics and Civil Engineering cluster between 7.5 and 8.0.</li>
+              <li>Average grades in electives of Mathematics/ASI, Energy Science, Mechanical Engineering, IEOR, Aerospace Engineering and Chemical Engineering cluster between 7.1 and 7.5.</li>
+              <li>Looking at specific courses reveals how drastically grading patterns can fluctuate year over year, even with similar class sizes. For instance, SOM610 (Marketing Management II) recorded a notably low average of 5.65 with 130 students in Autumn 2024, but increased by a massive two full points to 7.65 with 118 students in Autumn 2025.</li>
+            </ul>
+          </div>
+
+          <div class="sec-kicker" style="margin-top:26px;">Standard Deviation of Elective Grades</div>
+          <div class="sec-sub">Higher SD = wider spread of grades within a department's electives ("high risk, high reward"); lower SD = grades cluster more tightly.</div>
+          <div class="grid-2">
+            <div class="chart-wrap"><h4>2025</h4><canvas id="chartElecSD2025" height="300"></canvas></div>
+            <div class="chart-wrap"><h4>2024</h4><canvas id="chartElecSD2024" height="300"></canvas></div>
+          </div>
+          <div class="note-box">
+            <h4>Why standard deviation?</h4>
+            <p>Standard deviation measures how spread out students' grades are. If two courses share the same average grade, the one with higher SD has grades more widely dispersed — a "high risk, high reward" scenario with more top (10) and low (6) grades. A course with lower SD keeps grades concentrated around 7–8, a "safer route" with fewer extremes.</p>
+            <p style="margin-top:8px;"><b>How it's calculated:</b> we first find the weighted average grade for each course offering in a department, then measure the statistical spread of those course averages relative to the department's collective mean.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5: MINORS -->
+    <section id="minors" class="block">
+      <div class="card">
+        <div class="card-header pink">
+          <h2>⑤ Department-wise Minors Average Grades</h2>
+          <span class="tag">Value + M-tagged course count (n)</span>
+        </div>
+        <div class="card-body">
+          <div class="sec-kicker">2024 &amp; 2025</div>
+          <div class="table-scroll">__MINORS_24_25_TABLE__</div>
+
+          <div class="sec-kicker" style="margin-top:24px;">2022 &amp; 2023</div>
+          <div class="table-scroll">__MINORS_22_23_TABLE__</div>
+
+          <div class="note-box" style="margin-top:18px;">
+            <h4>Notes</h4>
+            <ul style="margin:0;padding-left:18px;">
+              <li><b>Scope:</b> covers the 17 minor departments running in the upcoming 2026–27 academic year (16 home departments + Robotics), using data tracked from 2022 to 2025.</li>
+              <li><b>Course standardization:</b> focuses exclusively on core M-tagged courses under the Division column to establish a consistent departmental baseline. Fluctuation-heavy minor electives are excluded, as they vary entirely by individual student choice.</li>
+              <li><b>Robotics overlap:</b> Robotics courses are cross-listed from courses of home departments — e.g. EE309 (Microprocessors) counts identically for both Electrical and Robotics since it is M-tagged in both.</li>
+              <li><b>Data reliability:</b> some departments have far more data than others. Entrepreneurship (37 courses), Systems &amp; Control (29) and BSBE (21) have solid baselines, while MM (1), Earth Sciences (2), Energy (3) and Humanities (5) have very few data points — treat those averages as rough indicators, not final proof.</li>
+            </ul>
+          </div>
+
+          <div class="sec-kicker" style="margin-top:24px;">Standard Deviation of Year-wise Minors Averages</div>
+          <div class="two-col">
+            <div class="chart-wrap"><h4>Illustrative distribution (from reported mean / SD)</h4><canvas id="chartKdeMinors" height="260"></canvas></div>
+            <div class="note-box">
+              <h4>Distribution stability vs. widening variance</h4>
+              <p>Peak grade concentration (mode) stays fairly steady around 7.22–7.79 across all years, but the course-average spread widens over time — from the tightest distribution in 2023 (SD = 0.987) to the flattest in 2025 (SD = 1.216).</p>
+              <div class="stat-row" style="margin-top:12px;">
+                <div class="stat-card"><div class="lbl">2022</div><div class="val">SD 1.146</div></div>
+                <div class="stat-card"><div class="lbl">2023</div><div class="val">SD 0.987</div></div>
+                <div class="stat-card"><div class="lbl">2024</div><div class="val">SD 1.044</div></div>
+                <div class="stat-card"><div class="lbl">2025</div><div class="val">SD 1.216</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6: CBS -->
+    <section id="cbs" class="block">
+      <div class="card">
+        <div class="card-header pink"><h2>⑥ CBS Analysis &amp; Top 30 Courses</h2></div>
+        <div class="card-body">
+          <p style="font-size:16px;font-weight:600;margin-bottom:18px;">Eager to know about the CPI-boosting courses? Voila! We got you covered. 🎓</p>
+
+          <div class="two-col">
+            <div>
+              <div class="formula-box" style="margin-bottom:12px;">CBS&nbsp;=&nbsp;Σ<sub>semesters in analysis</sub>&nbsp;(weight × F<sub>i</sub>)&nbsp;/&nbsp;(NS)</div>
+              <div class="formula-box">F(X, N, σ², N₀, k)&nbsp;=&nbsp;X&nbsp;/&nbsp;[(1+(10^(−N/N₀))σ²)(1+(N₀ᵏ/(N₀ᵏ+Nᵏ))L)]</div>
+            </div>
+            <div class="note-box">
+              <h4>The CPI Booster Score (CBS) <span class="credit-tag">Credits: Rudra G</span></h4>
+              <p>CBS is a score defined to assess which courses are most effective for improving CPI. A higher CBS indicates that a course is better suited for enhancing CPI. For full variable definitions and methodology, refer to the DAV team's documentation.</p>
+            </div>
+          </div>
+
+          <div class="sec-kicker" style="margin-top:26px;">Top 30 Courses by CBS — Autumn Semester</div>
+          <div class="sec-sub">Tile value = average enrolled students</div>
+          __TOP30_AUTUMN__
+          <div class="course-legend">*We neither endorse nor discourage any courses; this analysis is solely for statistical purposes.</div>
+
+          <div class="sec-kicker" style="margin-top:26px;">Top 30 Courses by CBS — Spring Semester</div>
+          <div class="sec-sub">Tile value = average enrolled students</div>
+          __TOP30_SPRING__
+          <div class="course-legend">*We neither endorse nor discourage any courses; this analysis is solely for statistical purposes.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7: OVERALL DEPT AVG -->
+    <section id="deptavg" class="block">
+      <div class="card">
+        <div class="card-header blue"><h2>⑦ Overall Department-wise Average Grades Across Years</h2></div>
+        <div class="card-body">
+          <div class="grid-2">
+            <div class="chart-wrap"><h4>Group 1</h4><canvas id="chartOverallG1" height="260"></canvas></div>
+            <div class="chart-wrap"><h4>Group 2</h4><canvas id="chartOverallG2" height="260"></canvas></div>
+          </div>
+          <div class="note-box">
+            <h4>Analysis</h4>
+            <ul style="margin:0 0 10px;padding-left:18px;">
+              <li>ENT, IDC, and GP consistently tend to have high grades, with averages reliably exceeding the 8.0 mark.</li>
+              <li>ES has the most consistent grades, with its four-year average fluctuating by a mere 0.12 points — a highly predictable pattern closely matched by departments like EC, MG, and CS.</li>
+              <li>The 2024 macro-level grade expansion: academic year 2024 marked a widespread upward shift in grades across the institute, with 13 of the 19 tracked departments recording a higher average grade than their 2023 baselines.</li>
+            </ul>
+            <p style="font-size:12.5px;color:var(--ink-soft)">Note: department-wise averages aggregate all course types (mandatory core, electives, minors). "Group 1"/"Group 2" is purely a layout split — it carries no metric or category meaning.</p>
+          </div>
+
+          <div class="sec-kicker" style="margin-top:26px;">Department-wise Standard Deviation of Average Grades</div>
+          <div class="sec-sub">Reflects the full spread of grading across every course the department has offered.</div>
+          <div class="grid-2">
+            <div class="chart-wrap"><h4>2025</h4><canvas id="chartDeptSD2025" height="300"></canvas></div>
+            <div class="chart-wrap"><h4>2024</h4><canvas id="chartDeptSD2024" height="300"></canvas></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8: AUTUMN VS SPRING -->
+    <section id="autumnspring" class="block">
+      <div class="card">
+        <div class="card-header blue"><h2>⑧ Average Grades of Department: Autumn vs Spring, 2024 vs 2025</h2></div>
+        <div class="card-body">
+          <div class="chart-wrap"><h4>Group 1</h4><canvas id="chartAvsG1" height="320"></canvas></div>
+          <div class="chart-wrap"><h4>Group 2</h4><canvas id="chartAvsG2" height="300"></canvas></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 9: AP GRADES -->
+    <section id="apgrades" class="block">
+      <div class="card">
+        <div class="card-header pink"><h2>⑨ Department-wise AP Grade Distribution</h2></div>
+        <div class="card-body">
+          <div class="two-col">
+            <div class="table-scroll">__AP_TABLE__</div>
+            <div class="note-box">
+              <p>The maximum number of APs that can be given in a course is 2% of registered students, so the numbers represent the percentage of APs given relative to total AP capacity. Only courses with more than 50 students are considered.</p>
+              <ul style="margin-top:10px;padding-left:18px;">
+                <li>ENT and BB consistently maximize their allocated AP grades.</li>
+                <li>MA shows a clear and continuous multi-year decline in awarding AP grades.</li>
+                <li>EN, ES and IDC courses award near-zero AP grades.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 10: AA% -->
+    <section id="aapercent" class="block">
+      <div class="card">
+        <div class="card-header pink"><h2>⑩ Number of Courses vs Percentage of Students Receiving AA</h2></div>
+        <div class="card-body">
+          <div class="chart-wrap"><canvas id="chartAA" height="280"></canvas></div>
+          <div class="note-box">
+            <ul style="margin:0;padding-left:18px;">
+              <li>Both years exhibit a steep right-skewed distribution, showing that the vast majority of courses award the top "AA" grade to only a small fraction of students — a massive chunk of offerings cluster tightly within the 0–20% bracket.</li>
+              <li>In 2025, the 10–20% bin saw the most substantial growth.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 11: COURSES VS AVG -->
+    <section id="coursesavg" class="block">
+      <div class="card">
+        <div class="card-header pink"><h2>⑪ Number of Courses vs Average Grades</h2></div>
+        <div class="card-body">
+          <div class="grid-2">
+            <div class="chart-wrap"><h4>2024 (Autumn &amp; Spring)</h4><canvas id="chartDist2024" height="240"></canvas></div>
+            <div class="chart-wrap"><h4>2025 (Autumn &amp; Spring)</h4><canvas id="chartDist2025" height="240"></canvas></div>
+          </div>
+          <div class="stat-row">
+            <div class="stat-card"><div class="lbl">2024 courses (n)</div><div class="val">1,824</div></div>
+            <div class="stat-card"><div class="lbl">2024 mean</div><div class="val">7.799</div></div>
+            <div class="stat-card"><div class="lbl">2024 median</div><div class="val">7.947</div></div>
+            <div class="stat-card"><div class="lbl">2025 courses (n)</div><div class="val">1,997</div></div>
+            <div class="stat-card"><div class="lbl">2025 mean</div><div class="val">7.804</div></div>
+            <div class="stat-card"><div class="lbl">2025 median</div><div class="val">8.000</div></div>
+          </div>
+          <div class="note-box">
+            <ul style="margin:0;padding-left:18px;">
+              <li>Course offerings increased by 173 in 2025 (n = 1824 → 1997). During this period, the mean (7.799 → 7.804) and standard deviation (1.378 → 1.379) remained relatively stable.</li>
+              <li>The median increased from 7.947 to 8.000, indicating that at least 50% of the courses in 2025 recorded an average of 8.0 or higher.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 12: RECOMMENDER -->
+    <section id="recommender" class="block">
+      <div class="card">
+        <div class="card-header yellow"><h2>⑫ Course Recommender 3.0</h2></div>
+        <div class="card-body">
+          <p>To facilitate informed decision-making when selecting Elective and Minor courses, students are advised to utilize the Course Recommender Tool, developed by the Data Analytics and Visualization (DAV) Team. The latest version 3.0 will be released shortly.</p>
+          <div class="sec-kicker" style="margin-top:16px;">Key features of 3.0</div>
+          <ul class="bullet-list">
+            <li><b>Tailored Recommendations:</b> suggests courses based on individual academic interests, letting users filter by department, popularity, lenient grading and more.</li>
+            <li><b>Minor Course Identification:</b> clearly identifies and lists courses offered as a Minor (both M-tagged and elective).</li>
+            <li><b>Conflict Detection:</b> automatically highlights potential scheduling conflicts between prospective electives/minors and mandatory core courses.</li>
+            <li><b>Prerequisite Information:</b> outlines the necessary prerequisites required prior to enrolling in specific courses.</li>
+          </ul>
+          <p style="text-align:center; font-family:'Baloo 2'; font-weight:800; font-size:22px; margin-top:20px;">Coming Soon!! 🚀</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="thankyou">
+      <h2>Thank You</h2>
+      <p>Grading Stats Report 3.0 · Data Analytics and Visualization Team · UGAC</p>
+      <div class="icon-orb">📈</div>
+    </div>
+
+    <footer>
+      Web edition generated from the original PDF report — all figures reproduced as published by the DAV Team.
+    </footer>
+  </main>
+</div>
+
+<script>
+const CHART_DATA = __CHART_DATA_JSON__;
+
+Chart.defaults.font.family = "'Inter', sans-serif";
+Chart.defaults.color = '#241C3D';
+
+const PALETTE = {
+  pink:'#F4A6A6', pinkB:'#e88a8a',
+  blue:'#9FD2EF', blueB:'#6fb8de',
+  green:'#A8E6B8', greenB:'#7fd399',
+  yellow:'#F9E27D', yellowB:'#f0cf3f',
+  ink:'#241C3D'
+};
+
+function groupedBar(canvasId, labels, seriesA, seriesB, nameA, nameB, colorA, colorB, nA, nB){
+  const ctx = document.getElementById(canvasId);
+  if(!ctx) return;
+  new Chart(ctx, {
+    type:'bar',
+    data:{ labels, datasets:[
+      {label:nameA, data:seriesA, backgroundColor:colorA, borderColor:PALETTE.ink, borderWidth:1.5, borderRadius:4, meta:nA},
+      {label:nameB, data:seriesB, backgroundColor:colorB, borderColor:PALETTE.ink, borderWidth:1.5, borderRadius:4, meta:nB},
+    ]},
+    options:{
+      responsive:true,
+      plugins:{
+        legend:{position:'top', labels:{boxWidth:12, font:{weight:'600'}}},
+        tooltip:{callbacks:{ label:(c)=>{
+          const meta = c.dataset.meta ? c.dataset.meta[c.dataIndex] : null;
+          return `${c.dataset.label}: ${c.parsed.y}` + (meta? `  (${meta} courses)`:'');
+        }}}
+      },
+      scales:{ y:{ beginAtZero:false, suggestedMin: Math.min(...seriesA,...seriesB)-0.6, suggestedMax: Math.max(...seriesA,...seriesB)+0.5,
+        title:{display:true,text:'Weighted Avg Grade'} } }
+    }
+  });
+}
+
+function radarChart(canvasId, labels, data, color, fillColor){
+  const ctx = document.getElementById(canvasId);
+  if(!ctx) return;
+  new Chart(ctx, {
+    type:'radar',
+    data:{ labels, datasets:[{ label:'Std. Deviation', data, borderColor:color, backgroundColor:fillColor,
+      pointBackgroundColor:color, pointRadius:3, borderWidth:2 }]},
+    options:{
+      responsive:true,
+      plugins:{legend:{display:false}, tooltip:{callbacks:{label:(c)=>`${c.label}: ${c.formattedValue}`}}},
+      scales:{ r:{ beginAtZero:true, suggestedMax: Math.max(...data)+0.15,
+        pointLabels:{font:{size:10, weight:'700'}}, ticks:{backdropColor:'transparent', font:{size:9}} } }
+    }
+  });
+}
+
+function fourYearBar(canvasId, labels, yearsData, years){
+  const ctx = document.getElementById(canvasId);
+  if(!ctx) return;
+  const cols = [PALETTE.pink, PALETTE.yellow, PALETTE.blue, PALETTE.green];
+  new Chart(ctx, {
+    type:'bar',
+    data:{ labels, datasets: years.map((y,i)=>({label:String(y), data:yearsData[y], backgroundColor:cols[i%4], borderColor:PALETTE.ink, borderWidth:1.2, borderRadius:3})) },
+    options:{ responsive:true,
+      plugins:{legend:{position:'top', labels:{boxWidth:12,font:{weight:'600'}}}},
+      scales:{ y:{ suggestedMin: 6, suggestedMax: 9, title:{display:true,text:'Average Grade'} } } }
+  });
+}
+
+function butterflyChart(canvasId, labels, a24, a25, s24, s25){
+  const ctx = document.getElementById(canvasId);
+  if(!ctx) return;
+  new Chart(ctx, {
+    type:'bar',
+    data:{ labels, datasets:[
+      {label:'2024 Autumn', data:a24, backgroundColor:PALETTE.pink, borderColor:PALETTE.ink, borderWidth:1},
+      {label:'2025 Autumn', data:a25, backgroundColor:PALETTE.green, borderColor:PALETTE.ink, borderWidth:1},
+      {label:'2024 Spring', data:s24, backgroundColor:PALETTE.blue, borderColor:PALETTE.ink, borderWidth:1},
+      {label:'2025 Spring', data:s25, backgroundColor:PALETTE.yellow, borderColor:PALETTE.ink, borderWidth:1},
+    ]},
+    options:{ indexAxis:'y', responsive:true,
+      plugins:{legend:{position:'top', labels:{boxWidth:12,font:{weight:'600'}}}},
+      scales:{ x:{ suggestedMin:6, suggestedMax:9, title:{display:true,text:'Average Grade'} } } }
+  });
+}
+
+// ---- Electives Autumn/Spring ----
+groupedBar('chartElecAutumnG1', CHART_DATA.elecAutumnG1.labels, CHART_DATA.elecAutumnG1.v24, CHART_DATA.elecAutumnG1.v25,
+  'Autumn 2024','Autumn 2025', PALETTE.pink, PALETTE.green, CHART_DATA.elecAutumnG1.n24, CHART_DATA.elecAutumnG1.n25);
+groupedBar('chartElecAutumnG2', CHART_DATA.elecAutumnG2.labels, CHART_DATA.elecAutumnG2.v24, CHART_DATA.elecAutumnG2.v25,
+  'Autumn 2024','Autumn 2025', PALETTE.pink, PALETTE.green, CHART_DATA.elecAutumnG2.n24, CHART_DATA.elecAutumnG2.n25);
+groupedBar('chartElecSpringG1', CHART_DATA.elecSpringG1.labels, CHART_DATA.elecSpringG1.v24, CHART_DATA.elecSpringG1.v25,
+  'Spring 2024','Spring 2025', PALETTE.blue, PALETTE.yellow, CHART_DATA.elecSpringG1.n24, CHART_DATA.elecSpringG1.n25);
+groupedBar('chartElecSpringG2', CHART_DATA.elecSpringG2.labels, CHART_DATA.elecSpringG2.v24, CHART_DATA.elecSpringG2.v25,
+  'Spring 2024','Spring 2025', PALETTE.blue, PALETTE.yellow, CHART_DATA.elecSpringG2.n24, CHART_DATA.elecSpringG2.n25);
+
+// ---- Electives SD radar ----
+radarChart('chartElecSD2025', CHART_DATA.elecSD.labels, CHART_DATA.elecSD.y2025, '#e0784f', 'rgba(224,120,79,0.28)');
+radarChart('chartElecSD2024', CHART_DATA.elecSD.labels, CHART_DATA.elecSD.y2024, '#5b8fd6', 'rgba(91,143,214,0.25)');
+
+// ---- Dept-wise SD radar ----
+radarChart('chartDeptSD2025', CHART_DATA.deptSD.labels, CHART_DATA.deptSD.y2025, '#e0784f', 'rgba(224,120,79,0.28)');
+radarChart('chartDeptSD2024', CHART_DATA.deptSD.labels, CHART_DATA.deptSD.y2024, '#5b8fd6', 'rgba(91,143,214,0.25)');
+
+// ---- Overall dept avg (4-year) ----
+fourYearBar('chartOverallG1', CHART_DATA.overallG1.labels, CHART_DATA.overallG1.data, CHART_DATA.overallG1.years);
+fourYearBar('chartOverallG2', CHART_DATA.overallG2.labels, CHART_DATA.overallG2.data, CHART_DATA.overallG2.years);
+
+// ---- Autumn vs Spring butterfly ----
+butterflyChart('chartAvsG1', CHART_DATA.avsG1.labels, CHART_DATA.avsG1.a24, CHART_DATA.avsG1.a25, CHART_DATA.avsG1.s24, CHART_DATA.avsG1.s25);
+butterflyChart('chartAvsG2', CHART_DATA.avsG2.labels, CHART_DATA.avsG2.a24, CHART_DATA.avsG2.a25, CHART_DATA.avsG2.s24, CHART_DATA.avsG2.s25);
+
+// ---- AA% histogram ----
+(function(){
+  const ctx = document.getElementById('chartAA');
+  new Chart(ctx, { type:'bar',
+    data:{ labels: CHART_DATA.aa.labels, datasets:[
+      {label:'2024', data:CHART_DATA.aa.y2024, backgroundColor:PALETTE.blue, borderColor:PALETTE.ink, borderWidth:1.2, borderRadius:4},
+      {label:'2025', data:CHART_DATA.aa.y2025, backgroundColor:PALETTE.pink, borderColor:PALETTE.ink, borderWidth:1.2, borderRadius:4},
+    ]},
+    options:{ responsive:true,
+      plugins:{legend:{position:'top'}},
+      scales:{ x:{title:{display:true,text:'% of Students Receiving AA (bucket)'}}, y:{title:{display:true,text:'Number of Courses'}} } }
+  });
+})();
+
+// ---- Illustrative normal-ish curve generator ----
+function gaussPoints(mean, sd, lo, hi, step){
+  const pts = [];
+  for(let x=lo; x<=hi; x+=step){
+    const y = Math.exp(-0.5*Math.pow((x-mean)/sd,2));
+    pts.push({x: Math.round(x*100)/100, y});
+  }
+  return pts;
+}
+
+(function(){
+  const ctx = document.getElementById('chartKdeMinors');
+  const colors = ['#7fd399','#f0cf3f','#6fb8de','#e88a8a'];
+  const datasets = CHART_DATA.kdeMinors.map((d,i)=>{
+    const pts = gaussPoints(d.mode, d.sd, 3, 10, 0.15);
+    return { label:`${d.year} (SD=${d.sd}, n=${d.n})`, data: pts.map(p=>p.y), borderColor:colors[i], backgroundColor:'transparent', borderWidth:2.4, pointRadius:0, tension:0.35 };
+  });
+  const labels = gaussPoints(7,1,3,10,0.15).map(p=>p.x);
+  new Chart(ctx, { type:'line', data:{ labels, datasets },
+    options:{ responsive:true, interaction:{mode:'nearest'},
+      plugins:{legend:{position:'bottom', labels:{boxWidth:12,font:{size:10.5,weight:'600'}}}},
+      scales:{ x:{ title:{display:true,text:'Course Average Grade'}, ticks:{maxTicksLimit:8} }, y:{ display:false } } }
+  });
+})();
+
+(function(){
+  ['2024','2025'].forEach(y=>{
+    const d = CHART_DATA.coursesDist[y];
+    const pts = gaussPoints(d.mean, d.sd, 3, 10, 0.1);
+    const ctx = document.getElementById('chartDist'+y);
+    new Chart(ctx, { type:'line',
+      data:{ labels: pts.map(p=>p.x), datasets:[{ label:`n=${d.n}`, data: pts.map(p=>p.y),
+        borderColor: y==='2024' ? '#6fb8de' : '#e0784f', backgroundColor: y==='2024' ? 'rgba(111,184,222,0.25)':'rgba(224,120,79,0.22)',
+        fill:true, borderWidth:2.4, pointRadius:0, tension:0.35 }]},
+      options:{ responsive:true,
+        plugins:{legend:{display:true, position:'bottom'}},
+        scales:{ x:{ title:{display:true,text:'Course Average Grade (0–10)'}, ticks:{maxTicksLimit:8} }, y:{display:false} } }
+    });
+  });
+})();
+
+// ---- Nav interactivity ----
+const toggle = document.getElementById('menuToggle');
+const sidebar = document.getElementById('sidebar');
+toggle.addEventListener('click', ()=> sidebar.classList.toggle('open'));
+document.querySelectorAll('.navlist a, .toc-card').forEach(a=>{
+  a.addEventListener('click', ()=> sidebar.classList.remove('open'));
+});
+
+const navLinks = document.querySelectorAll('#tocnav a');
+const sections = Array.from(navLinks).map(a=>document.querySelector(a.getAttribute('href')));
+function onScroll(){
+  let idx = 0;
+  const y = window.scrollY + 120;
+  sections.forEach((s,i)=>{ if(s && s.offsetTop <= y) idx = i; });
+  navLinks.forEach((a,i)=> a.classList.toggle('active', i===idx));
+}
+window.addEventListener('scroll', onScroll);
+onScroll();
+</script>
+</body>
+</html>
