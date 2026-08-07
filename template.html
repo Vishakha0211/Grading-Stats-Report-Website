@@ -28,6 +28,24 @@
   --shadow: 0 6px 24px rgba(36,28,61,0.08);
   --shadow-lift: 0 14px 34px rgba(36,28,61,0.14);
 }
+[data-theme="dark"]{
+  --cream:#1a1333;
+  --cream-deep:#2a1f4a;
+  --pink:#5c3040;
+  --pink-deep:#7a3850;
+  --pink-pale:#3d2040;
+  --blue:#2a4060;
+  --blue-deep:#3a5580;
+  --blue-pale:#1e3050;
+  --green:#2a5040;
+  --yellow:#605020;
+  --ink:#f0eaf8;
+  --ink-soft:#b8aed0;
+  --paper:#241c3d;
+  --line:#3d3560;
+  --shadow: 0 6px 24px rgba(0,0,0,0.3);
+  --shadow-lift: 0 14px 34px rgba(0,0,0,0.4);
+}
 *{box-sizing:border-box;}
 html{scroll-behavior:smooth;}
 body{
@@ -216,7 +234,8 @@ table.heatmap{border-collapse:collapse; width:100%; font-size:13.5px;}
 table.heatmap th{font-family:'Baloo 2'; font-weight:700; text-align:center; padding:8px 6px; font-size:13px;}
 table.heatmap td.hm-cell{text-align:center; padding:9px 6px; border:2px solid var(--paper); font-weight:700; border-radius:6px;}
 table.heatmap td.hm-empty{background:#f1eee0 !important; color:#b6b0a0 !important; font-weight:500;}
-table.heatmap th.rowlabel{text-align:left; padding-left:10px; background:var(--ink); color:var(--cream); border-radius:8px;}
+table.heatmap th.rowlabel{text-align:left; padding-left:10px; background:var(--ink); color:var(--cream); border-radius:8px; border-bottom:2px solid var(--paper);}
+table.heatmap td, table.heatmap th.rowlabel{border-bottom:2px solid var(--paper);}
 table.heatmap.minors td.hm-cell{font-size:12px; line-height:1.3;}
 .n-tag{font-weight:500; opacity:.85; font-size:10.5px;}
 .table-scroll{overflow-x:auto; padding-bottom:4px;}
@@ -276,6 +295,34 @@ footer{
   .main{max-width:100%; padding:0;}
   body{background:#fff;}
 }
+
+/* ---------- DARK MODE ---------- */
+[data-theme="dark"] body{
+  background-image:
+    repeating-linear-gradient(135deg, rgba(60,50,100,0.3) 0 26px, transparent 26px 60px);
+}
+[data-theme="dark"] .hero::after{
+  background:repeating-linear-gradient(135deg, rgba(60,50,100,0.2) 0 18px, transparent 18px 40px);
+}
+[data-theme="dark"] table.heatmap td.hm-empty{background:#2a2050 !important; color:#6a6090 !important;}
+[data-theme="dark"] .navlist a:hover{background:var(--pink-pale);}
+[data-theme="dark"] .navlist a.active{background:var(--ink); color:var(--paper);}
+[data-theme="dark"] .note-box{background:var(--cream-deep); border-color:var(--ink);}
+[data-theme="dark"] .formula-box{background:var(--cream-deep);}
+[data-theme="dark"] .chart-wrap{border-color:var(--line);}
+
+/* ---------- THEME TOGGLE ---------- */
+.theme-toggle{
+  display:inline-flex; align-items:center; justify-content:center;
+  width:38px;height:38px;border-radius:12px; border:2px solid var(--ink);
+  background:var(--yellow); font-size:18px; cursor:pointer;
+  transition:transform .15s ease, box-shadow .15s ease;
+  box-shadow:3px 3px 0 var(--ink); flex:0 0 38px;
+}
+.theme-toggle:hover{transform:translate(-1px,-1px); box-shadow:4px 4px 0 var(--ink);}
+.theme-toggle:active{transform:translate(1px,1px); box-shadow:1px 1px 0 var(--ink);}
+.sidebar-foot-toggle{display:flex; align-items:center; gap:10px; margin-top:22px; padding:10px 8px; border-top:2px dashed var(--line);}
+.sidebar-foot-toggle .foot-text{font-size:11px; color:var(--ink-soft); flex:1;}
 </style>
 </head>
 <body>
@@ -314,6 +361,10 @@ footer{
       <li><a href="#recommender"><span class="navnum">12</span> Course Recommender</a></li>
     </ul>
 
+    <div class="sidebar-foot-toggle">
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">🌙</button>
+      <span class="foot-text">Dark Mode</span>
+    </div>
     <div class="sidebar-foot">
       Contributed by Harsh, Ummehani, Vishakha &amp; Zubair · Project led by Rakshana<br><br>
       <em>Web edition — data faithfully reproduced from the original PDF report.</em>
@@ -325,13 +376,13 @@ footer{
     <!-- HERO -->
     <section id="home" class="block">
       <div class="hero">
-        <span class="hero-eyebrow">📈 UGAC · Undergraduate Academic Council</span>
         <h1>Grading Stats<br>Report 3.0</h1>
         <div class="sub">Data Analytics and Visualization Team</div>
         <div class="hero-meta">
           <div class="pill"><b>Contributed by</b>Harsh, Ummehani, Vishakha, Zubair</div>
           <div class="pill"><b>Project Led By</b>Rakshana</div>
           <div class="pill"><b>Source</b>Internal ASC · UG-open courses only</div>
+          <a href="dept.html" class="pill" style="cursor:pointer;text-decoration:none;background:var(--ink);color:var(--cream);"><b>Explore →</b>Department Dashboard</a>
         </div>
       </div>
 
@@ -859,6 +910,54 @@ function onScroll(){
 }
 window.addEventListener('scroll', onScroll);
 onScroll();
+
+// ---- Dark Mode Toggle ----
+const themeToggle = document.getElementById('themeToggle');
+const htmlEl = document.documentElement;
+
+function applyTheme(theme){
+  const isDark = theme === 'dark';
+  if(isDark){
+    htmlEl.setAttribute('data-theme', 'dark');
+    themeToggle.textContent = '☀️';
+  } else {
+    htmlEl.removeAttribute('data-theme');
+    themeToggle.textContent = '🌙';
+  }
+  const textColor = isDark ? '#f0eaf8' : '#241C3D';
+  const gridColor = isDark ? 'rgba(240,234,248,0.2)' : 'rgba(36,28,61,0.1)';
+  const borderCol = isDark ? '#3d3560' : '#EDE6C8';
+  Chart.defaults.color = textColor;
+  Chart.defaults.borderColor = borderCol;
+  Chart.defaults.scale = Chart.defaults.scale || {};
+  Chart.defaults.scale.grid = Chart.defaults.scale.grid || {};
+  Chart.defaults.scale.grid.color = gridColor;
+  if(Chart.instances){
+    Object.values(Chart.instances).forEach(c => {
+      if(c.options && c.options.scales){
+        Object.values(c.options.scales).forEach(s => {
+          if(!s) return;
+          s.grid = Object.assign(s.grid || {}, {color: gridColor});
+          s.ticks = Object.assign(s.ticks || {}, {color: textColor});
+          if(s.title) s.title = Object.assign(s.title, {color: textColor});
+          if(s.pointLabels) s.pointLabels = Object.assign(s.pointLabels, {color: textColor});
+        });
+      }
+      if(c.options && c.options.plugins && c.options.plugins.legend && c.options.plugins.legend.labels){
+        c.options.plugins.legend.labels.color = textColor;
+      }
+      c.update();
+    });
+  }
+}
+
+applyTheme(localStorage.getItem('theme') || 'light');
+
+themeToggle.addEventListener('click', ()=>{
+  const next = htmlEl.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  localStorage.setItem('theme', next);
+  applyTheme(next);
+});
 </script>
 </body>
 </html>

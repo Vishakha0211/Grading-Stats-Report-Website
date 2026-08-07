@@ -340,5 +340,99 @@ chart_data = {
 with open("chart_data.json","w") as f:
     json.dump(chart_data, f)
 
+# ---------------------------------------------------------------------------
+# DEPARTMENT PAGE DATA
+# ---------------------------------------------------------------------------
+
+dept_names = {
+    "AE":"Aerospace Engineering",
+    "BB":"Biosciences and Bioengineering",
+    "CE":"Civil Engineering",
+    "CH":"Chemistry",
+    "CL":"Chemical Engineering",
+    "CS":"Computer Science and Engineering",
+    "EC":"Economics",
+    "EE":"Electrical Engineering",
+    "EN":"Energy Science and Engineering",
+    "ENT":"Desai Sethi School of Entrepreneurship",
+    "ES":"Environmental Science and Engineering",
+    "GP":"Applied Geophysics",
+    "GS":"Earth Sciences",
+    "HS":"Humanities and Social Sciences",
+    "IDC":"IDC School of Design",
+    "IEOR":"Industrial Engineering and Operations Research",
+    "MA":"Mathematics/ASI",
+    "ME":"Mechanical Engineering",
+    "MG":"Shailesh J. Mehta School of Management",
+    "MM":"Metallurgical Engineering and Materials Science",
+    "PH":"Physics",
+}
+
+all_depts = sorted(dept_names.keys())
+
+elec_all = {}
+for d in list(elec_autumn_g1.keys()) + list(elec_autumn_g2.keys()):
+    autumn = elec_autumn_g1.get(d, elec_autumn_g2.get(d, None))
+    spring = elec_spring_g1.get(d, elec_spring_g2.get(d, None))
+    if autumn is None and spring is None:
+        continue
+    if autumn is None:
+        autumn = [None, None]
+    if spring is None:
+        spring = [None, None]
+    elec_all[d] = {"autumn": autumn, "spring": spring}
+
+overall_all = {}
+for d in overall_g1_order + overall_g2_order:
+    data = overall_g1.get(d) or overall_g2.get(d)
+    if data:
+        overall_all[d] = data
+
+avs_all = {}
+for d in avs_g1_order + avs_g2_order:
+    data = avs_g1.get(d) or avs_g2.get(d)
+    if data:
+        avs_all[d] = data
+
+elec_sd_all = {}
+for i, d in enumerate(elec_sd_order):
+    elec_sd_all[d] = {"y2025": elec_sd_2025[i], "y2024": elec_sd_2024[i]}
+
+dept_sd_all = {}
+for i, d in enumerate(dept_sd_order):
+    dept_sd_all[d] = {"y2025": dept_sd_2025[i], "y2024": dept_sd_2024[i]}
+
+minors_all = {}
+for d in minors_24_25_order + minors_22_23_order:
+    entries = []
+    if d in minors_24_25:
+        entries.extend(minors_24_25[d])
+    if d in minors_22_23:
+        entries.extend(minors_22_23[d])
+    if entries:
+        minors_all[d] = entries
+
+dept_page_data = {
+    "deptNames": dept_names,
+    "allDepts": all_depts,
+    "overall": overall_all,
+    "overallYears": overall_years,
+    "avs": avs_all,
+    "electives": elec_all,
+    "elecSD": elec_sd_all,
+    "deptSD": dept_sd_all,
+    "minors": minors_all,
+    "apDist": {d: ap_dist[d] for d in ap_depts},
+    "apYears": [2022, 2023, 2024, 2025],
+    "freshie": {c: freshie[c] for c in freshie_courses},
+    "freshieCourses": freshie_courses,
+    "freshieYears": freshie_years,
+    "soph": soph,
+    "third": third,
+}
+
+with open("dept_data.json","w") as f:
+    json.dump(dept_page_data, f)
+
 print("all data generated")
 

@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Department Dashboard — Grading Stats 3.0</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<script>/*__CHARTJS_INLINE__*/</script>
+<style>
+:root{
+  --cream:#FDF6D9; --cream-deep:#FBEFAF;
+  --pink:#FFC7C7; --pink-deep:#FF9E9E; --pink-pale:#FFE7E7;
+  --blue:#BFE6FB; --blue-deep:#8FCBEF; --blue-pale:#E6F6FE;
+  --green:#B7E4C7; --yellow:#F7DE72;
+  --ink:#241C3D; --ink-soft:#4A4266; --paper:#FFFFFF; --line:#EDE6C8;
+  --radius:22px; --radius-sm:14px;
+  --shadow: 0 6px 24px rgba(36,28,61,0.08);
+  --shadow-lift: 0 14px 34px rgba(36,28,61,0.14);
+}
+[data-theme="dark"]{
+  --cream:#1a1333; --cream-deep:#2a1f4a;
+  --pink:#5c3040; --pink-deep:#7a3850; --pink-pale:#3d2040;
+  --blue:#2a4060; --blue-deep:#3a5580; --blue-pale:#1e3050;
+  --green:#2a5040; --yellow:#605020;
+  --ink:#f0eaf8; --ink-soft:#b8aed0; --paper:#241c3d; --line:#3d3560;
+  --shadow: 0 6px 24px rgba(0,0,0,0.3); --shadow-lift: 0 14px 34px rgba(0,0,0,0.4);
+}
+*{box-sizing:border-box;} html{scroll-behavior:smooth;}
+body{margin:0; font-family:'Inter',system-ui,sans-serif; color:var(--ink); background:var(--cream);
+  background-image:repeating-linear-gradient(135deg, rgba(255,255,255,0.55) 0 26px, transparent 26px 60px); min-height:100vh;}
+[data-theme="dark"] body{background-image:repeating-linear-gradient(135deg, rgba(60,50,100,0.3) 0 26px, transparent 26px 60px);}
+h1,h2,h3,h4{font-family:'Baloo 2',system-ui,sans-serif; margin:0; letter-spacing:.2px;}
+p{line-height:1.6;} a{color:inherit;}
+
+.container{max-width:1100px; margin:0 auto; padding:36px 32px 80px;}
+.dept-layout{display:flex; gap:24px; align-items:flex-start;}
+.dept-main{flex:1; min-width:0;}
+
+/* section nav sidebar */
+.section-nav{
+  width:220px; flex:0 0 220px; position:sticky; top:20px;
+  background:var(--paper); border:2.5px solid var(--ink); border-radius:16px;
+  padding:16px 14px; box-shadow:4px 4px 0 var(--ink);
+  display:none;
+}
+.section-nav.visible{display:block;}
+.section-nav h4{font-size:12px; text-transform:uppercase; letter-spacing:1px; color:var(--ink-soft); margin:0 0 10px; font-weight:700;}
+.section-nav a{
+  display:block; padding:8px 10px; border-radius:10px; font-size:12.5px; font-weight:600;
+  color:var(--ink); text-decoration:none; transition:background .12s, transform .12s; margin-bottom:2px;
+}
+.section-nav a:hover{background:var(--pink-pale); transform:translateX(2px);}
+.section-nav a.active{background:var(--ink); color:var(--cream);}
+@media(max-width:1100px){.section-nav{display:none !important;}}
+
+/* top bar */
+.topbar{display:flex; align-items:center; gap:16px; margin-bottom:24px; flex-wrap:wrap;}
+.back-btn{
+  display:inline-flex; align-items:center; gap:6px;
+  background:var(--paper); border:2.5px solid var(--ink); border-radius:14px;
+  padding:10px 18px; font-size:14px; font-weight:700; text-decoration:none; color:var(--ink);
+  box-shadow:4px 4px 0 var(--ink); transition:transform .12s, box-shadow .12s;
+}
+.back-btn:hover{transform:translate(-2px,-2px); box-shadow:6px 6px 0 var(--ink);}
+
+.theme-toggle{
+  display:inline-flex; align-items:center; justify-content:center;
+  width:38px;height:38px;border-radius:12px; border:2px solid var(--ink);
+  background:var(--yellow); font-size:18px; cursor:pointer; margin-left:auto;
+  transition:transform .15s ease, box-shadow .15s ease;
+  box-shadow:3px 3px 0 var(--ink); flex:0 0 38px;
+}
+.theme-toggle:hover{transform:translate(-1px,-1px); box-shadow:4px 4px 0 var(--ink);}
+
+/* hero */
+.hero{
+  border-radius:28px; border:3px solid var(--ink);
+  background:linear-gradient(135deg, var(--pink) 0%, var(--pink-pale) 55%, var(--cream-deep) 100%);
+  padding:44px 40px; margin-bottom:28px; position:relative; overflow:hidden;
+  box-shadow:var(--shadow-lift);
+}
+.hero::after{content:""; position:absolute; inset:0;
+  background:repeating-linear-gradient(135deg, rgba(255,255,255,0.4) 0 18px, transparent 18px 40px); pointer-events:none;}
+.hero h1{font-size:clamp(30px,4vw,48px); font-weight:800; position:relative; z-index:1; line-height:1.05;}
+.hero .sub{font-size:16px; font-weight:600; color:var(--ink-soft); position:relative; z-index:1; margin-top:4px;}
+
+/* dept selector */
+.selector-label{font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--ink-soft); margin-bottom:10px;}
+.dept-grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(200px, 1fr)); gap:10px; margin-bottom:30px;}
+.dept-card{
+  background:var(--paper); border:2.5px solid var(--ink); border-radius:14px;
+  padding:14px 16px; cursor:pointer; text-decoration:none; color:var(--ink);
+  box-shadow:3px 3px 0 var(--ink); transition:transform .12s, box-shadow .12s, background .12s;
+}
+.dept-card:hover{transform:translate(-2px,-2px); box-shadow:5px 5px 0 var(--ink);}
+.dept-card.selected{background:var(--ink); color:var(--cream); box-shadow:5px 5px 0 var(--yellow);}
+.dept-card .abbr{font-family:'JetBrains Mono'; font-weight:700; font-size:15px;}
+.dept-card .name{font-size:12px; font-weight:500; margin-top:2px; opacity:.85;}
+
+/* dashboard */
+#dashboard{display:none;}
+#dashboard.visible{display:block;}
+
+.card{background:var(--paper); border:3px solid var(--ink); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden; margin-bottom:18px;}
+.card-header{padding:16px 24px; border-bottom:3px solid var(--ink); display:flex; align-items:center; gap:12px; flex-wrap:wrap; justify-content:space-between;}
+.card-header.pink{background:linear-gradient(120deg,var(--pink),var(--pink-pale));}
+.card-header.blue{background:linear-gradient(120deg,var(--blue),var(--blue-pale));}
+.card-header.yellow{background:linear-gradient(120deg,var(--yellow),var(--cream-deep));}
+.card-header h2{font-size:20px; font-weight:700;}
+.card-header .tag{font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.8px; background:var(--paper); border:2px solid var(--ink); padding:5px 11px; border-radius:999px;}
+.card-body{padding:24px;}
+
+.stat-row{display:flex; gap:14px; flex-wrap:wrap; margin-bottom:16px;}
+.stat-card{flex:1; min-width:120px; background:var(--paper); border:2.5px solid var(--ink); border-radius:14px; padding:14px 16px; box-shadow:3px 3px 0 var(--ink);}
+.stat-card .lbl{font-size:11px; text-transform:uppercase; letter-spacing:.6px; color:var(--ink-soft); font-weight:700;}
+.stat-card .val{font-family:'Baloo 2'; font-size:22px; font-weight:800; margin-top:2px;}
+
+.grid-2{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+@media(max-width:860px){.grid-2{grid-template-columns:1fr;}}
+.chart-wrap{background:var(--paper); border:2px solid var(--line); border-radius:16px; padding:16px; margin-bottom:14px;}
+.chart-wrap h4{font-size:13px; font-weight:700; margin-bottom:10px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.5px;}
+canvas{max-width:100%;}
+
+.note-box{background:var(--cream-deep); border:2.5px dashed var(--ink); border-radius:16px; padding:16px 18px; font-size:14px;}
+.note-box h4{font-size:14px; margin-bottom:8px;}
+.note-box ul{margin:0; padding-left:18px;} .note-box li{margin-bottom:8px;}
+
+.heatmap-min{border-collapse:collapse; width:100%; font-size:13px;}
+.heatmap-min th{font-family:'Baloo 2'; font-weight:700; text-align:center; padding:8px 6px; font-size:12px;}
+.heatmap-min td{textAlign:center; padding:8px 6px; border:2px solid var(--paper); font-weight:700; border-radius:6px; text-align:center;}
+.heatmap-min td.empty{background:#f1eee0 !important; color:#b6b0a0 !important; font-weight:500;}
+.heatmap-min th.rowlabel{text-align:left; padding-left:10px; background:var(--ink); color:var(--cream); border-radius:8px; border-bottom:2px solid var(--paper);}
+.heatmap-min td, .heatmap-min th.rowlabel{border-bottom:2px solid var(--paper);}
+[data-theme="dark"] .heatmap-min td.empty{background:#2a2050 !important; color:#6a6090 !important;}
+.table-scroll{overflow-x:auto; padding-bottom:4px;}
+.n-tag{font-weight:500; opacity:.85; font-size:10px;}
+
+.placeholder-msg{text-align:center; padding:60px 20px; color:var(--ink-soft); font-size:16px; font-weight:600;}
+
+@media(max-width:700px){.container{padding:20px 14px 60px;} .hero{padding:28px 20px;} .dept-grid{grid-template-columns:repeat(auto-fill, minmax(150px, 1fr));}}
+@media print{.back-btn,.theme-toggle{display:none;} body{background:#fff;}}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="topbar">
+    <a href="index.html" class="back-btn">← Back to Report</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">🌙</button>
+  </div>
+
+  <div class="hero">
+    <h1>Department Dashboard</h1>
+    <div class="sub">Select your department below to view detailed grading statistics</div>
+  </div>
+
+  <div class="selector-label">Select Department</div>
+  <div class="dept-grid" id="deptGrid"></div>
+
+  <div class="dept-layout">
+    <nav class="section-nav" id="sectionNav">
+      <h4>Sections</h4>
+      <a href="#sec-overall">4-Year Trend</a>
+      <a href="#sec-electives">Elective Averages</a>
+      <a href="#sec-sd">Standard Deviation</a>
+      <a href="#sec-ap">AP Distribution</a>
+      <a href="#sec-minors">Minors Data</a>
+      <a href="#sec-soph">Sophomore Core</a>
+      <a href="#sec-third">Third-Year Core</a>
+    </nav>
+
+    <div class="dept-main">
+      <div id="dashboard">
+        <div class="stat-row" id="statRow"></div>
+
+        <div class="card" id="cardOverall" data-section="sec-overall">
+      <div class="card-header blue"><h2 id="overallTitle">4-Year Average Trend</h2></div>
+      <div class="card-body">
+        <div class="grid-2">
+          <div class="chart-wrap"><h4>Overall Average</h4><canvas id="chartDeptOverall" height="260"></canvas></div>
+          <div class="chart-wrap"><h4>Autumn vs Spring</h4><canvas id="chartDeptAvs" height="260"></canvas></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="cardElectives" data-section="sec-electives">
+      <div class="card-header pink"><h2>Elective Averages</h2><span class="tag">Autumn & Spring</span></div>
+      <div class="card-body">
+        <div class="grid-2">
+          <div class="chart-wrap"><h4>Autumn</h4><canvas id="chartDeptElecAutumn" height="240"></canvas></div>
+          <div class="chart-wrap"><h4>Spring</h4><canvas id="chartDeptElecSpring" height="240"></canvas></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="cardSD" data-section="sec-sd">
+      <div class="card-header yellow"><h2>Standard Deviation</h2><span class="tag">Elective & Overall</span></div>
+      <div class="card-body">
+        <div class="grid-2">
+          <div class="chart-wrap"><h4>Elective SD</h4><canvas id="chartDeptElecSD" height="240"></canvas></div>
+          <div class="chart-wrap"><h4>Overall Dept SD</h4><canvas id="chartDeptDeptSD" height="240"></canvas></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="cardAP" data-section="sec-ap">
+      <div class="card-header pink"><h2>AP Grade Distribution</h2><span class="tag">% of capacity used</span></div>
+      <div class="card-body">
+        <div class="chart-wrap"><canvas id="chartDeptAP" height="240"></canvas></div>
+      </div>
+    </div>
+
+    <div class="card" id="cardMinors" data-section="sec-minors">
+      <div class="card-header blue"><h2>Minors Data</h2><span class="tag">M-tagged courses</span></div>
+      <div class="card-body">
+        <div class="table-scroll" id="minorsTableWrap"></div>
+      </div>
+    </div>
+
+    <div class="card" id="cardSoph" data-section="sec-soph">
+      <div class="card-header pink"><h2>Sophomore Core Averages</h2></div>
+      <div class="card-body">
+        <div class="table-scroll" id="sophTableWrap"></div>
+      </div>
+    </div>
+
+    <div class="card" id="cardThird" data-section="sec-third">
+      <div class="card-header blue"><h2>Third-Year Core Averages</h2></div>
+      <div class="card-body">
+        <div class="table-scroll" id="thirdTableWrap"></div>
+      </div>
+    </div>
+    </div>
+  </div>
+
+  <div id="placeholder" class="placeholder-msg">👆 Select a department above to view its grading dashboard</div>
+  </div>
+</div>
+
+<script>
+const DEPT_DATA = __DEPT_DATA_JSON__;
+
+Chart.defaults.font.family = "'Inter', sans-serif";
+Chart.defaults.color = '#241C3D';
+
+const PALETTE = {
+  pink:'#F4A6A6', blue:'#9FD2EF', green:'#A8E6B8', yellow:'#F9E27D', ink:'#241C3D',
+  orange:'#e0784f', purple:'#7b68ee'
+};
+
+let activeCharts = [];
+
+function destroyCharts(){ activeCharts.forEach(c => c.destroy()); activeCharts = []; }
+
+function colorForGrade(v, lo, hi){
+  if(v == null) return '#f4f4f4';
+  const t = Math.max(0, Math.min(1, (v - lo) / (hi - lo)));
+  const stops = [[0,[198,239,206]],[0.5,[255,235,156]],[1,[248,105,107]]];
+  for(let i=0;i<stops.length-1;i++){
+    const [t0,c0]=stops[i],[t1,c1]=stops[i+1];
+    if(t>=t0&&t<=t1){
+      const f=t1===t0?0:(t-t0)/(t1-t0);
+      return `rgb(${Math.round(c0[0]+(c1[0]-c0[0])*f)},${Math.round(c0[1]+(c1[1]-c0[1])*f)},${Math.round(c0[2]+(c1[2]-c0[2])*f)})`;
+    }
+  }
+  return '#f4f4f4';
+}
+
+function txtColor(rgb){
+  const nums = rgb.replace('rgb(','').replace(')','').split(',');
+  const lum = 0.299*parseInt(nums[0])+0.587*parseInt(nums[1])+0.114*parseInt(nums[2]);
+  return lum>150?'#1a1330':'#ffffff';
+}
+
+function buildDeptGrid(){
+  const grid = document.getElementById('deptGrid');
+  DEPT_DATA.allDepts.forEach(abbr => {
+    const card = document.createElement('div');
+    card.className = 'dept-card';
+    card.dataset.dept = abbr;
+    card.innerHTML = `<div class="abbr">${abbr}</div><div class="name">${DEPT_DATA.deptNames[abbr]}</div>`;
+    card.addEventListener('click', ()=> selectDept(abbr));
+    grid.appendChild(card);
+  });
+}
+
+function selectDept(abbr){
+  document.querySelectorAll('.dept-card').forEach(c => c.classList.toggle('selected', c.dataset.dept===abbr));
+  document.getElementById('placeholder').style.display='none';
+  document.getElementById('dashboard').classList.add('visible');
+  document.getElementById('sectionNav').classList.add('visible');
+  destroyCharts();
+  renderDashboard(abbr);
+  setTimeout(()=> document.getElementById('statRow').scrollIntoView({behavior:'smooth', block:'start'}), 50);
+  setTimeout(setupScrollSpy, 200);
+}
+
+function renderDashboard(dept){
+  const isDark = document.documentElement.getAttribute('data-theme')==='dark';
+  const tickColor = isDark?'#f0eaf8':'#241C3D';
+  const gridColor = isDark?'rgba(240,234,248,0.2)':'rgba(36,28,61,0.1)';
+
+  const statRow = document.getElementById('statRow');
+  statRow.innerHTML = '';
+
+  const overall = DEPT_DATA.overall[dept];
+  const avs = DEPT_DATA.avs[dept];
+  const elec = DEPT_DATA.electives[dept];
+  const esd = DEPT_DATA.elecSD[dept];
+  const dsd = DEPT_DATA.deptSD[dept];
+  const ap = DEPT_DATA.apDist[dept];
+  const minors = DEPT_DATA.minors[dept];
+
+  const stats = [];
+  if(overall){
+    stats.push({lbl:'2025 Avg', val:overall[3].toFixed(2)});
+    stats.push({lbl:'4yr Mean', val:(overall.reduce((a,b)=>a+b,0)/overall.length).toFixed(2)});
+    const trend = overall[3]-overall[0];
+    stats.push({lbl:'Trend (22→25)', val:(trend>0?'+':'')+trend.toFixed(2)});
+  }
+  if(elec){
+    if(elec.autumn && elec.autumn[1]) stats.push({lbl:'Elec Avg (A25)', val:elec.autumn[1][0].toFixed(2)});
+    if(elec.spring && elec.spring[1]) stats.push({lbl:'Elec Avg (S25)', val:elec.spring[1][0].toFixed(2)});
+  }
+  if(esd) stats.push({lbl:'Elec SD (2025)', val:esd.y2025.toFixed(3)});
+  stats.forEach(s=>{
+    const div = document.createElement('div');
+    div.className='stat-card';
+    div.innerHTML=`<div class="lbl">${s.lbl}</div><div class="val">${s.val}</div>`;
+    statRow.appendChild(div);
+  });
+
+  if(overall){
+    document.getElementById('cardOverall').style.display='';
+    new Chart(document.getElementById('chartDeptOverall'),{
+      type:'bar',
+      data:{labels:DEPT_DATA.overallYears.map(String), datasets:[{label:'Avg Grade', data:overall,
+        backgroundColor:[PALETTE.pink,PALETTE.yellow,PALETTE.blue,PALETTE.green], borderColor:PALETTE.ink, borderWidth:1.5, borderRadius:4}]},
+      options:{responsive:true, plugins:{legend:{display:false}}, scales:{y:{suggestedMin:6,suggestedMax:9,title:{display:true,text:'Average Grade'},ticks:{color:tickColor},grid:{color:gridColor}},x:{ticks:{color:tickColor},grid:{color:gridColor}}}}
+    });
+    activeCharts.push(Chart.instances[Object.keys(Chart.instances).pop()]);
+  } else { document.getElementById('cardOverall').style.display='none'; }
+
+  if(avs){
+    new Chart(document.getElementById('chartDeptAvs'),{
+      type:'bar',
+      data:{labels:['Aut 24','Aut 25','Spr 24','Spr 25'], datasets:[{label:'Avg Grade', data:avs,
+        backgroundColor:[PALETTE.pink,PALETTE.green,PALETTE.blue,PALETTE.yellow], borderColor:PALETTE.ink, borderWidth:1.5, borderRadius:4}]},
+      options:{responsive:true, plugins:{legend:{display:false}}, scales:{y:{suggestedMin:6,suggestedMax:9,title:{display:true,text:'Average Grade'},ticks:{color:tickColor},grid:{color:gridColor}},x:{ticks:{color:tickColor},grid:{color:gridColor}}}}
+    });
+    activeCharts.push(Chart.instances[Object.keys(Chart.instances).pop()]);
+  }
+
+  if(elec){
+    document.getElementById('cardElectives').style.display='';
+    const aData = elec.autumn;
+    const sData = elec.spring;
+    if(aData){
+      new Chart(document.getElementById('chartDeptElecAutumn'),{
+        type:'bar',
+        data:{labels:['2024','2025'], datasets:[{label:'Avg Grade', data:[aData[0]?aData[0][0]:null, aData[1]?aData[1][0]:null],
+          backgroundColor:[PALETTE.pink,PALETTE.green], borderColor:PALETTE.ink, borderWidth:1.5, borderRadius:4}]},
+        options:{responsive:true, plugins:{legend:{display:false}}, scales:{y:{suggestedMin:6,suggestedMax:9,ticks:{color:tickColor},grid:{color:gridColor}},x:{ticks:{color:tickColor},grid:{color:gridColor}}}}
+      });
+      activeCharts.push(Chart.instances[Object.keys(Chart.instances).pop()]);
+    }
+    if(sData){
+      new Chart(document.getElementById('chartDeptElecSpring'),{
+        type:'bar',
+        data:{labels:['2024','2025'], datasets:[{label:'Avg Grade', data:[sData[0]?sData[0][0]:null, sData[1]?sData[1][0]:null],
+          backgroundColor:[PALETTE.blue,PALETTE.yellow], borderColor:PALETTE.ink, borderWidth:1.5, borderRadius:4}]},
+        options:{responsive:true, plugins:{legend:{display:false}}, scales:{y:{suggestedMin:6,suggestedMax:9,ticks:{color:tickColor},grid:{color:gridColor}},x:{ticks:{color:tickColor},grid:{color:gridColor}}}}
+      });
+      activeCharts.push(Chart.instances[Object.keys(Chart.instances).pop()]);
+    }
+  } else { document.getElementById('cardElectives').style.display='none'; }
+
+  if(esd || dsd){
+    document.getElementById('cardSD').style.display='';
+    if(esd){
+      new Chart(document.getElementById('chartDeptElecSD'),{
+        type:'bar',
+        data:{labels:['2024','2025'], datasets:[{label:'Elective SD', data:[esd.y2024,esd.y2025],
+          backgroundColor:[PALETTE.blue,PALETTE.orange], borderColor:PALETTE.ink, borderWidth:1.5, borderRadius:4}]},
+        options:{responsive:true, plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true,suggestedMax:1.6,ticks:{color:tickColor},grid:{color:gridColor}},x:{ticks:{color:tickColor},grid:{color:gridColor}}}}
+      });
+      activeCharts.push(Chart.instances[Object.keys(Chart.instances).pop()]);
+    }
+    if(dsd){
+      new Chart(document.getElementById('chartDeptDeptSD'),{
+        type:'bar',
+        data:{labels:['2024','2025'], datasets:[{label:'Dept SD', data:[dsd.y2024,dsd.y2025],
+          backgroundColor:[PALETTE.blue,PALETTE.orange], borderColor:PALETTE.ink, borderWidth:1.5, borderRadius:4}]},
+        options:{responsive:true, plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true,suggestedMax:1.6,ticks:{color:tickColor},grid:{color:gridColor}},x:{ticks:{color:tickColor},grid:{color:gridColor}}}}
+      });
+      activeCharts.push(Chart.instances[Object.keys(Chart.instances).pop()]);
+    }
+  } else { document.getElementById('cardSD').style.display='none'; }
+
+  if(ap){
+    document.getElementById('cardAP').style.display='';
+    new Chart(document.getElementById('chartDeptAP'),{
+      type:'bar',
+      data:{labels:DEPT_DATA.apYears.map(String), datasets:[{label:'AP %', data:ap,
+        backgroundColor:[PALETTE.blue,PALETTE.green,PALETTE.yellow,PALETTE.pink], borderColor:PALETTE.ink, borderWidth:1.5, borderRadius:4}]},
+      options:{responsive:true, plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true,title:{display:true,text:'% of AP Capacity'},ticks:{color:tickColor},grid:{color:gridColor}},x:{ticks:{color:tickColor},grid:{color:gridColor}}}}
+    });
+    activeCharts.push(Chart.instances[Object.keys(Chart.instances).pop()]);
+  } else { document.getElementById('cardAP').style.display='none'; }
+
+  if(minors && minors.length>0){
+    document.getElementById('cardMinors').style.display='';
+    const cols = ['Autumn 2024','Spring 2024','Autumn 2025','Spring 2025','Autumn 2022','Spring 2022','Autumn 2023','Spring 2023'];
+    let html = '<table class="heatmap-min"><thead><tr><th></th>';
+    cols.forEach(c => html+=`<th>${c}</th>`);
+    html += '</tr></thead><tbody><tr><th class="rowlabel">'+dept+'</th>';
+    const padded = new Array(8).fill(null);
+    minors.forEach((entry,i)=>{ if(entry) padded[i]=entry; });
+    padded.forEach(entry=>{
+      if(!entry){ html+='<td class="empty">—</td>'; }
+      else{
+        const [v,n]=entry;
+        const bg=colorForGrade(v,5,10);
+        html+=`<td style="background:${bg};color:${txtColor(bg)}"><b>${v.toFixed(2)}</b><br><span class="n-tag">n=${n}</span></td>`;
+      }
+    });
+    html += '</tr></tbody></table>';
+    document.getElementById('minorsTableWrap').innerHTML = html;
+  } else { document.getElementById('cardMinors').style.display='none'; }
+
+  if(DEPT_DATA.soph[dept]){
+    document.getElementById('cardSoph').style.display='';
+    const vals = DEPT_DATA.soph[dept];
+    let html = '<table class="heatmap-min"><thead><tr><th></th><th>2024</th><th>2025</th></tr></thead><tbody>';
+    html += `<tr><th class="rowlabel">${dept}</th>`;
+    vals.forEach(v=>{
+      if(v==null){ html+='<td class="empty">—</td>'; }
+      else{ const bg=colorForGrade(v,6,10); html+=`<td style="background:${bg};color:${txtColor(bg)}">${v.toFixed(2)}</td>`; }
+    });
+    html += '</tr></tbody></table>';
+    document.getElementById('sophTableWrap').innerHTML = html;
+  } else { document.getElementById('cardSoph').style.display='none'; }
+
+  if(DEPT_DATA.third[dept]){
+    document.getElementById('cardThird').style.display='';
+    const vals = DEPT_DATA.third[dept];
+    let html = '<table class="heatmap-min"><thead><tr><th></th><th>2024</th><th>2025</th></tr></thead><tbody>';
+    html += `<tr><th class="rowlabel">${dept}</th>`;
+    vals.forEach(v=>{
+      if(v==null){ html+='<td class="empty">—</td>'; }
+      else{ const bg=colorForGrade(v,6,10); html+=`<td style="background:${bg};color:${txtColor(bg)}">${v.toFixed(2)}</td>`; }
+    });
+    html += '</tr></tbody></table>';
+    document.getElementById('thirdTableWrap').innerHTML = html;
+  } else { document.getElementById('cardThird').style.display='none'; }
+}
+
+buildDeptGrid();
+
+// ---- Section Nav Scroll-Spy ----
+function setupScrollSpy(){
+  const nav = document.getElementById('sectionNav');
+  const links = nav.querySelectorAll('a');
+  const sections = [];
+  links.forEach(a => {
+    const id = a.getAttribute('href').replace('#','');
+    const el = document.querySelector(`[data-section="${id}"]`);
+    if(el) sections.push({link:a, el});
+  });
+  if(!sections.length) return;
+  links.forEach(a => a.addEventListener('click', e => {
+    e.preventDefault();
+    const id = a.getAttribute('href').replace('#','');
+    const el = document.querySelector(`[data-section="${id}"]`);
+    if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
+  }));
+  function onScroll(){
+    let active = sections[0];
+    const y = window.scrollY + 160;
+    for(const s of sections){ if(s.el.offsetTop <= y) active = s; }
+    sections.forEach(s => s.link.classList.toggle('active', s===active));
+  }
+  window.addEventListener('scroll', onScroll);
+  onScroll();
+}
+
+// ---- Dark Mode ----
+const themeToggle = document.getElementById('themeToggle');
+const htmlEl = document.documentElement;
+
+function applyTheme(theme){
+  const isDark = theme==='dark';
+  if(isDark){ htmlEl.setAttribute('data-theme','dark'); themeToggle.textContent='☀️'; }
+  else { htmlEl.removeAttribute('data-theme'); themeToggle.textContent='🌙'; }
+  const textColor = isDark?'#f0eaf8':'#241C3D';
+  const gridColor = isDark?'rgba(240,234,248,0.2)':'rgba(36,28,61,0.1)';
+  const borderCol = isDark?'#3d3560':'#EDE6C8';
+  Chart.defaults.color = textColor;
+  Chart.defaults.borderColor = borderCol;
+  Chart.instances && Object.values(Chart.instances).forEach(c => {
+    if(c.options && c.options.scales){
+      Object.values(c.options.scales).forEach(s => {
+        if(!s) return;
+        s.grid = Object.assign(s.grid||{},{color:gridColor});
+        s.ticks = Object.assign(s.ticks||{},{color:textColor});
+        if(s.title) s.title = Object.assign(s.title,{color:textColor});
+        if(s.pointLabels) s.pointLabels = Object.assign(s.pointLabels,{color:textColor});
+      });
+    }
+    if(c.options && c.options.plugins && c.options.plugins.legend && c.options.plugins.legend.labels)
+      c.options.plugins.legend.labels.color = textColor;
+    c.update();
+  });
+}
+applyTheme(localStorage.getItem('theme')||'light');
+themeToggle.addEventListener('click',()=>{
+  const next = htmlEl.getAttribute('data-theme')==='dark'?'light':'dark';
+  localStorage.setItem('theme',next);
+  applyTheme(next);
+});
+</script>
+</body>
+</html>

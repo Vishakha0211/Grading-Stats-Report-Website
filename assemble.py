@@ -1,5 +1,6 @@
 import json
 
+# ---- Build index.html (main report) ----
 with open("data_out.json") as f:
     comp = json.load(f)
 with open("chart_data.json") as f:
@@ -7,7 +8,7 @@ with open("chart_data.json") as f:
 with open("template.html", encoding="utf-8") as f:
     html = f.read()
 
-with open("pkg/package/dist/chart.umd.js", encoding="utf-8") as f:
+with open("node_modules/chart.js/dist/chart.umd.js", encoding="utf-8") as f:
     chartjs_src = f.read()
 html = html.replace("/*__CHARTJS_INLINE__*/", chartjs_src)
 
@@ -28,8 +29,19 @@ for k, v in replacements.items():
         print("WARNING: placeholder not found:", k)
     html = html.replace(k, v)
 
-out_path = "/mnt/user-data/outputs/Grading_Stats_Report_3_0_Web.html"
-with open(out_path, "w", encoding="utf-8") as f:
+with open("index.html", "w", encoding="utf-8") as f:
     f.write(html)
+print("Written: index.html  size(kb)=", round(len(html)/1024,1))
 
-print("Written:", out_path, "size(kb)=", round(len(html)/1024,1))
+# ---- Build dept.html (department dashboard) ----
+with open("dept_data.json") as f:
+    dept_data = json.load(f)
+with open("dept_template.html", encoding="utf-8") as f:
+    dhtml = f.read()
+
+dhtml = dhtml.replace("/*__CHARTJS_INLINE__*/", chartjs_src)
+dhtml = dhtml.replace("__DEPT_DATA_JSON__", json.dumps(dept_data))
+
+with open("dept.html", "w", encoding="utf-8") as f:
+    f.write(dhtml)
+print("Written: dept.html    size(kb)=", round(len(dhtml)/1024,1))

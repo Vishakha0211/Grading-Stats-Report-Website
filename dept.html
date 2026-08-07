@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Grading Stats Report 3.0 — DAV Team, UGAC</title>
+<title>Department Dashboard — Grading Stats 3.0</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 <script>/*!
@@ -23,952 +23,514 @@
 </script>
 <style>
 :root{
-  --cream:#FDF6D9;
-  --cream-deep:#FBEFAF;
-  --pink:#FFC7C7;
-  --pink-deep:#FF9E9E;
-  --pink-pale:#FFE7E7;
-  --blue:#BFE6FB;
-  --blue-deep:#8FCBEF;
-  --blue-pale:#E6F6FE;
-  --green:#B7E4C7;
-  --yellow:#F7DE72;
-  --ink:#241C3D;
-  --ink-soft:#4A4266;
-  --paper:#FFFFFF;
-  --line:#EDE6C8;
-  --radius:22px;
-  --radius-sm:14px;
+  --cream:#FDF6D9; --cream-deep:#FBEFAF;
+  --pink:#FFC7C7; --pink-deep:#FF9E9E; --pink-pale:#FFE7E7;
+  --blue:#BFE6FB; --blue-deep:#8FCBEF; --blue-pale:#E6F6FE;
+  --green:#B7E4C7; --yellow:#F7DE72;
+  --ink:#241C3D; --ink-soft:#4A4266; --paper:#FFFFFF; --line:#EDE6C8;
+  --radius:22px; --radius-sm:14px;
   --shadow: 0 6px 24px rgba(36,28,61,0.08);
   --shadow-lift: 0 14px 34px rgba(36,28,61,0.14);
 }
 [data-theme="dark"]{
-  --cream:#1a1333;
-  --cream-deep:#2a1f4a;
-  --pink:#5c3040;
-  --pink-deep:#7a3850;
-  --pink-pale:#3d2040;
-  --blue:#2a4060;
-  --blue-deep:#3a5580;
-  --blue-pale:#1e3050;
-  --green:#2a5040;
-  --yellow:#605020;
-  --ink:#f0eaf8;
-  --ink-soft:#b8aed0;
-  --paper:#241c3d;
-  --line:#3d3560;
-  --shadow: 0 6px 24px rgba(0,0,0,0.3);
-  --shadow-lift: 0 14px 34px rgba(0,0,0,0.4);
+  --cream:#1a1333; --cream-deep:#2a1f4a;
+  --pink:#5c3040; --pink-deep:#7a3850; --pink-pale:#3d2040;
+  --blue:#2a4060; --blue-deep:#3a5580; --blue-pale:#1e3050;
+  --green:#2a5040; --yellow:#605020;
+  --ink:#f0eaf8; --ink-soft:#b8aed0; --paper:#241c3d; --line:#3d3560;
+  --shadow: 0 6px 24px rgba(0,0,0,0.3); --shadow-lift: 0 14px 34px rgba(0,0,0,0.4);
 }
-*{box-sizing:border-box;}
-html{scroll-behavior:smooth;}
-body{
-  margin:0;
-  font-family:'Inter',system-ui,sans-serif;
-  color:var(--ink);
-  background:var(--cream);
-  background-image:
-    repeating-linear-gradient(135deg, rgba(255,255,255,0.55) 0 26px, transparent 26px 60px);
-  min-height:100vh;
-}
+*{box-sizing:border-box;} html{scroll-behavior:smooth;}
+body{margin:0; font-family:'Inter',system-ui,sans-serif; color:var(--ink); background:var(--cream);
+  background-image:repeating-linear-gradient(135deg, rgba(255,255,255,0.55) 0 26px, transparent 26px 60px); min-height:100vh;}
+[data-theme="dark"] body{background-image:repeating-linear-gradient(135deg, rgba(60,50,100,0.3) 0 26px, transparent 26px 60px);}
 h1,h2,h3,h4{font-family:'Baloo 2',system-ui,sans-serif; margin:0; letter-spacing:.2px;}
-p{line-height:1.6;}
-a{color:inherit;}
-.mono{font-family:'JetBrains Mono',monospace;}
+p{line-height:1.6;} a{color:inherit;}
 
-/* ---------- LAYOUT ---------- */
-.app{display:flex; min-height:100vh;}
-.sidebar{
-  width:280px; flex:0 0 280px;
-  background:var(--paper);
-  border-right:3px solid var(--ink);
-  position:sticky; top:0; height:100vh; overflow-y:auto;
-  padding:22px 18px 30px;
-  z-index:50;
-}
-.brand{
-  display:flex; gap:10px; align-items:center;
-  padding:6px 8px 18px;
-  border-bottom:2px dashed var(--line);
-  margin-bottom:14px;
-}
-.brand-badge{
-  width:44px;height:44px;border-radius:14px;
-  background:linear-gradient(135deg,var(--pink),var(--yellow));
-  display:flex;align-items:center;justify-content:center;
-  font-size:22px; border:2px solid var(--ink);
-  flex:0 0 44px;
-}
-.brand-text{line-height:1.15;}
-.brand-text .t1{font-family:'Baloo 2'; font-weight:700; font-size:15.5px;}
-.brand-text .t2{font-size:11.5px; color:var(--ink-soft); font-weight:600;}
-.navlabel{
-  font-size:11px; text-transform:uppercase; letter-spacing:1.2px;
-  color:var(--ink-soft); font-weight:700; margin:16px 4px 8px;
-}
-.navlist{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:3px;}
-.navlist a{
-  display:flex; gap:10px; align-items:flex-start;
-  text-decoration:none; padding:9px 10px; border-radius:11px;
-  font-size:13.6px; font-weight:600; color:var(--ink);
-  transition:background .15s ease, transform .15s ease;
-}
-.navlist a:hover{background:var(--pink-pale); transform:translateX(2px);}
-.navlist a.active{background:var(--ink); color:var(--cream);}
-.navnum{
-  font-family:'JetBrains Mono'; font-size:11px; font-weight:700;
-  width:20px;height:20px;border-radius:7px;flex:0 0 20px;
-  display:flex;align-items:center;justify-content:center;
-  background:var(--pink); color:var(--ink); margin-top:1px;
-}
-.navlist a.active .navnum{background:var(--yellow); color:var(--ink);}
-.sidebar-foot{margin-top:22px; font-size:11px; color:var(--ink-soft); padding:10px 8px; border-top:2px dashed var(--line);}
+.container{max-width:1100px; margin:0 auto; padding:36px 32px 80px;}
+.dept-layout{display:flex; gap:24px; align-items:flex-start;}
+.dept-main{flex:1; min-width:0;}
 
-.menutoggle{
-  display:none; position:fixed; top:14px; right:14px; z-index:100;
-  width:46px;height:46px;border-radius:13px; border:2px solid var(--ink);
-  background:var(--yellow); font-size:20px; align-items:center; justify-content:center;
-  box-shadow:var(--shadow);
-}
-
-.main{flex:1; min-width:0; padding:40px 48px 90px; max-width:1180px; margin:0 auto;}
-
-/* ---------- HERO ---------- */
-.hero{
-  border-radius:28px; border:3px solid var(--ink);
-  background:linear-gradient(135deg, var(--pink) 0%, var(--pink-pale) 55%, var(--cream-deep) 100%);
-  padding:52px 44px; margin-bottom:26px; position:relative; overflow:hidden;
-  box-shadow:var(--shadow-lift);
-}
-.hero::after{
-  content:""; position:absolute; inset:0;
-  background:repeating-linear-gradient(135deg, rgba(255,255,255,0.4) 0 18px, transparent 18px 40px);
-  pointer-events:none;
-}
-.hero-eyebrow{
-  display:inline-flex; align-items:center; gap:8px;
-  background:var(--paper); border:2px solid var(--ink); border-radius:999px;
-  padding:6px 14px; font-size:12.5px; font-weight:700; letter-spacing:.6px;
-  text-transform:uppercase; position:relative; z-index:1;
-}
-.hero h1{font-size:clamp(34px,5vw,58px); font-weight:800; margin:18px 0 6px; position:relative; z-index:1; line-height:1.02;}
-.hero .sub{font-size:18px; font-weight:600; color:var(--ink-soft); position:relative; z-index:1;}
-.hero-meta{display:flex; flex-wrap:wrap; gap:12px; margin-top:26px; position:relative; z-index:1;}
-.pill{
-  background:var(--paper); border:2px solid var(--ink); border-radius:14px;
-  padding:10px 16px; font-size:13px; font-weight:600;
-}
-.pill b{font-family:'Baloo 2'; display:block; font-size:14.5px; margin-bottom:1px;}
-
-/* ---------- TOC GRID (intro) ---------- */
-.toc-grid{
-  display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-top:8px;
-}
-@media (max-width:900px){.toc-grid{grid-template-columns:repeat(2,1fr);}}
-.toc-card{
+/* section nav sidebar */
+.section-nav{
+  width:220px; flex:0 0 220px; position:sticky; top:20px;
   background:var(--paper); border:2.5px solid var(--ink); border-radius:16px;
-  padding:16px 14px; text-decoration:none; color:var(--ink);
-  display:flex; flex-direction:column; gap:10px;
-  box-shadow:4px 4px 0 var(--ink);
-  transition:transform .15s ease, box-shadow .15s ease;
+  padding:16px 14px; box-shadow:4px 4px 0 var(--ink);
+  display:none;
 }
-.toc-card:hover{transform:translate(-2px,-2px); box-shadow:6px 6px 0 var(--ink);}
-.toc-num{
-  width:30px;height:30px;border-radius:9px; background:var(--blue);
-  border:2px solid var(--ink); display:flex; align-items:center; justify-content:center;
-  font-family:'JetBrains Mono'; font-weight:700; font-size:13px;
+.section-nav.visible{display:block;}
+.section-nav h4{font-size:12px; text-transform:uppercase; letter-spacing:1px; color:var(--ink-soft); margin:0 0 10px; font-weight:700;}
+.section-nav a{
+  display:block; padding:8px 10px; border-radius:10px; font-size:12.5px; font-weight:600;
+  color:var(--ink); text-decoration:none; transition:background .12s, transform .12s; margin-bottom:2px;
 }
-.toc-card span.label{font-weight:700; font-size:14px; line-height:1.3;}
+.section-nav a:hover{background:var(--pink-pale); transform:translateX(2px);}
+.section-nav a.active{background:var(--ink); color:var(--cream);}
+@media(max-width:1100px){.section-nav{display:none !important;}}
 
-/* ---------- SECTIONS ---------- */
-section.block{
-  scroll-margin-top:24px;
-  margin:34px 0;
+/* top bar */
+.topbar{display:flex; align-items:center; gap:16px; margin-bottom:24px; flex-wrap:wrap;}
+.back-btn{
+  display:inline-flex; align-items:center; gap:6px;
+  background:var(--paper); border:2.5px solid var(--ink); border-radius:14px;
+  padding:10px 18px; font-size:14px; font-weight:700; text-decoration:none; color:var(--ink);
+  box-shadow:4px 4px 0 var(--ink); transition:transform .12s, box-shadow .12s;
 }
-.card{
-  background:var(--paper); border:3px solid var(--ink); border-radius:var(--radius);
-  box-shadow:var(--shadow); overflow:hidden; margin-bottom:18px;
-}
-.card-header{
-  padding:18px 26px; border-bottom:3px solid var(--ink);
-  display:flex; align-items:center; gap:12px; flex-wrap:wrap; justify-content:space-between;
-}
-.card-header.pink{background:linear-gradient(120deg,var(--pink),var(--pink-pale));}
-.card-header.blue{background:linear-gradient(120deg,var(--blue),var(--blue-pale));}
-.card-header.yellow{background:linear-gradient(120deg,var(--yellow),var(--cream-deep));}
-.card-header h2{font-size:22px; font-weight:700;}
-.card-header .tag{
-  font-size:11.5px; font-weight:700; text-transform:uppercase; letter-spacing:.8px;
-  background:var(--paper); border:2px solid var(--ink); padding:5px 11px; border-radius:999px;
-}
-.card-body{padding:26px;}
-.card-body.tight{padding:16px 20px;}
-.sec-kicker{
-  font-size:12.5px; font-weight:700; text-transform:uppercase; letter-spacing:1px;
-  color:var(--ink-soft); margin-bottom:6px;
-}
-.sec-title{font-size:29px; font-weight:800; margin-bottom:4px;}
-.sec-sub{color:var(--ink-soft); font-size:15px; margin-bottom:18px; font-weight:500;}
+.back-btn:hover{transform:translate(-2px,-2px); box-shadow:6px 6px 0 var(--ink);}
 
-.two-col{display:grid; grid-template-columns:1.3fr 1fr; gap:20px; align-items:start;}
-@media (max-width:900px){.two-col{grid-template-columns:1fr;}}
-.note-box{
-  background:var(--cream-deep); border:2.5px dashed var(--ink); border-radius:16px;
-  padding:16px 18px; font-size:14px;
-}
-.note-box h4{font-size:14.5px; margin-bottom:8px;}
-.note-box ul{margin:0; padding-left:18px;}
-.note-box li{margin-bottom:8px;}
-.note-box p{margin:0 0 8px;}
-.note-box p:last-child{margin-bottom:0;}
-
-.bullet-list{margin:0; padding-left:20px;}
-.bullet-list li{margin-bottom:11px; line-height:1.55;}
-.bullet-list b{font-weight:700;}
-
-.formula-box{
-  background:var(--cream-deep); border:2px solid var(--ink); border-radius:16px;
-  padding:18px 20px; font-family:'JetBrains Mono',monospace; font-size:14.5px;
-  overflow-x:auto; text-align:center;
-}
-.formula-box .frac{display:inline-block; vertical-align:middle;}
-
-.chart-wrap{
-  background:var(--paper); border:2px solid var(--line); border-radius:16px;
-  padding:16px; margin-bottom:14px;
-}
-.chart-wrap h4{font-size:14px; font-weight:700; margin-bottom:10px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.5px;}
-canvas{max-width:100%;}
-
-.grid-2{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
-@media (max-width:860px){.grid-2{grid-template-columns:1fr;}}
-
-/* heatmap tables */
-table.heatmap{border-collapse:collapse; width:100%; font-size:13.5px;}
-table.heatmap th{font-family:'Baloo 2'; font-weight:700; text-align:center; padding:8px 6px; font-size:13px;}
-table.heatmap td.hm-cell{text-align:center; padding:9px 6px; border:2px solid var(--paper); font-weight:700; border-radius:6px;}
-table.heatmap td.hm-empty{background:#f1eee0 !important; color:#b6b0a0 !important; font-weight:500;}
-table.heatmap th.rowlabel{text-align:left; padding-left:10px; background:var(--ink); color:var(--cream); border-radius:8px;}
-table.heatmap.minors td.hm-cell{font-size:12px; line-height:1.3;}
-.n-tag{font-weight:500; opacity:.85; font-size:10.5px;}
-.table-scroll{overflow-x:auto; padding-bottom:4px;}
-
-/* course grid */
-.course-grid{display:grid; grid-template-columns:repeat(6,1fr); gap:8px;}
-@media (max-width:900px){.course-grid{grid-template-columns:repeat(3,1fr);}}
-.course-tile{
-  border-radius:12px; padding:10px 6px; text-align:center; border:2px solid var(--ink);
-}
-.course-code{font-family:'JetBrains Mono'; font-weight:700; font-size:12px;}
-.course-n{font-size:16px; font-weight:800; font-family:'Baloo 2'; margin-top:2px;}
-.course-legend{font-size:12px; color:var(--ink-soft); margin-top:10px; font-style:italic;}
-
-/* stat cards */
-.stat-row{display:flex; gap:14px; flex-wrap:wrap; margin-bottom:16px;}
-.stat-card{
-  flex:1; min-width:130px; background:var(--paper); border:2.5px solid var(--ink); border-radius:14px;
-  padding:14px 16px; box-shadow:3px 3px 0 var(--ink);
-}
-.stat-card .lbl{font-size:11.5px; text-transform:uppercase; letter-spacing:.6px; color:var(--ink-soft); font-weight:700;}
-.stat-card .val{font-family:'Baloo 2'; font-size:24px; font-weight:800; margin-top:2px;}
-
-/* legend swatches */
-.legend-row{display:flex; gap:16px; flex-wrap:wrap; margin:8px 0 16px; font-size:12.5px; font-weight:600;}
-.legend-row span{display:inline-flex; align-items:center; gap:6px;}
-.sw{width:13px;height:13px;border-radius:4px; display:inline-block; border:1.5px solid var(--ink);}
-
-footer{
-  text-align:center; padding:40px 20px 60px; color:var(--ink-soft); font-size:13px;
-}
-.thankyou{
-  text-align:center; padding:70px 30px; border-radius:28px; border:3px solid var(--ink);
-  background:linear-gradient(135deg,var(--pink),var(--cream-deep));
-  box-shadow:var(--shadow-lift); position:relative; overflow:hidden;
-}
-.thankyou h2{font-size:48px; font-weight:800;}
-.thankyou p{margin-top:10px; color:var(--ink-soft); font-weight:600; font-size:15px;}
-.icon-orb{
-  width:90px;height:90px; border-radius:50%; background:var(--paper); border:3px solid var(--ink);
-  display:flex; align-items:center; justify-content:center; margin:22px auto 0; font-size:38px;
-}
-
-.credit-tag{font-size:11.5px; background:var(--paper); border:2px solid var(--ink); border-radius:999px; padding:4px 12px; font-weight:700;}
-
-@media (max-width:980px){
-  .sidebar{position:fixed; left:0; top:0; transform:translateX(-105%); transition:transform .25s ease; width:78vw; max-width:320px; box-shadow:var(--shadow-lift);}
-  .sidebar.open{transform:translateX(0);}
-  .main{padding:80px 18px 70px;}
-  .menutoggle{display:flex;}
-  .hero{padding:34px 22px;}
-  .card-body{padding:18px;}
-  .course-grid{grid-template-columns:repeat(2,1fr);}
-}
-@media print{
-  .sidebar,.menutoggle{display:none;}
-  .main{max-width:100%; padding:0;}
-  body{background:#fff;}
-}
-
-/* ---------- DARK MODE ---------- */
-[data-theme="dark"] body{
-  background-image:
-    repeating-linear-gradient(135deg, rgba(60,50,100,0.3) 0 26px, transparent 26px 60px);
-}
-[data-theme="dark"] .hero::after{
-  background:repeating-linear-gradient(135deg, rgba(60,50,100,0.2) 0 18px, transparent 18px 40px);
-}
-[data-theme="dark"] table.heatmap td.hm-empty{background:#2a2050 !important; color:#6a6090 !important;}
-[data-theme="dark"] .navlist a:hover{background:var(--pink-pale);}
-[data-theme="dark"] .navlist a.active{background:var(--ink); color:var(--paper);}
-[data-theme="dark"] .note-box{background:var(--cream-deep); border-color:var(--ink);}
-[data-theme="dark"] .formula-box{background:var(--cream-deep);}
-[data-theme="dark"] .chart-wrap{border-color:var(--line);}
-
-/* ---------- THEME TOGGLE ---------- */
 .theme-toggle{
   display:inline-flex; align-items:center; justify-content:center;
   width:38px;height:38px;border-radius:12px; border:2px solid var(--ink);
-  background:var(--yellow); font-size:18px; cursor:pointer;
+  background:var(--yellow); font-size:18px; cursor:pointer; margin-left:auto;
   transition:transform .15s ease, box-shadow .15s ease;
   box-shadow:3px 3px 0 var(--ink); flex:0 0 38px;
 }
 .theme-toggle:hover{transform:translate(-1px,-1px); box-shadow:4px 4px 0 var(--ink);}
-.theme-toggle:active{transform:translate(1px,1px); box-shadow:1px 1px 0 var(--ink);}
-.sidebar-foot-toggle{display:flex; align-items:center; gap:10px; margin-top:22px; padding:10px 8px; border-top:2px dashed var(--line);}
-.sidebar-foot-toggle .foot-text{font-size:11px; color:var(--ink-soft); flex:1;}
+
+/* hero */
+.hero{
+  border-radius:28px; border:3px solid var(--ink);
+  background:linear-gradient(135deg, var(--pink) 0%, var(--pink-pale) 55%, var(--cream-deep) 100%);
+  padding:44px 40px; margin-bottom:28px; position:relative; overflow:hidden;
+  box-shadow:var(--shadow-lift);
+}
+.hero::after{content:""; position:absolute; inset:0;
+  background:repeating-linear-gradient(135deg, rgba(255,255,255,0.4) 0 18px, transparent 18px 40px); pointer-events:none;}
+.hero h1{font-size:clamp(30px,4vw,48px); font-weight:800; position:relative; z-index:1; line-height:1.05;}
+.hero .sub{font-size:16px; font-weight:600; color:var(--ink-soft); position:relative; z-index:1; margin-top:4px;}
+
+/* dept selector */
+.selector-label{font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--ink-soft); margin-bottom:10px;}
+.dept-grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(200px, 1fr)); gap:10px; margin-bottom:30px;}
+.dept-card{
+  background:var(--paper); border:2.5px solid var(--ink); border-radius:14px;
+  padding:14px 16px; cursor:pointer; text-decoration:none; color:var(--ink);
+  box-shadow:3px 3px 0 var(--ink); transition:transform .12s, box-shadow .12s, background .12s;
+}
+.dept-card:hover{transform:translate(-2px,-2px); box-shadow:5px 5px 0 var(--ink);}
+.dept-card.selected{background:var(--ink); color:var(--cream); box-shadow:5px 5px 0 var(--yellow);}
+.dept-card .abbr{font-family:'JetBrains Mono'; font-weight:700; font-size:15px;}
+.dept-card .name{font-size:12px; font-weight:500; margin-top:2px; opacity:.85;}
+
+/* dashboard */
+#dashboard{display:none;}
+#dashboard.visible{display:block;}
+
+.card{background:var(--paper); border:3px solid var(--ink); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden; margin-bottom:18px;}
+.card-header{padding:16px 24px; border-bottom:3px solid var(--ink); display:flex; align-items:center; gap:12px; flex-wrap:wrap; justify-content:space-between;}
+.card-header.pink{background:linear-gradient(120deg,var(--pink),var(--pink-pale));}
+.card-header.blue{background:linear-gradient(120deg,var(--blue),var(--blue-pale));}
+.card-header.yellow{background:linear-gradient(120deg,var(--yellow),var(--cream-deep));}
+.card-header h2{font-size:20px; font-weight:700;}
+.card-header .tag{font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.8px; background:var(--paper); border:2px solid var(--ink); padding:5px 11px; border-radius:999px;}
+.card-body{padding:24px;}
+
+.stat-row{display:flex; gap:14px; flex-wrap:wrap; margin-bottom:16px;}
+.stat-card{flex:1; min-width:120px; background:var(--paper); border:2.5px solid var(--ink); border-radius:14px; padding:14px 16px; box-shadow:3px 3px 0 var(--ink);}
+.stat-card .lbl{font-size:11px; text-transform:uppercase; letter-spacing:.6px; color:var(--ink-soft); font-weight:700;}
+.stat-card .val{font-family:'Baloo 2'; font-size:22px; font-weight:800; margin-top:2px;}
+
+.grid-2{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+@media(max-width:860px){.grid-2{grid-template-columns:1fr;}}
+.chart-wrap{background:var(--paper); border:2px solid var(--line); border-radius:16px; padding:16px; margin-bottom:14px;}
+.chart-wrap h4{font-size:13px; font-weight:700; margin-bottom:10px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.5px;}
+canvas{max-width:100%;}
+
+.note-box{background:var(--cream-deep); border:2.5px dashed var(--ink); border-radius:16px; padding:16px 18px; font-size:14px;}
+.note-box h4{font-size:14px; margin-bottom:8px;}
+.note-box ul{margin:0; padding-left:18px;} .note-box li{margin-bottom:8px;}
+
+.heatmap-min{border-collapse:collapse; width:100%; font-size:13px;}
+.heatmap-min th{font-family:'Baloo 2'; font-weight:700; text-align:center; padding:8px 6px; font-size:12px;}
+.heatmap-min td{textAlign:center; padding:8px 6px; border:2px solid var(--paper); font-weight:700; border-radius:6px; text-align:center;}
+.heatmap-min td.empty{background:#f1eee0 !important; color:#b6b0a0 !important; font-weight:500;}
+.heatmap-min th.rowlabel{text-align:left; padding-left:10px; background:var(--ink); color:var(--cream); border-radius:8px; border-bottom:2px solid var(--paper);}
+.heatmap-min td, .heatmap-min th.rowlabel{border-bottom:2px solid var(--paper);}
+[data-theme="dark"] .heatmap-min td.empty{background:#2a2050 !important; color:#6a6090 !important;}
+.table-scroll{overflow-x:auto; padding-bottom:4px;}
+.n-tag{font-weight:500; opacity:.85; font-size:10px;}
+
+.placeholder-msg{text-align:center; padding:60px 20px; color:var(--ink-soft); font-size:16px; font-weight:600;}
+
+@media(max-width:700px){.container{padding:20px 14px 60px;} .hero{padding:28px 20px;} .dept-grid{grid-template-columns:repeat(auto-fill, minmax(150px, 1fr));}}
+@media print{.back-btn,.theme-toggle{display:none;} body{background:#fff;}}
 </style>
 </head>
 <body>
 
-<button class="menutoggle" id="menuToggle" aria-label="Toggle navigation">☰</button>
+<div class="container">
+  <div class="topbar">
+    <a href="index.html" class="back-btn">← Back to Report</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">🌙</button>
+  </div>
 
-<div class="app">
-  <nav class="sidebar" id="sidebar">
-    <div class="brand">
-      <div class="brand-badge">📊</div>
-      <div class="brand-text">
-        <div class="t1">Grading Stats 3.0</div>
-        <div class="t2">Data Analytics &amp; Visualization Team</div>
+  <div class="hero">
+    <h1>Department Dashboard</h1>
+    <div class="sub">Select your department below to view detailed grading statistics</div>
+  </div>
+
+  <div class="selector-label">Select Department</div>
+  <div class="dept-grid" id="deptGrid"></div>
+
+  <div class="dept-layout">
+    <nav class="section-nav" id="sectionNav">
+      <h4>Sections</h4>
+      <a href="#sec-overall">4-Year Trend</a>
+      <a href="#sec-electives">Elective Averages</a>
+      <a href="#sec-sd">Standard Deviation</a>
+      <a href="#sec-ap">AP Distribution</a>
+      <a href="#sec-minors">Minors Data</a>
+      <a href="#sec-soph">Sophomore Core</a>
+      <a href="#sec-third">Third-Year Core</a>
+    </nav>
+
+    <div class="dept-main">
+      <div id="dashboard">
+        <div class="stat-row" id="statRow"></div>
+
+        <div class="card" id="cardOverall" data-section="sec-overall">
+      <div class="card-header blue"><h2 id="overallTitle">4-Year Average Trend</h2></div>
+      <div class="card-body">
+        <div class="grid-2">
+          <div class="chart-wrap"><h4>Overall Average</h4><canvas id="chartDeptOverall" height="260"></canvas></div>
+          <div class="chart-wrap"><h4>Autumn vs Spring</h4><canvas id="chartDeptAvs" height="260"></canvas></div>
+        </div>
       </div>
     </div>
 
-    <div class="navlabel">Overview</div>
-    <ul class="navlist">
-      <li><a href="#home">🏠 Home</a></li>
-      <li><a href="#methodology">🧮 Methodology</a></li>
-    </ul>
-
-    <div class="navlabel">Topics Covered</div>
-    <ul class="navlist" id="tocnav">
-      <li><a href="#freshies"><span class="navnum">1</span> Average Grades of Freshies</a></li>
-      <li><a href="#sophies"><span class="navnum">2</span> Average Grades of Sophies</a></li>
-      <li><a href="#thirdies"><span class="navnum">3</span> Average Grades of Thirdies</a></li>
-      <li><a href="#electives"><span class="navnum">4</span> Dept-wise Electives Avg Grades</a></li>
-      <li><a href="#minors"><span class="navnum">5</span> Dept-wise Minors Avg Grades</a></li>
-      <li><a href="#cbs"><span class="navnum">6</span> CBS Analysis &amp; Top 30 Courses</a></li>
-      <li><a href="#deptavg"><span class="navnum">7</span> Dept-wise Average Grades</a></li>
-      <li><a href="#autumnspring"><span class="navnum">8</span> Autumn &amp; Spring Avg Grades</a></li>
-      <li><a href="#apgrades"><span class="navnum">9</span> AP Grade Distribution</a></li>
-      <li><a href="#aapercent"><span class="navnum">10</span> Courses vs % of AAs</a></li>
-      <li><a href="#coursesavg"><span class="navnum">11</span> Courses vs Average Grades</a></li>
-      <li><a href="#recommender"><span class="navnum">12</span> Course Recommender</a></li>
-    </ul>
-
-    <div class="sidebar-foot-toggle">
-      <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">🌙</button>
-      <span class="foot-text">Dark Mode</span>
-    </div>
-    <div class="sidebar-foot">
-      Contributed by Harsh, Ummehani, Vishakha &amp; Zubair · Project led by Rakshana<br><br>
-      <em>Web edition — data faithfully reproduced from the original PDF report.</em>
-    </div>
-  </nav>
-
-  <main class="main">
-
-    <!-- HERO -->
-    <section id="home" class="block">
-      <div class="hero">
-        <span class="hero-eyebrow">📈 UGAC · Undergraduate Academic Council</span>
-        <h1>Grading Stats<br>Report 3.0</h1>
-        <div class="sub">Data Analytics and Visualization Team</div>
-        <div class="hero-meta">
-          <div class="pill"><b>Contributed by</b>Harsh, Ummehani, Vishakha, Zubair</div>
-          <div class="pill"><b>Project Led By</b>Rakshana</div>
-          <div class="pill"><b>Source</b>Internal ASC · UG-open courses only</div>
+    <div class="card" id="cardElectives" data-section="sec-electives">
+      <div class="card-header pink"><h2>Elective Averages</h2><span class="tag">Autumn & Spring</span></div>
+      <div class="card-body">
+        <div class="grid-2">
+          <div class="chart-wrap"><h4>Autumn</h4><canvas id="chartDeptElecAutumn" height="240"></canvas></div>
+          <div class="chart-wrap"><h4>Spring</h4><canvas id="chartDeptElecSpring" height="240"></canvas></div>
         </div>
       </div>
-
-      <div class="card">
-        <div class="card-header yellow">
-          <h2>Topics Covered</h2>
-          <span class="tag">Click any card to jump</span>
-        </div>
-        <div class="card-body">
-          <div class="toc-grid">
-            <a class="toc-card" href="#freshies"><span class="toc-num">1</span><span class="label">Average Grades of Freshies</span></a>
-            <a class="toc-card" href="#sophies"><span class="toc-num">2</span><span class="label">Average Grades of Sophies</span></a>
-            <a class="toc-card" href="#thirdies"><span class="toc-num">3</span><span class="label">Average Grades of Thirdies</span></a>
-            <a class="toc-card" href="#electives"><span class="toc-num">4</span><span class="label">Dept wise Electives Average Grades</span></a>
-            <a class="toc-card" href="#minors"><span class="toc-num">5</span><span class="label">Dept wise Minors Average Grades</span></a>
-            <a class="toc-card" href="#cbs"><span class="toc-num">6</span><span class="label">CBS Analysis &amp; Top 30 Courses</span></a>
-            <a class="toc-card" href="#deptavg"><span class="toc-num">7</span><span class="label">Dept wise Average Grades</span></a>
-            <a class="toc-card" href="#autumnspring"><span class="toc-num">8</span><span class="label">Dept wise Autumn &amp; Spring Average Grades</span></a>
-            <a class="toc-card" href="#apgrades"><span class="toc-num">9</span><span class="label">AP Grade Distribution</span></a>
-            <a class="toc-card" href="#aapercent"><span class="toc-num">10</span><span class="label">Number of Courses Vs % of AAs</span></a>
-            <a class="toc-card" href="#coursesavg"><span class="toc-num">11</span><span class="label">Number of Courses Vs Average Grades</span></a>
-            <a class="toc-card" href="#recommender"><span class="toc-num">12</span><span class="label">Course Recommender</span></a>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- METHODOLOGY -->
-    <section id="methodology" class="block">
-      <div class="card">
-        <div class="card-header pink"><h2>Methodology</h2></div>
-        <div class="card-body">
-          <ul class="bullet-list">
-            <li>We have used <b>Internal ASC</b> for collecting data and creating all the databases used in this report.</li>
-            <li>We have used only the courses that are open to the <b>Undergraduate</b> students for all our analyses.</li>
-          </ul>
-          <div class="grid-2" style="margin-top:18px;">
-            <div class="formula-box">CourseAverage&nbsp;=&nbsp;Σ(GradePoint × StudentCount)&nbsp;/&nbsp;TotalStudents&nbsp;(excluding NP | PP)</div>
-            <div class="formula-box">Dept. Average&nbsp;=&nbsp;Σ(CourseAverage × Credits)&nbsp;/&nbsp;Σ(Credits)</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 1 & 2 & 3: FRESHIE / SOPHIE / THIRDIE -->
-    <section id="freshies" class="block">
-      <div class="card">
-        <div class="card-header pink"><h2>① First Year Average Grades of Common Courses</h2></div>
-        <div class="card-body">
-          <div class="two-col">
-            <div>
-              <div class="table-scroll"><table class="heatmap"><thead><tr><th></th><th>2023</th><th>2024</th><th>2025</th></tr></thead><tbody><tr><th class='rowlabel'>BB101</th><td class='hm-cell' style='background:rgb(254,222,151);color:#1a1330'>8.20</td><td class='hm-cell' style='background:rgb(254,215,149);color:#1a1330'>8.30</td><td class='hm-cell' style='background:rgb(251,235,160);color:#1a1330'>7.86</td></tr><tr><th class='rowlabel'>CH111</th><td class='hm-cell' style='background:rgb(212,238,194);color:#1a1330'>6.50</td><td class='hm-cell' style='background:rgb(221,237,186);color:#1a1330'>6.79</td><td class='hm-cell' style='background:rgb(219,238,187);color:#1a1330'>6.75</td></tr><tr><th class='rowlabel'>CH117</th><td class='hm-cell' style='background:rgb(250,140,120);color:#1a1330'>9.46</td><td class='hm-cell' style='background:rgb(249,131,117);color:#1a1330'>9.60</td><td class='hm-cell' style='background:rgb(250,135,118);color:#1a1330'>9.54</td></tr><tr><th class='rowlabel'>CS101</th><td class='hm-cell' style='background:rgb(243,236,167);color:#1a1330'>7.57</td><td class='hm-cell' style='background:rgb(243,236,166);color:#1a1330'>7.59</td><td class='hm-cell' style='background:rgb(234,236,174);color:#1a1330'>7.28</td></tr><tr><th class='rowlabel'>MA105</th><td class='hm-cell' style='background:rgb(213,238,193);color:#1a1330'>6.52</td><td class='hm-cell' style='background:rgb(255,230,154);color:#1a1330'>8.08</td><td class='hm-cell' style='background:rgb(220,237,187);color:#1a1330'>6.77</td></tr><tr><th class='rowlabel'>MA110</th><td class='hm-cell' style='background:rgb(207,238,198);color:#1a1330'>6.31</td><td class='hm-cell' style='background:rgb(234,236,175);color:#1a1330'>7.25</td><td class='hm-cell' style='background:rgb(205,239,200);color:#1a1330'>6.24</td></tr><tr><th class='rowlabel'>MS101</th><td class='hm-cell' style='background:rgb(253,201,143);color:#1a1330'>8.53</td><td class='hm-cell' style='background:rgb(253,192,140);color:#1a1330'>8.66</td><td class='hm-cell' style='background:rgb(253,201,143);color:#1a1330'>8.53</td></tr><tr><th class='rowlabel'>PH110</th><td class='hm-cell' style='background:rgb(240,236,169);color:#1a1330'>7.48</td><td class='hm-cell' style='background:rgb(227,237,180);color:#1a1330'>7.02</td><td class='hm-cell' style='background:rgb(224,237,183);color:#1a1330'>6.91</td></tr><tr><th class='rowlabel'>PH117</th><td class='hm-cell' style='background:rgb(254,222,151);color:#1a1330'>8.20</td><td class='hm-cell' style='background:rgb(253,235,158);color:#1a1330'>7.92</td><td class='hm-cell' style='background:rgb(254,211,147);color:#1a1330'>8.37</td></tr></tbody></table></div>
-              <div class="legend-row"><span><i class="sw" style="background:#c6efce"></i>lower</span><span><i class="sw" style="background:#ffeb9c"></i>mid</span><span><i class="sw" style="background:#f8696b"></i>higher</span> average grade (out of 10)</div>
-            </div>
-            <div class="note-box">
-              <h4>What changed</h4>
-              <p>The 2024 batch experienced significant grade inflation across several high-credit freshman courses (MA105, MA110, MS101, and CS101). Averages peaked across the board, driven heavily by the mathematics department, where MA105 increased by 1.56 points and MA110 climbed by nearly a full point compared to 2023.</p>
-              <p>In contrast, the 2025 batch saw a distinct downward shift. Averages dropped across all major core courses: MA105 fell by 1.31 points, MA110 reverted to its 2023 baseline, BB101 hit a three-year low, and both CS101 and MS101 registered notable declines.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="sophies" class="block">
-      <div class="card">
-        <div class="card-header pink"><h2>② Mandatory Core Courses — Sophomores</h2></div>
-        <div class="card-body">
-          <div class="two-col">
-            <div class="table-scroll"><table class="heatmap"><thead><tr><th></th><th>2024</th><th>2025</th></tr></thead><tbody><tr><th class='rowlabel'>AE</th><td class="hm-cell" style="background:rgb(232,237,176);color:#1a1330">7.21</td><td class="hm-cell" style="background:rgb(234,236,174);color:#1a1330">7.27</td></tr><tr><th class='rowlabel'>CE</th><td class="hm-cell" style="background:rgb(229,237,179);color:#1a1330">7.08</td><td class="hm-cell" style="background:rgb(237,236,172);color:#1a1330">7.37</td></tr><tr><th class='rowlabel'>CL</th><td class="hm-cell" style="background:rgb(228,237,179);color:#1a1330">7.07</td><td class="hm-cell" style="background:rgb(227,237,181);color:#1a1330">7.01</td></tr><tr><th class='rowlabel'>CS</th><td class="hm-cell" style="background:rgb(233,237,175);color:#1a1330">7.23</td><td class="hm-cell" style="background:rgb(233,237,176);color:#1a1330">7.22</td></tr><tr><th class='rowlabel'>EE</th><td class="hm-cell" style="background:rgb(242,236,167);color:#1a1330">7.56</td><td class="hm-cell" style="background:rgb(238,236,171);color:#1a1330">7.40</td></tr><tr><th class='rowlabel'>EN</th><td class="hm-cell" style="background:rgb(235,236,173);color:#1a1330">7.31</td><td class="hm-cell" style="background:rgb(220,237,186);color:#1a1330">6.78</td></tr><tr><th class='rowlabel'>EP</th><td class="hm-cell" style="background:rgb(225,237,182);color:#1a1330">6.96</td><td class="hm-cell" style="background:rgb(227,237,180);color:#1a1330">7.02</td></tr><tr><th class='rowlabel'>ES</th><td class="hm-cell" style="background:rgb(245,236,164);color:#1a1330">7.66</td><td class="hm-cell" style="background:rgb(251,235,160);color:#1a1330">7.86</td></tr><tr><th class='rowlabel'>IEOR</th><td class="hm-cell hm-empty">—</td><td class="hm-cell" style="background:rgb(254,214,148);color:#1a1330">8.33</td></tr><tr><th class='rowlabel'>ME</th><td class="hm-cell" style="background:rgb(239,236,170);color:#1a1330">7.44</td><td class="hm-cell" style="background:rgb(236,236,172);color:#1a1330">7.34</td></tr><tr><th class='rowlabel'>MM</th><td class="hm-cell" style="background:rgb(239,236,170);color:#1a1330">7.44</td><td class="hm-cell" style="background:rgb(227,237,180);color:#1a1330">7.03</td></tr></tbody></table></div>
-            <div class="note-box">
-              <h4>Reading this heatmap</h4>
-              <p>Compares the average grades of second-year students across the 2024 and 2025 academic batches. Averages are calculated exclusively using mandatory department core courses.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="thirdies" class="block">
-      <div class="card">
-        <div class="card-header pink"><h2>③ Mandatory Core Courses — Thirdies</h2></div>
-        <div class="card-body">
-          <div class="two-col">
-            <div class="table-scroll"><table class="heatmap"><thead><tr><th></th><th>2024</th><th>2025</th></tr></thead><tbody><tr><th class='rowlabel'>AE</th><td class="hm-cell" style="background:rgb(236,236,172);color:#1a1330">7.35</td><td class="hm-cell" style="background:rgb(238,236,170);color:#1a1330">7.42</td></tr><tr><th class='rowlabel'>CE</th><td class="hm-cell" style="background:rgb(231,237,177);color:#1a1330">7.15</td><td class="hm-cell" style="background:rgb(240,236,169);color:#1a1330">7.48</td></tr><tr><th class='rowlabel'>CL</th><td class="hm-cell" style="background:rgb(230,237,178);color:#1a1330">7.12</td><td class="hm-cell" style="background:rgb(225,237,182);color:#1a1330">6.95</td></tr><tr><th class='rowlabel'>CS</th><td class="hm-cell" style="background:rgb(235,236,174);color:#1a1330">7.30</td><td class="hm-cell" style="background:rgb(234,236,174);color:#1a1330">7.28</td></tr><tr><th class='rowlabel'>EE</th><td class="hm-cell" style="background:rgb(244,236,166);color:#1a1330">7.62</td><td class="hm-cell" style="background:rgb(242,236,167);color:#1a1330">7.55</td></tr><tr><th class='rowlabel'>EN</th><td class="hm-cell" style="background:rgb(237,236,172);color:#1a1330">7.38</td><td class="hm-cell" style="background:rgb(229,237,178);color:#1a1330">7.10</td></tr><tr><th class='rowlabel'>EP</th><td class="hm-cell" style="background:rgb(227,237,180);color:#1a1330">7.02</td><td class="hm-cell" style="background:rgb(228,237,180);color:#1a1330">7.05</td></tr><tr><th class='rowlabel'>ES</th><td class="hm-cell" style="background:rgb(247,236,163);color:#1a1330">7.72</td><td class="hm-cell" style="background:rgb(253,235,158);color:#1a1330">7.92</td></tr><tr><th class='rowlabel'>IEOR</th><td class="hm-cell hm-empty">—</td><td class="hm-cell hm-empty">—</td></tr><tr><th class='rowlabel'>ME</th><td class="hm-cell" style="background:rgb(234,236,175);color:#1a1330">7.25</td><td class="hm-cell" style="background:rgb(238,236,171);color:#1a1330">7.41</td></tr><tr><th class='rowlabel'>MM</th><td class="hm-cell" style="background:rgb(241,236,168);color:#1a1330">7.51</td><td class="hm-cell" style="background:rgb(232,237,176);color:#1a1330">7.18</td></tr></tbody></table></div>
-            <div class="note-box">
-              <h4>Reading this heatmap</h4>
-              <p>Compares the average grades of third-year students across the 2024 and 2025 academic batches, again using mandatory department core courses only.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 4: ELECTIVES -->
-    <section id="electives" class="block">
-      <div class="card">
-        <div class="card-header blue">
-          <h2>④ Department-wise Electives Average Grades</h2>
-          <span class="tag">Autumn · Spring · Std. Deviation</span>
-        </div>
-        <div class="card-body">
-          <div class="sec-kicker">Autumn Semester</div>
-          <div class="grid-2">
-            <div class="chart-wrap"><h4>Group 1</h4><canvas id="chartElecAutumnG1" height="260"></canvas></div>
-            <div class="chart-wrap"><h4>Group 2</h4><canvas id="chartElecAutumnG2" height="260"></canvas></div>
-          </div>
-          <div class="sec-kicker" style="margin-top:22px;">Spring Semester</div>
-          <div class="grid-2">
-            <div class="chart-wrap"><h4>Group 1</h4><canvas id="chartElecSpringG1" height="260"></canvas></div>
-            <div class="chart-wrap"><h4>Group 2</h4><canvas id="chartElecSpringG2" height="260"></canvas></div>
-          </div>
-
-          <div class="note-box" style="margin-top:6px;">
-            <h4>Analysis</h4>
-            <ul style="margin:0;padding-left:18px;">
-              <li>Departments such as Earth Sciences, IDC Design, Entrepreneurship, Humanities &amp; Social Sciences, Management and Biosciences &amp; Bioengineering consistently represent the highest-scoring bracket, maintaining strong elective averages between 8.0 and 8.6.</li>
-              <li>Average grades in electives of Chemistry, Physics, Metallurgical Engineering &amp; Materials Science, Environmental Science, Electrical Engineering, Computer Science &amp; Engineering, Economics and Civil Engineering cluster between 7.5 and 8.0.</li>
-              <li>Average grades in electives of Mathematics/ASI, Energy Science, Mechanical Engineering, IEOR, Aerospace Engineering and Chemical Engineering cluster between 7.1 and 7.5.</li>
-              <li>Looking at specific courses reveals how drastically grading patterns can fluctuate year over year, even with similar class sizes. For instance, SOM610 (Marketing Management II) recorded a notably low average of 5.65 with 130 students in Autumn 2024, but increased by a massive two full points to 7.65 with 118 students in Autumn 2025.</li>
-            </ul>
-          </div>
-
-          <div class="sec-kicker" style="margin-top:26px;">Standard Deviation of Elective Grades</div>
-          <div class="sec-sub">Higher SD = wider spread of grades within a department's electives ("high risk, high reward"); lower SD = grades cluster more tightly.</div>
-          <div class="grid-2">
-            <div class="chart-wrap"><h4>2025</h4><canvas id="chartElecSD2025" height="300"></canvas></div>
-            <div class="chart-wrap"><h4>2024</h4><canvas id="chartElecSD2024" height="300"></canvas></div>
-          </div>
-          <div class="note-box">
-            <h4>Why standard deviation?</h4>
-            <p>Standard deviation measures how spread out students' grades are. If two courses share the same average grade, the one with higher SD has grades more widely dispersed — a "high risk, high reward" scenario with more top (10) and low (6) grades. A course with lower SD keeps grades concentrated around 7–8, a "safer route" with fewer extremes.</p>
-            <p style="margin-top:8px;"><b>How it's calculated:</b> we first find the weighted average grade for each course offering in a department, then measure the statistical spread of those course averages relative to the department's collective mean.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 5: MINORS -->
-    <section id="minors" class="block">
-      <div class="card">
-        <div class="card-header pink">
-          <h2>⑤ Department-wise Minors Average Grades</h2>
-          <span class="tag">Value + M-tagged course count (n)</span>
-        </div>
-        <div class="card-body">
-          <div class="sec-kicker">2024 &amp; 2025</div>
-          <div class="table-scroll"><table class="heatmap minors"><thead><tr><th></th><th>Autumn 2024</th><th>Spring 2024</th><th>Autumn 2025</th><th>Spring 2025</th></tr></thead><tbody><tr><th class='rowlabel'>AE</th><td class="hm-cell" style="background:rgb(242,236,168);color:#1a1330"><b>6.91</b><br><span class="n-tag">n=8</span></td><td class="hm-cell" style="background:rgb(227,237,180);color:#1a1330"><b>6.29</b><br><span class="n-tag">n=4</span></td><td class="hm-cell" style="background:rgb(226,237,181);color:#1a1330"><b>6.23</b><br><span class="n-tag">n=4</span></td><td class="hm-cell" style="background:rgb(231,237,177);color:#1a1330"><b>6.45</b><br><span class="n-tag">n=4</span></td></tr><tr><th class='rowlabel'>BB</th><td class="hm-cell" style="background:rgb(254,212,147);color:#1a1330"><b>7.95</b><br><span class="n-tag">n=4</span></td><td class="hm-cell" style="background:rgb(252,185,137);color:#1a1330"><b>8.47</b><br><span class="n-tag">n=6</span></td><td class="hm-cell" style="background:rgb(255,232,155);color:#1a1330"><b>7.56</b><br><span class="n-tag">n=7</span></td><td class="hm-cell" style="background:rgb(254,219,150);color:#1a1330"><b>7.81</b><br><span class="n-tag">n=4</span></td></tr><tr><th class='rowlabel'>CS</th><td class="hm-cell" style="background:rgb(248,235,162);color:#1a1330"><b>7.19</b><br><span class="n-tag">n=5</span></td><td class="hm-cell" style="background:rgb(215,238,191);color:#1a1330"><b>5.76</b><br><span class="n-tag">n=4</span></td><td class="hm-cell" style="background:rgb(255,234,156);color:#1a1330"><b>7.52</b><br><span class="n-tag">n=4</span></td><td class="hm-cell" style="background:rgb(230,237,178);color:#1a1330"><b>6.42</b><br><span class="n-tag">n=4</span></td></tr><tr><th class='rowlabel'>DH</th><td class="hm-cell" style="background:rgb(254,213,148);color:#1a1330"><b>7.92</b><br><span class="n-tag">n=4</span></td><td class="hm-cell" style="background:rgb(254,208,146);color:#1a1330"><b>8.02</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(255,227,153);color:#1a1330"><b>7.65</b><br><span class="n-tag">n=5</span></td><td class="hm-cell" style="background:rgb(251,165,130);color:#1a1330"><b>8.85</b><br><span class="n-tag">n=4</span></td></tr><tr><th class='rowlabel'>OS</th><td class="hm-cell" style="background:rgb(245,236,164);color:#1a1330"><b>7.08</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(251,235,160);color:#1a1330"><b>7.32</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(241,236,168);color:#1a1330"><b>6.88</b><br><span class="n-tag">n=1</span></td><td class="hm-cell" style="background:rgb(255,234,156);color:#1a1330"><b>7.51</b><br><span class="n-tag">n=2</span></td></tr><tr><th class='rowlabel'>EC</th><td class="hm-cell" style="background:rgb(215,238,191);color:#1a1330"><b>5.76</b><br><span class="n-tag">n=1</span></td><td class="hm-cell hm-empty">—</td><td class="hm-cell" style="background:rgb(205,239,200);color:#1a1330"><b>5.30</b><br><span class="n-tag">n=1</span></td><td class="hm-cell hm-empty">—</td></tr><tr><th class='rowlabel'>EE</th><td class="hm-cell" style="background:rgb(233,237,175);color:#1a1330"><b>6.54</b><br><span class="n-tag">n=4</span></td><td class="hm-cell" style="background:rgb(219,238,188);color:#1a1330"><b>5.91</b><br><span class="n-tag">n=5</span></td><td class="hm-cell" style="background:rgb(235,236,173);color:#1a1330"><b>6.64</b><br><span class="n-tag">n=4</span></td><td class="hm-cell hm-empty">—</td></tr><tr><th class='rowlabel'>ENT</th><td class="hm-cell" style="background:rgb(255,227,153);color:#1a1330"><b>7.65</b><br><span class="n-tag">n=8</span></td><td class="hm-cell" style="background:rgb(254,215,149);color:#1a1330"><b>7.88</b><br><span class="n-tag">n=9</span></td><td class="hm-cell" style="background:rgb(253,193,140);color:#1a1330"><b>8.31</b><br><span class="n-tag">n=8</span></td><td class="hm-cell" style="background:rgb(253,196,141);color:#1a1330"><b>8.25</b><br><span class="n-tag">n=12</span></td></tr><tr><th class='rowlabel'>ES</th><td class="hm-cell" style="background:rgb(216,238,190);color:#1a1330"><b>5.80</b><br><span class="n-tag">n=1</span></td><td class="hm-cell" style="background:rgb(248,105,107);color:#ffffff"><b>10.00</b><br><span class="n-tag">n=1</span></td><td class="hm-cell" style="background:rgb(252,174,133);color:#1a1330"><b>8.67</b><br><span class="n-tag">n=1</span></td><td class="hm-cell hm-empty">—</td></tr><tr><th class='rowlabel'>HSS</th><td class="hm-cell" style="background:rgb(251,154,125);color:#1a1330"><b>9.06</b><br><span class="n-tag">n=1</span></td><td class="hm-cell hm-empty">—</td><td class="hm-cell" style="background:rgb(253,205,145);color:#1a1330"><b>8.08</b><br><span class="n-tag">n=1</span></td><td class="hm-cell" style="background:rgb(253,198,142);color:#1a1330"><b>8.21</b><br><span class="n-tag">n=3</span></td></tr><tr><th class='rowlabel'>MA</th><td class="hm-cell" style="background:rgb(234,236,175);color:#1a1330"><b>6.57</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(247,236,163);color:#1a1330"><b>7.16</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(248,235,162);color:#1a1330"><b>7.21</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(234,236,174);color:#1a1330"><b>6.58</b><br><span class="n-tag">n=2</span></td></tr><tr><th class='rowlabel'>MG</th><td class="hm-cell" style="background:rgb(254,235,157);color:#1a1330"><b>7.46</b><br><span class="n-tag">n=4</span></td><td class="hm-cell" style="background:rgb(218,238,188);color:#1a1330"><b>5.89</b><br><span class="n-tag">n=1</span></td><td class="hm-cell" style="background:rgb(249,235,161);color:#1a1330"><b>7.25</b><br><span class="n-tag">n=3</span></td><td class="hm-cell" style="background:rgb(246,236,164);color:#1a1330"><b>7.12</b><br><span class="n-tag">n=2</span></td></tr><tr><th class='rowlabel'>MM</th><td class="hm-cell hm-empty">—</td><td class="hm-cell hm-empty">—</td><td class="hm-cell hm-empty">—</td><td class="hm-cell" style="background:rgb(254,209,146);color:#1a1330"><b>8.00</b><br><span class="n-tag">n=1</span></td></tr><tr><th class='rowlabel'>PH</th><td class="hm-cell" style="background:rgb(255,226,153);color:#1a1330"><b>7.67</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(250,235,161);color:#1a1330"><b>7.27</b><br><span class="n-tag">n=1</span></td><td class="hm-cell" style="background:rgb(243,236,167);color:#1a1330"><b>6.97</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(220,237,187);color:#1a1330"><b>5.96</b><br><span class="n-tag">n=2</span></td></tr><tr><th class='rowlabel'>Robotics</th><td class="hm-cell" style="background:rgb(233,237,175);color:#1a1330"><b>6.53</b><br><span class="n-tag">n=4</span></td><td class="hm-cell hm-empty">—</td><td class="hm-cell" style="background:rgb(198,239,206);color:#1a1330"><b>5.02</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(255,229,154);color:#1a1330"><b>7.61</b><br><span class="n-tag">n=3</span></td></tr><tr><th class='rowlabel'>SysCon</th><td class="hm-cell" style="background:rgb(246,236,164);color:#1a1330"><b>7.12</b><br><span class="n-tag">n=9</span></td><td class="hm-cell" style="background:rgb(247,236,163);color:#1a1330"><b>7.17</b><br><span class="n-tag">n=3</span></td><td class="hm-cell" style="background:rgb(254,217,149);color:#1a1330"><b>7.85</b><br><span class="n-tag">n=10</span></td><td class="hm-cell" style="background:rgb(253,206,145);color:#1a1330"><b>8.06</b><br><span class="n-tag">n=7</span></td></tr><tr><th class='rowlabel'>SI</th><td class="hm-cell" style="background:rgb(252,235,158);color:#1a1330"><b>7.38</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(253,195,141);color:#1a1330"><b>8.27</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(251,169,131);color:#1a1330"><b>8.76</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(253,199,142);color:#1a1330"><b>8.19</b><br><span class="n-tag">n=2</span></td></tr></tbody></table></div>
-
-          <div class="sec-kicker" style="margin-top:24px;">2022 &amp; 2023</div>
-          <div class="table-scroll"><table class="heatmap minors"><thead><tr><th></th><th>Autumn 2022</th><th>Spring 2022</th><th>Autumn 2023</th><th>Spring 2023</th></tr></thead><tbody><tr><th class='rowlabel'>AE</th><td class="hm-cell" style="background:rgb(211,238,194);color:#1a1330"><b>5.58</b><br><span class="n-tag">n=7</span></td><td class="hm-cell" style="background:rgb(200,239,204);color:#1a1330"><b>5.08</b><br><span class="n-tag">n=6</span></td><td class="hm-cell" style="background:rgb(210,238,195);color:#1a1330"><b>5.54</b><br><span class="n-tag">n=8</span></td><td class="hm-cell" style="background:rgb(205,238,200);color:#1a1330"><b>5.32</b><br><span class="n-tag">n=5</span></td></tr><tr><th class='rowlabel'>BB</th><td class="hm-cell" style="background:rgb(247,236,163);color:#1a1330"><b>7.13</b><br><span class="n-tag">n=5</span></td><td class="hm-cell" style="background:rgb(251,154,125);color:#1a1330"><b>9.06</b><br><span class="n-tag">n=5</span></td><td class="hm-cell" style="background:rgb(255,228,153);color:#1a1330"><b>7.64</b><br><span class="n-tag">n=6</span></td><td class="hm-cell" style="background:rgb(253,203,144);color:#1a1330"><b>8.12</b><br><span class="n-tag">n=5</span></td></tr><tr><th class='rowlabel'>CS</th><td class="hm-cell" style="background:rgb(247,236,163);color:#1a1330"><b>7.14</b><br><span class="n-tag">n=3</span></td><td class="hm-cell" style="background:rgb(242,236,168);color:#1a1330"><b>6.91</b><br><span class="n-tag">n=3</span></td><td class="hm-cell" style="background:rgb(232,237,176);color:#1a1330"><b>6.48</b><br><span class="n-tag">n=3</span></td><td class="hm-cell" style="background:rgb(245,236,165);color:#1a1330"><b>7.04</b><br><span class="n-tag">n=4</span></td></tr><tr><th class='rowlabel'>DH</th><td class="hm-cell" style="background:rgb(251,157,127);color:#1a1330"><b>9.00</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(221,237,186);color:#1a1330"><b>6.00</b><br><span class="n-tag">n=3</span></td><td class="hm-cell" style="background:rgb(252,171,132);color:#1a1330"><b>8.74</b><br><span class="n-tag">n=3</span></td><td class="hm-cell" style="background:rgb(247,236,163);color:#1a1330"><b>7.16</b><br><span class="n-tag">n=4</span></td></tr><tr><th class='rowlabel'>DS</th><td class="hm-cell" style="background:rgb(253,198,142);color:#1a1330"><b>8.21</b><br><span class="n-tag">n=1</span></td><td class="hm-cell" style="background:rgb(250,235,160);color:#1a1330"><b>7.29</b><br><span class="n-tag">n=1</span></td><td class="hm-cell" style="background:rgb(254,218,150);color:#1a1330"><b>7.82</b><br><span class="n-tag">n=1</span></td><td class="hm-cell" style="background:rgb(239,236,170);color:#1a1330"><b>6.79</b><br><span class="n-tag">n=2</span></td></tr><tr><th class='rowlabel'>EC</th><td class="hm-cell hm-empty">—</td><td class="hm-cell hm-empty">—</td><td class="hm-cell hm-empty">—</td><td class="hm-cell hm-empty">—</td></tr><tr><th class='rowlabel'>EE</th><td class="hm-cell" style="background:rgb(255,228,153);color:#1a1330"><b>7.63</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(235,236,173);color:#1a1330"><b>6.63</b><br><span class="n-tag">n=3</span></td><td class="hm-cell" style="background:rgb(248,235,162);color:#1a1330"><b>7.19</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(224,237,183);color:#1a1330"><b>6.13</b><br><span class="n-tag">n=3</span></td></tr><tr><th class='rowlabel'>ENT</th><td class="hm-cell" style="background:rgb(253,195,141);color:#1a1330"><b>8.27</b><br><span class="n-tag">n=3</span></td><td class="hm-cell" style="background:rgb(252,235,158);color:#1a1330"><b>7.38</b><br><span class="n-tag">n=3</span></td><td class="hm-cell" style="background:rgb(252,187,138);color:#1a1330"><b>8.43</b><br><span class="n-tag">n=4</span></td><td class="hm-cell" style="background:rgb(255,227,153);color:#1a1330"><b>7.65</b><br><span class="n-tag">n=5</span></td></tr><tr><th class='rowlabel'>ES</th><td class="hm-cell" style="background:rgb(251,163,129);color:#1a1330"><b>8.88</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(254,209,146);color:#1a1330"><b>8.00</b><br><span class="n-tag">n=1</span></td><td class="hm-cell" style="background:rgb(252,175,133);color:#1a1330"><b>8.65</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(247,236,163);color:#1a1330"><b>7.17</b><br><span class="n-tag">n=2</span></td></tr><tr><th class='rowlabel'>HSS</th><td class="hm-cell" style="background:rgb(255,235,156);color:#1a1330"><b>7.48</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(253,195,141);color:#1a1330"><b>8.27</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(252,178,134);color:#1a1330"><b>8.60</b><br><span class="n-tag">n=1</span></td><td class="hm-cell" style="background:rgb(252,183,136);color:#1a1330"><b>8.50</b><br><span class="n-tag">n=1</span></td></tr><tr><th class='rowlabel'>MA</th><td class="hm-cell" style="background:rgb(215,238,191);color:#1a1330"><b>5.74</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(237,236,172);color:#1a1330"><b>6.71</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(254,235,157);color:#1a1330"><b>7.44</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(234,236,174);color:#1a1330"><b>6.58</b><br><span class="n-tag">n=2</span></td></tr><tr><th class='rowlabel'>MG</th><td class="hm-cell" style="background:rgb(254,224,152);color:#1a1330"><b>7.72</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(250,235,161);color:#1a1330"><b>7.27</b><br><span class="n-tag">n=3</span></td><td class="hm-cell" style="background:rgb(254,219,150);color:#1a1330"><b>7.80</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(243,236,166);color:#1a1330"><b>6.98</b><br><span class="n-tag">n=1</span></td></tr><tr><th class='rowlabel'>MM</th><td class="hm-cell" style="background:rgb(248,105,107);color:#ffffff"><b>10.00</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(254,209,146);color:#1a1330"><b>8.00</b><br><span class="n-tag">n=2</span></td><td class="hm-cell hm-empty">—</td><td class="hm-cell hm-empty">—</td></tr><tr><th class='rowlabel'>PH</th><td class="hm-cell" style="background:rgb(254,215,148);color:#1a1330"><b>7.89</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(252,235,158);color:#1a1330"><b>7.38</b><br><span class="n-tag">n=1</span></td><td class="hm-cell" style="background:rgb(254,235,157);color:#1a1330"><b>7.46</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(214,238,192);color:#1a1330"><b>5.71</b><br><span class="n-tag">n=1</span></td></tr><tr><th class='rowlabel'>Robotics</th><td class="hm-cell hm-empty">—</td><td class="hm-cell hm-empty">—</td><td class="hm-cell hm-empty">—</td><td class="hm-cell hm-empty">—</td></tr><tr><th class='rowlabel'>SysCon</th><td class="hm-cell" style="background:rgb(227,237,180);color:#1a1330"><b>6.29</b><br><span class="n-tag">n=8</span></td><td class="hm-cell" style="background:rgb(253,207,145);color:#1a1330"><b>8.04</b><br><span class="n-tag">n=10</span></td><td class="hm-cell" style="background:rgb(254,218,150);color:#1a1330"><b>7.82</b><br><span class="n-tag">n=9</span></td><td class="hm-cell" style="background:rgb(255,229,154);color:#1a1330"><b>7.61</b><br><span class="n-tag">n=11</span></td></tr><tr><th class='rowlabel'>SI</th><td class="hm-cell" style="background:rgb(252,235,158);color:#1a1330"><b>7.38</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(253,195,141);color:#1a1330"><b>8.27</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(247,236,163);color:#1a1330"><b>7.14</b><br><span class="n-tag">n=2</span></td><td class="hm-cell hm-empty">—</td></tr></tbody></table></div>
-
-          <div class="note-box" style="margin-top:18px;">
-            <h4>Notes</h4>
-            <ul style="margin:0;padding-left:18px;">
-              <li><b>Scope:</b> covers the 17 minor departments running in the upcoming 2026–27 academic year (16 home departments + Robotics), using data tracked from 2022 to 2025.</li>
-              <li><b>Course standardization:</b> focuses exclusively on core M-tagged courses under the Division column to establish a consistent departmental baseline. Fluctuation-heavy minor electives are excluded, as they vary entirely by individual student choice.</li>
-              <li><b>Robotics overlap:</b> Robotics courses are cross-listed from courses of home departments — e.g. EE309 (Microprocessors) counts identically for both Electrical and Robotics since it is M-tagged in both.</li>
-              <li><b>Data reliability:</b> some departments have far more data than others. Entrepreneurship (37 courses), Systems &amp; Control (29) and BSBE (21) have solid baselines, while MM (1), Earth Sciences (2), Energy (3) and Humanities (5) have very few data points — treat those averages as rough indicators, not final proof.</li>
-            </ul>
-          </div>
-
-          <div class="sec-kicker" style="margin-top:24px;">Standard Deviation of Year-wise Minors Averages</div>
-          <div class="two-col">
-            <div class="chart-wrap"><h4>Illustrative distribution (from reported mean / SD)</h4><canvas id="chartKdeMinors" height="260"></canvas></div>
-            <div class="note-box">
-              <h4>Distribution stability vs. widening variance</h4>
-              <p>Peak grade concentration (mode) stays fairly steady around 7.22–7.79 across all years, but the course-average spread widens over time — from the tightest distribution in 2023 (SD = 0.987) to the flattest in 2025 (SD = 1.216).</p>
-              <div class="stat-row" style="margin-top:12px;">
-                <div class="stat-card"><div class="lbl">2022</div><div class="val">SD 1.146</div></div>
-                <div class="stat-card"><div class="lbl">2023</div><div class="val">SD 0.987</div></div>
-                <div class="stat-card"><div class="lbl">2024</div><div class="val">SD 1.044</div></div>
-                <div class="stat-card"><div class="lbl">2025</div><div class="val">SD 1.216</div></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 6: CBS -->
-    <section id="cbs" class="block">
-      <div class="card">
-        <div class="card-header pink"><h2>⑥ CBS Analysis &amp; Top 30 Courses</h2></div>
-        <div class="card-body">
-          <p style="font-size:16px;font-weight:600;margin-bottom:18px;">Eager to know about the CPI-boosting courses? Voila! We got you covered. 🎓</p>
-
-          <div class="two-col">
-            <div>
-              <div class="formula-box" style="margin-bottom:12px;">CBS&nbsp;=&nbsp;Σ<sub>semesters in analysis</sub>&nbsp;(weight × F<sub>i</sub>)&nbsp;/&nbsp;(NS)</div>
-              <div class="formula-box">F(X, N, σ², N₀, k)&nbsp;=&nbsp;X&nbsp;/&nbsp;[(1+(10^(−N/N₀))σ²)(1+(N₀ᵏ/(N₀ᵏ+Nᵏ))L)]</div>
-            </div>
-            <div class="note-box">
-              <h4>The CPI Booster Score (CBS) <span class="credit-tag">Credits: Rudra G</span></h4>
-              <p>CBS is a score defined to assess which courses are most effective for improving CPI. A higher CBS indicates that a course is better suited for enhancing CPI. For full variable definitions and methodology, refer to the DAV team's documentation.</p>
-            </div>
-          </div>
-
-          <div class="sec-kicker" style="margin-top:26px;">Top 30 Courses by CBS — Autumn Semester</div>
-          <div class="sec-sub">Tile value = average enrolled students</div>
-          <div class="course-grid"><div class="course-tile" style="background:rgb(199,21,110);color:#ffffff"><div class="course-code">DE6103</div><div class="course-n">96</div></div><div class="course-tile" style="background:rgb(199,21,110);color:#ffffff"><div class="course-code">DE348</div><div class="course-n">96</div></div><div class="course-tile" style="background:rgb(202,29,110);color:#ffffff"><div class="course-code">DE334</div><div class="course-n">94</div></div><div class="course-tile" style="background:rgb(206,40,110);color:#ffffff"><div class="course-code">DE343</div><div class="course-n">91</div></div><div class="course-tile" style="background:rgb(212,55,110);color:#ffffff"><div class="course-code">EE721</div><div class="course-n">87</div></div><div class="course-tile" style="background:rgb(224,89,110);color:#ffffff"><div class="course-code">EE789</div><div class="course-n">78</div></div><div class="course-tile" style="background:rgb(247,150,110);color:#1a1330"><div class="course-code">ES451</div><div class="course-n">62</div></div><div class="course-tile" style="background:rgb(248,154,110);color:#1a1330"><div class="course-code">HS472</div><div class="course-n">61</div></div><div class="course-tile" style="background:rgb(250,160,111);color:#1a1330"><div class="course-code">SOM622</div><div class="course-n">59</div></div><div class="course-tile" style="background:rgb(250,162,113);color:#1a1330"><div class="course-code">DE347</div><div class="course-n">58</div></div><div class="course-tile" style="background:rgb(250,166,117);color:#1a1330"><div class="course-code">PS635</div><div class="course-n">56</div></div><div class="course-tile" style="background:rgb(251,170,122);color:#1a1330"><div class="course-code">CL461</div><div class="course-n">54</div></div><div class="course-tile" style="background:rgb(251,180,132);color:#1a1330"><div class="course-code">ES657</div><div class="course-n">49</div></div><div class="course-tile" style="background:rgb(252,186,139);color:#1a1330"><div class="course-code">DE335</div><div class="course-n">46</div></div><div class="course-tile" style="background:rgb(252,190,143);color:#1a1330"><div class="course-code">CL443</div><div class="course-n">44</div></div><div class="course-tile" style="background:rgb(252,192,145);color:#1a1330"><div class="course-code">DE353</div><div class="course-n">43</div></div><div class="course-tile" style="background:rgb(252,198,151);color:#1a1330"><div class="course-code">DE205</div><div class="course-n">40</div></div><div class="course-tile" style="background:rgb(252,200,153);color:#1a1330"><div class="course-code">GS527</div><div class="course-n">39</div></div><div class="course-tile" style="background:rgb(252,200,153);color:#1a1330"><div class="course-code">DE203</div><div class="course-n">39</div></div><div class="course-tile" style="background:rgb(252,200,153);color:#1a1330"><div class="course-code">GS421</div><div class="course-n">39</div></div><div class="course-tile" style="background:rgb(253,204,158);color:#1a1330"><div class="course-code">HS471</div><div class="course-n">37</div></div><div class="course-tile" style="background:rgb(253,204,158);color:#1a1330"><div class="course-code">DE201</div><div class="course-n">37</div></div><div class="course-tile" style="background:rgb(253,206,160);color:#1a1330"><div class="course-code">DE113</div><div class="course-n">36</div></div><div class="course-tile" style="background:rgb(253,206,160);color:#1a1330"><div class="course-code">DE111</div><div class="course-n">36</div></div><div class="course-tile" style="background:rgb(253,209,164);color:#1a1330"><div class="course-code">MM751</div><div class="course-n">34</div></div><div class="course-tile" style="background:rgb(253,213,168);color:#1a1330"><div class="course-code">ENT623</div><div class="course-n">32</div></div><div class="course-tile" style="background:rgb(253,213,168);color:#1a1330"><div class="course-code">BB653</div><div class="course-n">32</div></div><div class="course-tile" style="background:rgb(253,215,170);color:#1a1330"><div class="course-code">CH801</div><div class="course-n">31</div></div><div class="course-tile" style="background:rgb(254,221,177);color:#1a1330"><div class="course-code">BB619</div><div class="course-n">28</div></div><div class="course-tile" style="background:rgb(255,247,204);color:#1a1330"><div class="course-code">SC650</div><div class="course-n">15</div></div></div>
-          <div class="course-legend">*We neither endorse nor discourage any courses; this analysis is solely for statistical purposes.</div>
-
-          <div class="sec-kicker" style="margin-top:26px;">Top 30 Courses by CBS — Spring Semester</div>
-          <div class="sec-sub">Tile value = average enrolled students</div>
-          <div class="course-grid"><div class="course-tile" style="background:rgb(199,21,110);color:#ffffff"><div class="course-code">DE344</div><div class="course-n">82</div></div><div class="course-tile" style="background:rgb(221,79,110);color:#ffffff"><div class="course-code">DE614</div><div class="course-n">70</div></div><div class="course-tile" style="background:rgb(222,84,110);color:#ffffff"><div class="course-code">DE612</div><div class="course-n">69</div></div><div class="course-tile" style="background:rgb(224,89,110);color:#ffffff"><div class="course-code">CM801</div><div class="course-n">68</div></div><div class="course-tile" style="background:rgb(233,113,110);color:#ffffff"><div class="course-code">SOM725</div><div class="course-n">63</div></div><div class="course-tile" style="background:rgb(246,148,110);color:#1a1330"><div class="course-code">CM703</div><div class="course-n">56</div></div><div class="course-tile" style="background:rgb(246,148,110);color:#1a1330"><div class="course-code">DH308</div><div class="course-n">56</div></div><div class="course-tile" style="background:rgb(251,173,125);color:#1a1330"><div class="course-code">DE335</div><div class="course-n">48</div></div><div class="course-tile" style="background:rgb(251,176,128);color:#1a1330"><div class="course-code">DE342</div><div class="course-n">47</div></div><div class="course-tile" style="background:rgb(251,181,133);color:#1a1330"><div class="course-code">GS540</div><div class="course-n">45</div></div><div class="course-tile" style="background:rgb(252,186,139);color:#1a1330"><div class="course-code">CL445</div><div class="course-n">43</div></div><div class="course-tile" style="background:rgb(252,191,144);color:#1a1330"><div class="course-code">ENT606</div><div class="course-n">41</div></div><div class="course-tile" style="background:rgb(252,196,150);color:#1a1330"><div class="course-code">GS538</div><div class="course-n">39</div></div><div class="course-tile" style="background:rgb(252,196,150);color:#1a1330"><div class="course-code">GS438</div><div class="course-n">39</div></div><div class="course-tile" style="background:rgb(252,196,150);color:#1a1330"><div class="course-code">MM739</div><div class="course-n">39</div></div><div class="course-tile" style="background:rgb(252,199,152);color:#1a1330"><div class="course-code">ME770</div><div class="course-n">38</div></div><div class="course-tile" style="background:rgb(252,199,152);color:#1a1330"><div class="course-code">GS450</div><div class="course-n">38</div></div><div class="course-tile" style="background:rgb(252,199,152);color:#1a1330"><div class="course-code">DE118</div><div class="course-n">38</div></div><div class="course-tile" style="background:rgb(252,201,155);color:#1a1330"><div class="course-code">DE126</div><div class="course-n">37</div></div><div class="course-tile" style="background:rgb(252,201,155);color:#1a1330"><div class="course-code">TD626</div><div class="course-n">37</div></div><div class="course-tile" style="background:rgb(252,201,155);color:#1a1330"><div class="course-code">DE203</div><div class="course-n">37</div></div><div class="course-tile" style="background:rgb(252,201,155);color:#1a1330"><div class="course-code">DE138</div><div class="course-n">37</div></div><div class="course-tile" style="background:rgb(252,201,155);color:#1a1330"><div class="course-code">ENT624</div><div class="course-n">37</div></div><div class="course-tile" style="background:rgb(253,206,161);color:#1a1330"><div class="course-code">DE112</div><div class="course-n">35</div></div><div class="course-tile" style="background:rgb(253,206,161);color:#1a1330"><div class="course-code">GP516</div><div class="course-n">35</div></div><div class="course-tile" style="background:rgb(253,211,166);color:#1a1330"><div class="course-code">MM674</div><div class="course-n">33</div></div><div class="course-tile" style="background:rgb(253,214,169);color:#1a1330"><div class="course-code">DE114</div><div class="course-n">32</div></div><div class="course-tile" style="background:rgb(253,214,169);color:#1a1330"><div class="course-code">ENT605</div><div class="course-n">32</div></div><div class="course-tile" style="background:rgb(253,217,171);color:#1a1330"><div class="course-code">TD642</div><div class="course-n">31</div></div><div class="course-tile" style="background:rgb(255,247,204);color:#1a1330"><div class="course-code">ME761</div><div class="course-n">19</div></div></div>
-          <div class="course-legend">*We neither endorse nor discourage any courses; this analysis is solely for statistical purposes.</div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 7: OVERALL DEPT AVG -->
-    <section id="deptavg" class="block">
-      <div class="card">
-        <div class="card-header blue"><h2>⑦ Overall Department-wise Average Grades Across Years</h2></div>
-        <div class="card-body">
-          <div class="grid-2">
-            <div class="chart-wrap"><h4>Group 1</h4><canvas id="chartOverallG1" height="260"></canvas></div>
-            <div class="chart-wrap"><h4>Group 2</h4><canvas id="chartOverallG2" height="260"></canvas></div>
-          </div>
-          <div class="note-box">
-            <h4>Analysis</h4>
-            <ul style="margin:0 0 10px;padding-left:18px;">
-              <li>ENT, IDC, and GP consistently tend to have high grades, with averages reliably exceeding the 8.0 mark.</li>
-              <li>ES has the most consistent grades, with its four-year average fluctuating by a mere 0.12 points — a highly predictable pattern closely matched by departments like EC, MG, and CS.</li>
-              <li>The 2024 macro-level grade expansion: academic year 2024 marked a widespread upward shift in grades across the institute, with 13 of the 19 tracked departments recording a higher average grade than their 2023 baselines.</li>
-            </ul>
-            <p style="font-size:12.5px;color:var(--ink-soft)">Note: department-wise averages aggregate all course types (mandatory core, electives, minors). "Group 1"/"Group 2" is purely a layout split — it carries no metric or category meaning.</p>
-          </div>
-
-          <div class="sec-kicker" style="margin-top:26px;">Department-wise Standard Deviation of Average Grades</div>
-          <div class="sec-sub">Reflects the full spread of grading across every course the department has offered.</div>
-          <div class="grid-2">
-            <div class="chart-wrap"><h4>2025</h4><canvas id="chartDeptSD2025" height="300"></canvas></div>
-            <div class="chart-wrap"><h4>2024</h4><canvas id="chartDeptSD2024" height="300"></canvas></div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 8: AUTUMN VS SPRING -->
-    <section id="autumnspring" class="block">
-      <div class="card">
-        <div class="card-header blue"><h2>⑧ Average Grades of Department: Autumn vs Spring, 2024 vs 2025</h2></div>
-        <div class="card-body">
-          <div class="chart-wrap"><h4>Group 1</h4><canvas id="chartAvsG1" height="320"></canvas></div>
-          <div class="chart-wrap"><h4>Group 2</h4><canvas id="chartAvsG2" height="300"></canvas></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 9: AP GRADES -->
-    <section id="apgrades" class="block">
-      <div class="card">
-        <div class="card-header pink"><h2>⑨ Department-wise AP Grade Distribution</h2></div>
-        <div class="card-body">
-          <div class="two-col">
-            <div class="table-scroll"><table class="heatmap"><thead><tr><th></th><th>2022</th><th>2023</th><th>2024</th><th>2025</th></tr></thead><tbody><tr><th class='rowlabel'>AE</th><td class="hm-cell" style="background:rgb(254,223,186);color:#1a1330">13.91</td><td class="hm-cell" style="background:rgb(254,226,188);color:#1a1330">12.14</td><td class="hm-cell" style="background:rgb(254,234,194);color:#1a1330">7.66</td><td class="hm-cell" style="background:rgb(254,225,188);color:#1a1330">12.39</td></tr><tr><th class='rowlabel'>BB</th><td class="hm-cell" style="background:rgb(250,158,140);color:#1a1330">50.30</td><td class="hm-cell" style="background:rgb(252,187,160);color:#1a1330">34.13</td><td class="hm-cell" style="background:rgb(228,111,121);color:#ffffff">68.63</td><td class="hm-cell" style="background:rgb(250,164,143);color:#1a1330">47.27</td></tr><tr><th class='rowlabel'>CE</th><td class="hm-cell" style="background:rgb(253,216,182);color:#1a1330">17.57</td><td class="hm-cell" style="background:rgb(253,206,174);color:#1a1330">23.46</td><td class="hm-cell" style="background:rgb(253,211,178);color:#1a1330">20.46</td><td class="hm-cell" style="background:rgb(253,209,176);color:#1a1330">21.86</td></tr><tr><th class='rowlabel'>CH</th><td class="hm-cell" style="background:rgb(250,167,146);color:#1a1330">45.56</td><td class="hm-cell" style="background:rgb(253,205,173);color:#1a1330">23.92</td><td class="hm-cell" style="background:rgb(253,207,175);color:#1a1330">22.55</td><td class="hm-cell" style="background:rgb(252,199,169);color:#1a1330">27.23</td></tr><tr><th class='rowlabel'>CL</th><td class="hm-cell" style="background:rgb(252,197,168);color:#1a1330">28.14</td><td class="hm-cell" style="background:rgb(253,209,176);color:#1a1330">21.58</td><td class="hm-cell" style="background:rgb(252,199,169);color:#1a1330">27.46</td><td class="hm-cell" style="background:rgb(251,180,155);color:#1a1330">38.25</td></tr><tr><th class='rowlabel'>CS</th><td class="hm-cell" style="background:rgb(251,177,153);color:#1a1330">40.04</td><td class="hm-cell" style="background:rgb(251,181,156);color:#1a1330">37.64</td><td class="hm-cell" style="background:rgb(250,166,145);color:#1a1330">45.91</td><td class="hm-cell" style="background:rgb(251,185,159);color:#1a1330">35.02</td></tr><tr><th class='rowlabel'>EE</th><td class="hm-cell" style="background:rgb(252,196,167);color:#1a1330">29.00</td><td class="hm-cell" style="background:rgb(253,209,177);color:#1a1330">21.32</td><td class="hm-cell" style="background:rgb(252,199,169);color:#1a1330">27.40</td><td class="hm-cell" style="background:rgb(252,199,169);color:#1a1330">27.32</td></tr><tr><th class='rowlabel'>EN</th><td class="hm-cell" style="background:rgb(255,247,204);color:#1a1330">0.00</td><td class="hm-cell" style="background:rgb(254,234,194);color:#1a1330">7.63</td><td class="hm-cell" style="background:rgb(255,247,204);color:#1a1330">0.00</td><td class="hm-cell" style="background:rgb(254,228,190);color:#1a1330">10.94</td></tr><tr><th class='rowlabel'>ENT</th><td class="hm-cell" style="background:rgb(249,158,140);color:#1a1330">50.44</td><td class="hm-cell" style="background:rgb(223,101,117);color:#ffffff">72.57</td><td class="hm-cell" style="background:rgb(219,92,114);color:#ffffff">76.02</td><td class="hm-cell" style="background:rgb(227,110,121);color:#ffffff">69.08</td></tr><tr><th class='rowlabel'>ES</th><td class="hm-cell" style="background:rgb(255,247,204);color:#1a1330">0.00</td><td class="hm-cell" style="background:rgb(255,241,200);color:#1a1330">3.43</td><td class="hm-cell" style="background:rgb(253,212,178);color:#1a1330">20.16</td><td class="hm-cell" style="background:rgb(253,218,183);color:#1a1330">16.75</td></tr><tr><th class='rowlabel'>IDC</th><td class="hm-cell" style="background:rgb(255,247,204);color:#1a1330">0.00</td><td class="hm-cell" style="background:rgb(255,247,204);color:#1a1330">0.00</td><td class="hm-cell" style="background:rgb(254,238,197);color:#1a1330">5.34</td><td class="hm-cell" style="background:rgb(255,238,198);color:#1a1330">4.88</td></tr><tr><th class='rowlabel'>IEOR</th><td class="hm-cell" style="background:rgb(254,230,191);color:#1a1330">9.88</td><td class="hm-cell" style="background:rgb(252,201,170);color:#1a1330">26.39</td><td class="hm-cell" style="background:rgb(254,223,186);color:#1a1330">13.85</td><td class="hm-cell" style="background:rgb(254,223,186);color:#1a1330">13.79</td></tr><tr><th class='rowlabel'>MA</th><td class="hm-cell" style="background:rgb(250,160,140);color:#1a1330">49.69</td><td class="hm-cell" style="background:rgb(249,157,139);color:#1a1330">50.73</td><td class="hm-cell" style="background:rgb(251,180,156);color:#1a1330">37.80</td><td class="hm-cell" style="background:rgb(252,195,166);color:#1a1330">29.61</td></tr><tr><th class='rowlabel'>ME</th><td class="hm-cell" style="background:rgb(253,203,172);color:#1a1330">24.82</td><td class="hm-cell" style="background:rgb(253,205,174);color:#1a1330">23.79</td><td class="hm-cell" style="background:rgb(253,218,183);color:#1a1330">16.44</td><td class="hm-cell" style="background:rgb(254,225,188);color:#1a1330">12.77</td></tr><tr><th class='rowlabel'>MG</th><td class="hm-cell" style="background:rgb(254,226,189);color:#1a1330">11.98</td><td class="hm-cell" style="background:rgb(255,241,199);color:#1a1330">3.64</td><td class="hm-cell" style="background:rgb(255,239,198);color:#1a1330">4.34</td><td class="hm-cell" style="background:rgb(254,233,194);color:#1a1330">7.83</td></tr><tr><th class='rowlabel'>MM</th><td class="hm-cell" style="background:rgb(253,216,181);color:#1a1330">17.70</td><td class="hm-cell" style="background:rgb(253,212,179);color:#1a1330">19.82</td><td class="hm-cell" style="background:rgb(253,205,173);color:#1a1330">23.89</td><td class="hm-cell" style="background:rgb(252,188,161);color:#1a1330">33.58</td></tr><tr><th class='rowlabel'>PH</th><td class="hm-cell" style="background:rgb(252,201,171);color:#1a1330">26.15</td><td class="hm-cell" style="background:rgb(253,216,182);color:#1a1330">17.45</td><td class="hm-cell" style="background:rgb(253,208,176);color:#1a1330">22.16</td><td class="hm-cell" style="background:rgb(253,212,179);color:#1a1330">19.82</td></tr></tbody></table></div>
-            <div class="note-box">
-              <p>The maximum number of APs that can be given in a course is 2% of registered students, so the numbers represent the percentage of APs given relative to total AP capacity. Only courses with more than 50 students are considered.</p>
-              <ul style="margin-top:10px;padding-left:18px;">
-                <li>ENT and BB consistently maximize their allocated AP grades.</li>
-                <li>MA shows a clear and continuous multi-year decline in awarding AP grades.</li>
-                <li>EN, ES and IDC courses award near-zero AP grades.</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 10: AA% -->
-    <section id="aapercent" class="block">
-      <div class="card">
-        <div class="card-header pink"><h2>⑩ Number of Courses vs Percentage of Students Receiving AA</h2></div>
-        <div class="card-body">
-          <div class="chart-wrap"><canvas id="chartAA" height="280"></canvas></div>
-          <div class="note-box">
-            <ul style="margin:0;padding-left:18px;">
-              <li>Both years exhibit a steep right-skewed distribution, showing that the vast majority of courses award the top "AA" grade to only a small fraction of students — a massive chunk of offerings cluster tightly within the 0–20% bracket.</li>
-              <li>In 2025, the 10–20% bin saw the most substantial growth.</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 11: COURSES VS AVG -->
-    <section id="coursesavg" class="block">
-      <div class="card">
-        <div class="card-header pink"><h2>⑪ Number of Courses vs Average Grades</h2></div>
-        <div class="card-body">
-          <div class="grid-2">
-            <div class="chart-wrap"><h4>2024 (Autumn &amp; Spring)</h4><canvas id="chartDist2024" height="240"></canvas></div>
-            <div class="chart-wrap"><h4>2025 (Autumn &amp; Spring)</h4><canvas id="chartDist2025" height="240"></canvas></div>
-          </div>
-          <div class="stat-row">
-            <div class="stat-card"><div class="lbl">2024 courses (n)</div><div class="val">1,824</div></div>
-            <div class="stat-card"><div class="lbl">2024 mean</div><div class="val">7.799</div></div>
-            <div class="stat-card"><div class="lbl">2024 median</div><div class="val">7.947</div></div>
-            <div class="stat-card"><div class="lbl">2025 courses (n)</div><div class="val">1,997</div></div>
-            <div class="stat-card"><div class="lbl">2025 mean</div><div class="val">7.804</div></div>
-            <div class="stat-card"><div class="lbl">2025 median</div><div class="val">8.000</div></div>
-          </div>
-          <div class="note-box">
-            <ul style="margin:0;padding-left:18px;">
-              <li>Course offerings increased by 173 in 2025 (n = 1824 → 1997). During this period, the mean (7.799 → 7.804) and standard deviation (1.378 → 1.379) remained relatively stable.</li>
-              <li>The median increased from 7.947 to 8.000, indicating that at least 50% of the courses in 2025 recorded an average of 8.0 or higher.</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 12: RECOMMENDER -->
-    <section id="recommender" class="block">
-      <div class="card">
-        <div class="card-header yellow"><h2>⑫ Course Recommender 3.0</h2></div>
-        <div class="card-body">
-          <p>To facilitate informed decision-making when selecting Elective and Minor courses, students are advised to utilize the Course Recommender Tool, developed by the Data Analytics and Visualization (DAV) Team. The latest version 3.0 will be released shortly.</p>
-          <div class="sec-kicker" style="margin-top:16px;">Key features of 3.0</div>
-          <ul class="bullet-list">
-            <li><b>Tailored Recommendations:</b> suggests courses based on individual academic interests, letting users filter by department, popularity, lenient grading and more.</li>
-            <li><b>Minor Course Identification:</b> clearly identifies and lists courses offered as a Minor (both M-tagged and elective).</li>
-            <li><b>Conflict Detection:</b> automatically highlights potential scheduling conflicts between prospective electives/minors and mandatory core courses.</li>
-            <li><b>Prerequisite Information:</b> outlines the necessary prerequisites required prior to enrolling in specific courses.</li>
-          </ul>
-          <p style="text-align:center; font-family:'Baloo 2'; font-weight:800; font-size:22px; margin-top:20px;">Coming Soon!! 🚀</p>
-        </div>
-      </div>
-    </section>
-
-    <div class="thankyou">
-      <h2>Thank You</h2>
-      <p>Grading Stats Report 3.0 · Data Analytics and Visualization Team · UGAC</p>
-      <div class="icon-orb">📈</div>
     </div>
 
-    <footer>
-      Web edition generated from the original PDF report — all figures reproduced as published by the DAV Team.
-    </footer>
-  </main>
+    <div class="card" id="cardSD" data-section="sec-sd">
+      <div class="card-header yellow"><h2>Standard Deviation</h2><span class="tag">Elective & Overall</span></div>
+      <div class="card-body">
+        <div class="grid-2">
+          <div class="chart-wrap"><h4>Elective SD</h4><canvas id="chartDeptElecSD" height="240"></canvas></div>
+          <div class="chart-wrap"><h4>Overall Dept SD</h4><canvas id="chartDeptDeptSD" height="240"></canvas></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="cardAP" data-section="sec-ap">
+      <div class="card-header pink"><h2>AP Grade Distribution</h2><span class="tag">% of capacity used</span></div>
+      <div class="card-body">
+        <div class="chart-wrap"><canvas id="chartDeptAP" height="240"></canvas></div>
+      </div>
+    </div>
+
+    <div class="card" id="cardMinors" data-section="sec-minors">
+      <div class="card-header blue"><h2>Minors Data</h2><span class="tag">M-tagged courses</span></div>
+      <div class="card-body">
+        <div class="table-scroll" id="minorsTableWrap"></div>
+      </div>
+    </div>
+
+    <div class="card" id="cardSoph" data-section="sec-soph">
+      <div class="card-header pink"><h2>Sophomore Core Averages</h2></div>
+      <div class="card-body">
+        <div class="table-scroll" id="sophTableWrap"></div>
+      </div>
+    </div>
+
+    <div class="card" id="cardThird" data-section="sec-third">
+      <div class="card-header blue"><h2>Third-Year Core Averages</h2></div>
+      <div class="card-body">
+        <div class="table-scroll" id="thirdTableWrap"></div>
+      </div>
+    </div>
+    </div>
+  </div>
+
+  <div id="placeholder" class="placeholder-msg">👆 Select a department above to view its grading dashboard</div>
+  </div>
 </div>
 
 <script>
-const CHART_DATA = {"elecAutumnG1": {"labels": ["AE", "BB", "CE", "CH", "CL", "CS", "EC", "EE", "EN", "ENT"], "v24": [7.21, 8.2, 7.55, 7.99, 6.98, 8.29, 7.78, 7.49, 7.32, 8.29], "n24": [33, 29, 46, 31, 29, 29, 13, 51, 22, 10], "v25": [6.63, 8.42, 7.73, 7.99, 7.57, 7.73, 7.85, 7.83, 7.55, 8.48], "n25": [31, 28, 49, 31, 27, 39, 16, 54, 26, 9]}, "elecAutumnG2": {"labels": ["ES", "GP", "HS", "IDC", "IEOR", "MA", "ME", "MG", "MM", "PH"], "v24": [7.31, 8.9, 8.5, 8.4, 7.75, 7.86, 7.45, 7.93, 8.08, 7.65], "n24": [22, 47, 40, 80, 13, 41, 38, 53, 34, 25], "v25": [7.6, 8.45, 8.15, 8.68, 7.61, 7.59, 7.18, 8.03, 7.57, 7.85], "n25": [22, 42, 38, 92, 13, 39, 34, 47, 41, 29]}, "elecSpringG1": {"labels": ["AE", "BB", "CE", "CH", "CL", "CS", "EC", "EE", "EN", "ENT"], "v24": [6.85, 7.8, 7.52, 7.61, 7.18, 7.52, 7.41, 7.85, 7.65, 8.37], "n24": [26, 22, 35, 32, 14, 27, 11, 44, 19, 11], "v25": [7.02, 7.96, 7.78, 7.81, 7.13, 7.45, 7.55, 7.86, 7.38, 8.54], "n25": [34, 26, 43, 35, 22, 39, 14, 54, 22, 14]}, "elecSpringG2": {"labels": ["ES", "GP", "HS", "IDC", "IEOR", "MA", "ME", "MG", "MM", "PH"], "v24": [8.23, 8.44, 8.41, 8.64, 7.45, 7.1, 7.75, 8.33, 7.89, 7.78], "n24": [19, 36, 21, 60, 7, 30, 34, 39, 24, 25], "v25": [8.19, 8.48, 7.65, 8.54, 7.17, 7.62, 7.63, 7.42, 7.61, 8.04], "n25": [23, 37, 33, 72, 11, 39, 42, 37, 39, 29]}, "elecSD": {"labels": ["AE", "BB", "CE", "CH", "CL", "CS", "EC", "EE", "EN", "ENT", "ES", "GP", "HS", "IDC", "IEOR", "MA", "ME", "MG", "MM", "PH"], "y2025": [1.263, 0.814, 0.807, 1.098, 1.182, 0.904, 0.728, 0.809, 0.979, 0.469, 0.92, 0.79, 1.061, 0.625, 1.195, 1.044, 0.984, 0.585, 1.131, 1.018], "y2024": [1.087, 0.979, 0.979, 1.111, 1.12, 0.887, 0.668, 0.973, 1.017, 0.457, 0.828, 0.742, 0.878, 0.726, 1.363, 1.053, 0.867, 0.725, 0.991, 1.154]}, "deptSD": {"labels": ["AE", "CE", "CH", "CL", "CS", "EC", "EE", "EN", "ENT", "ES", "GP", "HS", "IDC", "IEOR", "MA", "ME", "MG", "MM", "PH"], "y2025": [1.21, 0.818, 1.109, 1.122, 0.886, 0.827, 0.783, 1.048, 0.537, 0.968, 0.79, 1.058, 0.623, 1.177, 1.047, 0.953, 0.61, 1.103, 1.073], "y2024": [1.033, 0.936, 1.123, 1.083, 1.194, 0.738, 0.982, 0.98, 0.481, 0.848, 0.742, 0.884, 0.723, 1.31, 1.221, 0.847, 0.755, 0.95, 1.082]}, "overallG1": {"labels": ["AE", "BB", "CE", "CH", "CL", "CS", "EC", "EE", "EN", "ENT"], "years": [2022, 2023, 2024, 2025], "data": {"2022": [6.92, 8.2, 7.2, 7.65, 7.03, 7.57, 7.64, 7.58, 7.18, 8.7], "2023": [7.09, 8.27, 7.04, 7.94, 7.08, 7.57, 7.72, 7.75, 7.13, 8.31], "2024": [7.26, 8.04, 7.28, 7.87, 7.31, 7.72, 7.79, 7.79, 7.49, 8.31], "2025": [7.07, 7.89, 7.49, 8.17, 7.24, 7.55, 7.77, 7.7, 7.35, 8.4]}}, "overallG2": {"labels": ["ES", "GP", "IDC", "IEOR", "MA", "ME", "MG", "MM", "PH"], "years": [2022, 2023, 2024, 2025], "data": {"2022": [7.75, 8.09, 8.2, 7.22, 6.67, 7.61, 7.77, 7.19, 7.46], "2023": [7.71, 7.88, 8.67, 7.09, 6.73, 7.49, 7.84, 7.34, 7.61], "2024": [7.83, 8.44, 8.61, 7.15, 7.54, 7.33, 7.86, 7.49, 7.39], "2025": [7.78, 8.38, 8.54, 7.61, 6.78, 7.54, 7.94, 7.17, 7.54]}}, "avsG1": {"labels": ["AE", "BB", "CE", "CH", "CL", "CS", "EC", "EE", "EN", "ENT"], "a24": [7.34, 8.25, 7.28, 7.74, 7.24, 7.83, 7.8, 7.74, 7.51, 8.35], "a25": [7.06, 7.96, 7.53, 8.32, 7.11, 7.56, 7.81, 7.62, 7.33, 8.45], "s24": [7.13, 7.68, 7.3, 8.06, 7.4, 7.56, 7.3, 7.84, 7.47, 8.27], "s25": [7.09, 7.8, 7.45, 8.02, 7.37, 7.54, 7.61, 7.79, 7.38, 8.39]}, "avsG2": {"labels": ["ES", "GP", "IDC", "IEOR", "MA", "ME", "MG", "MM", "PH"], "a24": [7.71, 8.53, 8.55, 7.18, 7.71, 7.24, 7.69, 7.45, 7.47], "a25": [7.92, 8.31, 8.54, 7.68, 6.91, 7.3, 7.89, 7.32, 7.67], "s24": [7.97, 8.39, 8.64, 7.06, 7.36, 7.45, 8.05, 7.56, 7.34], "s25": [7.63, 8.43, 8.54, 7.54, 6.65, 7.74, 7.99, 7.02, 7.44]}, "aa": {"labels": ["0-10%", "10-20%", "20-30%", "30-40%", "40-50%", "50-60%", "60-70%", "70-80%", "80-90%", "90-100%"], "y2024": [459, 492, 259, 108, 71, 40, 37, 19, 15, 2], "y2025": [496, 542, 288, 134, 72, 47, 34, 32, 16, 4]}, "kdeMinors": [{"year": 2022, "sd": 1.146, "n": 57, "mode": 7.79}, {"year": 2023, "sd": 0.987, "n": 56, "mode": 7.57}, {"year": 2024, "sd": 1.044, "n": 62, "mode": 7.22}, {"year": 2025, "sd": 1.216, "n": 68, "mode": 7.25}], "coursesDist": {"2024": {"n": 1824, "mean": 7.799, "sd": 1.378, "median": 7.947}, "2025": {"n": 1997, "mean": 7.804, "sd": 1.379, "median": 8.0}}};
+const DEPT_DATA = {"deptNames": {"AE": "Aerospace Engineering", "BB": "Biosciences and Bioengineering", "CE": "Civil Engineering", "CH": "Chemistry", "CL": "Chemical Engineering", "CS": "Computer Science and Engineering", "EC": "Economics", "EE": "Electrical Engineering", "EN": "Energy Science and Engineering", "ENT": "Desai Sethi School of Entrepreneurship", "ES": "Environmental Science and Engineering", "GP": "Applied Geophysics", "GS": "Earth Sciences", "HS": "Humanities and Social Sciences", "IDC": "IDC School of Design", "IEOR": "Industrial Engineering and Operations Research", "MA": "Mathematics/ASI", "ME": "Mechanical Engineering", "MG": "Shailesh J. Mehta School of Management", "MM": "Metallurgical Engineering and Materials Science", "PH": "Physics"}, "allDepts": ["AE", "BB", "CE", "CH", "CL", "CS", "EC", "EE", "EN", "ENT", "ES", "GP", "GS", "HS", "IDC", "IEOR", "MA", "ME", "MG", "MM", "PH"], "overall": {"AE": [6.92, 7.09, 7.26, 7.07], "BB": [8.2, 8.27, 8.04, 7.89], "CE": [7.2, 7.04, 7.28, 7.49], "CH": [7.65, 7.94, 7.87, 8.17], "CL": [7.03, 7.08, 7.31, 7.24], "CS": [7.57, 7.57, 7.72, 7.55], "EC": [7.64, 7.72, 7.79, 7.77], "EE": [7.58, 7.75, 7.79, 7.7], "EN": [7.18, 7.13, 7.49, 7.35], "ENT": [8.7, 8.31, 8.31, 8.4], "ES": [7.75, 7.71, 7.83, 7.78], "GP": [8.09, 7.88, 8.44, 8.38], "IDC": [8.2, 8.67, 8.61, 8.54], "IEOR": [7.22, 7.09, 7.15, 7.61], "MA": [6.67, 6.73, 7.54, 6.78], "ME": [7.61, 7.49, 7.33, 7.54], "MG": [7.77, 7.84, 7.86, 7.94], "MM": [7.19, 7.34, 7.49, 7.17], "PH": [7.46, 7.61, 7.39, 7.54]}, "overallYears": [2022, 2023, 2024, 2025], "avs": {"AE": [7.34, 7.06, 7.13, 7.09], "BB": [8.25, 7.96, 7.68, 7.8], "CE": [7.28, 7.53, 7.3, 7.45], "CH": [7.74, 8.32, 8.06, 8.02], "CL": [7.24, 7.11, 7.4, 7.37], "CS": [7.83, 7.56, 7.56, 7.54], "EC": [7.8, 7.81, 7.3, 7.61], "EE": [7.74, 7.62, 7.84, 7.79], "EN": [7.51, 7.33, 7.47, 7.38], "ENT": [8.35, 8.45, 8.27, 8.39], "ES": [7.71, 7.92, 7.97, 7.63], "GP": [8.53, 8.31, 8.39, 8.43], "IDC": [8.55, 8.54, 8.64, 8.54], "IEOR": [7.18, 7.68, 7.06, 7.54], "MA": [7.71, 6.91, 7.36, 6.65], "ME": [7.24, 7.3, 7.45, 7.74], "MG": [7.69, 7.89, 8.05, 7.99], "MM": [7.45, 7.32, 7.56, 7.02], "PH": [7.47, 7.67, 7.34, 7.44]}, "electives": {"AE": {"autumn": [[7.21, 33], [6.63, 31]], "spring": [[6.85, 26], [7.02, 34]]}, "BB": {"autumn": [[8.2, 29], [8.42, 28]], "spring": [[7.8, 22], [7.96, 26]]}, "CE": {"autumn": [[7.55, 46], [7.73, 49]], "spring": [[7.52, 35], [7.78, 43]]}, "CH": {"autumn": [[7.99, 31], [7.99, 31]], "spring": [[7.61, 32], [7.81, 35]]}, "CL": {"autumn": [[6.98, 29], [7.57, 27]], "spring": [[7.18, 14], [7.13, 22]]}, "CS": {"autumn": [[8.29, 29], [7.73, 39]], "spring": [[7.52, 27], [7.45, 39]]}, "EC": {"autumn": [[7.78, 13], [7.85, 16]], "spring": [[7.41, 11], [7.55, 14]]}, "EE": {"autumn": [[7.49, 51], [7.83, 54]], "spring": [[7.85, 44], [7.86, 54]]}, "EN": {"autumn": [[7.32, 22], [7.55, 26]], "spring": [[7.65, 19], [7.38, 22]]}, "ENT": {"autumn": [[8.29, 10], [8.48, 9]], "spring": [[8.37, 11], [8.54, 14]]}, "ES": {"autumn": [[7.31, 22], [7.6, 22]], "spring": [[8.23, 19], [8.19, 23]]}, "GP": {"autumn": [[8.9, 47], [8.45, 42]], "spring": [[8.44, 36], [8.48, 37]]}, "HS": {"autumn": [[8.5, 40], [8.15, 38]], "spring": [[8.41, 21], [7.65, 33]]}, "IDC": {"autumn": [[8.4, 80], [8.68, 92]], "spring": [[8.64, 60], [8.54, 72]]}, "IEOR": {"autumn": [[7.75, 13], [7.61, 13]], "spring": [[7.45, 7], [7.17, 11]]}, "MA": {"autumn": [[7.86, 41], [7.59, 39]], "spring": [[7.1, 30], [7.62, 39]]}, "ME": {"autumn": [[7.45, 38], [7.18, 34]], "spring": [[7.75, 34], [7.63, 42]]}, "MG": {"autumn": [[7.93, 53], [8.03, 47]], "spring": [[8.33, 39], [7.42, 37]]}, "MM": {"autumn": [[8.08, 34], [7.57, 41]], "spring": [[7.89, 24], [7.61, 39]]}, "PH": {"autumn": [[7.65, 25], [7.85, 29]], "spring": [[7.78, 25], [8.04, 29]]}}, "elecSD": {"AE": {"y2025": 1.263, "y2024": 1.087}, "BB": {"y2025": 0.814, "y2024": 0.979}, "CE": {"y2025": 0.807, "y2024": 0.979}, "CH": {"y2025": 1.098, "y2024": 1.111}, "CL": {"y2025": 1.182, "y2024": 1.12}, "CS": {"y2025": 0.904, "y2024": 0.887}, "EC": {"y2025": 0.728, "y2024": 0.668}, "EE": {"y2025": 0.809, "y2024": 0.973}, "EN": {"y2025": 0.979, "y2024": 1.017}, "ENT": {"y2025": 0.469, "y2024": 0.457}, "ES": {"y2025": 0.92, "y2024": 0.828}, "GP": {"y2025": 0.79, "y2024": 0.742}, "HS": {"y2025": 1.061, "y2024": 0.878}, "IDC": {"y2025": 0.625, "y2024": 0.726}, "IEOR": {"y2025": 1.195, "y2024": 1.363}, "MA": {"y2025": 1.044, "y2024": 1.053}, "ME": {"y2025": 0.984, "y2024": 0.867}, "MG": {"y2025": 0.585, "y2024": 0.725}, "MM": {"y2025": 1.131, "y2024": 0.991}, "PH": {"y2025": 1.018, "y2024": 1.154}}, "deptSD": {"AE": {"y2025": 1.21, "y2024": 1.033}, "CE": {"y2025": 0.818, "y2024": 0.936}, "CH": {"y2025": 1.109, "y2024": 1.123}, "CL": {"y2025": 1.122, "y2024": 1.083}, "CS": {"y2025": 0.886, "y2024": 1.194}, "EC": {"y2025": 0.827, "y2024": 0.738}, "EE": {"y2025": 0.783, "y2024": 0.982}, "EN": {"y2025": 1.048, "y2024": 0.98}, "ENT": {"y2025": 0.537, "y2024": 0.481}, "ES": {"y2025": 0.968, "y2024": 0.848}, "GP": {"y2025": 0.79, "y2024": 0.742}, "HS": {"y2025": 1.058, "y2024": 0.884}, "IDC": {"y2025": 0.623, "y2024": 0.723}, "IEOR": {"y2025": 1.177, "y2024": 1.31}, "MA": {"y2025": 1.047, "y2024": 1.221}, "ME": {"y2025": 0.953, "y2024": 0.847}, "MG": {"y2025": 0.61, "y2024": 0.755}, "MM": {"y2025": 1.103, "y2024": 0.95}, "PH": {"y2025": 1.073, "y2024": 1.082}}, "minors": {"AE": [[6.91, 8], [6.29, 4], [6.23, 4], [6.45, 4], [5.58, 7], [5.08, 6], [5.54, 8], [5.32, 5]], "BB": [[7.95, 4], [8.47, 6], [7.56, 7], [7.81, 4], [7.13, 5], [9.06, 5], [7.64, 6], [8.12, 5]], "CS": [[7.19, 5], [5.76, 4], [7.52, 4], [6.42, 4], [7.14, 3], [6.91, 3], [6.48, 3], [7.04, 4]], "DH": [[7.92, 4], [8.02, 2], [7.65, 5], [8.85, 4], [9.0, 2], [6.0, 3], [8.74, 3], [7.16, 4]], "OS": [[7.08, 2], [7.32, 2], [6.88, 1], [7.51, 2]], "EC": [[5.76, 1], null, [5.3, 1], null, null, null, null, null], "EE": [[6.54, 4], [5.91, 5], [6.64, 4], null, [7.63, 2], [6.63, 3], [7.19, 2], [6.13, 3]], "ENT": [[7.65, 8], [7.88, 9], [8.31, 8], [8.25, 12], [8.27, 3], [7.38, 3], [8.43, 4], [7.65, 5]], "ES": [[5.8, 1], [10.0, 1], [8.67, 1], null, [8.88, 2], [8.0, 1], [8.65, 2], [7.17, 2]], "HSS": [[9.06, 1], null, [8.08, 1], [8.21, 3], [7.48, 2], [8.27, 2], [8.6, 1], [8.5, 1]], "MA": [[6.57, 2], [7.16, 2], [7.21, 2], [6.58, 2], [5.74, 2], [6.71, 2], [7.44, 2], [6.58, 2]], "MG": [[7.46, 4], [5.89, 1], [7.25, 3], [7.12, 2], [7.72, 2], [7.27, 3], [7.8, 2], [6.98, 1]], "MM": [null, null, null, [8.0, 1], [10.0, 2], [8.0, 2], null, null], "PH": [[7.67, 2], [7.27, 1], [6.97, 2], [5.96, 2], [7.89, 2], [7.38, 1], [7.46, 2], [5.71, 1]], "Robotics": [[6.53, 4], null, [5.02, 2], [7.61, 3], null, null, null, null], "SysCon": [[7.12, 9], [7.17, 3], [7.85, 10], [8.06, 7], [6.29, 8], [8.04, 10], [7.82, 9], [7.61, 11]], "SI": [[7.38, 2], [8.27, 2], [8.76, 2], [8.19, 2], [7.38, 2], [8.27, 2], [7.14, 2], null], "DS": [[8.21, 1], [7.29, 1], [7.82, 1], [6.79, 2]]}, "apDist": {"AE": [13.91, 12.14, 7.66, 12.39], "BB": [50.3, 34.13, 68.63, 47.27], "CE": [17.57, 23.46, 20.46, 21.86], "CH": [45.56, 23.92, 22.55, 27.23], "CL": [28.14, 21.58, 27.46, 38.25], "CS": [40.04, 37.64, 45.91, 35.02], "EE": [29.0, 21.32, 27.4, 27.32], "EN": [0.0, 7.63, 0.0, 10.94], "ENT": [50.44, 72.57, 76.02, 69.08], "ES": [0.0, 3.43, 20.16, 16.75], "IDC": [0.0, 0.0, 5.34, 4.88], "IEOR": [9.88, 26.39, 13.85, 13.79], "MA": [49.69, 50.73, 37.8, 29.61], "ME": [24.82, 23.79, 16.44, 12.77], "MG": [11.98, 3.64, 4.34, 7.83], "MM": [17.7, 19.82, 23.89, 33.58], "PH": [26.15, 17.45, 22.16, 19.82]}, "apYears": [2022, 2023, 2024, 2025], "freshie": {"BB101": [8.2, 8.3, 7.86], "CH111": [6.5, 6.79, 6.75], "CH117": [9.46, 9.6, 9.54], "CS101": [7.57, 7.59, 7.28], "MA105": [6.52, 8.08, 6.77], "MA110": [6.31, 7.25, 6.24], "MS101": [8.53, 8.66, 8.53], "PH110": [7.48, 7.02, 6.91], "PH117": [8.2, 7.92, 8.37]}, "freshieCourses": ["BB101", "CH111", "CH117", "CS101", "MA105", "MA110", "MS101", "PH110", "PH117"], "freshieYears": [2023, 2024, 2025], "soph": {"AE": [7.21, 7.27], "CE": [7.08, 7.37], "CL": [7.07, 7.01], "CS": [7.23, 7.22], "EE": [7.56, 7.4], "EN": [7.31, 6.78], "EP": [6.96, 7.02], "ES": [7.66, 7.86], "IEOR": [null, 8.33], "ME": [7.44, 7.34], "MM": [7.44, 7.03]}, "third": {"AE": [7.35, 7.42], "CE": [7.15, 7.48], "CL": [7.12, 6.95], "CS": [7.3, 7.28], "EE": [7.62, 7.55], "EN": [7.38, 7.1], "EP": [7.02, 7.05], "ES": [7.72, 7.92], "IEOR": [null, null], "ME": [7.25, 7.41], "MM": [7.51, 7.18]}};
 
 Chart.defaults.font.family = "'Inter', sans-serif";
 Chart.defaults.color = '#241C3D';
 
 const PALETTE = {
-  pink:'#F4A6A6', pinkB:'#e88a8a',
-  blue:'#9FD2EF', blueB:'#6fb8de',
-  green:'#A8E6B8', greenB:'#7fd399',
-  yellow:'#F9E27D', yellowB:'#f0cf3f',
-  ink:'#241C3D'
+  pink:'#F4A6A6', blue:'#9FD2EF', green:'#A8E6B8', yellow:'#F9E27D', ink:'#241C3D',
+  orange:'#e0784f', purple:'#7b68ee'
 };
 
-function groupedBar(canvasId, labels, seriesA, seriesB, nameA, nameB, colorA, colorB, nA, nB){
-  const ctx = document.getElementById(canvasId);
-  if(!ctx) return;
-  new Chart(ctx, {
-    type:'bar',
-    data:{ labels, datasets:[
-      {label:nameA, data:seriesA, backgroundColor:colorA, borderColor:PALETTE.ink, borderWidth:1.5, borderRadius:4, meta:nA},
-      {label:nameB, data:seriesB, backgroundColor:colorB, borderColor:PALETTE.ink, borderWidth:1.5, borderRadius:4, meta:nB},
-    ]},
-    options:{
-      responsive:true,
-      plugins:{
-        legend:{position:'top', labels:{boxWidth:12, font:{weight:'600'}}},
-        tooltip:{callbacks:{ label:(c)=>{
-          const meta = c.dataset.meta ? c.dataset.meta[c.dataIndex] : null;
-          return `${c.dataset.label}: ${c.parsed.y}` + (meta? `  (${meta} courses)`:'');
-        }}}
-      },
-      scales:{ y:{ beginAtZero:false, suggestedMin: Math.min(...seriesA,...seriesB)-0.6, suggestedMax: Math.max(...seriesA,...seriesB)+0.5,
-        title:{display:true,text:'Weighted Avg Grade'} } }
+let activeCharts = [];
+
+function destroyCharts(){ activeCharts.forEach(c => c.destroy()); activeCharts = []; }
+
+function colorForGrade(v, lo, hi){
+  if(v == null) return '#f4f4f4';
+  const t = Math.max(0, Math.min(1, (v - lo) / (hi - lo)));
+  const stops = [[0,[198,239,206]],[0.5,[255,235,156]],[1,[248,105,107]]];
+  for(let i=0;i<stops.length-1;i++){
+    const [t0,c0]=stops[i],[t1,c1]=stops[i+1];
+    if(t>=t0&&t<=t1){
+      const f=t1===t0?0:(t-t0)/(t1-t0);
+      return `rgb(${Math.round(c0[0]+(c1[0]-c0[0])*f)},${Math.round(c0[1]+(c1[1]-c0[1])*f)},${Math.round(c0[2]+(c1[2]-c0[2])*f)})`;
     }
-  });
-}
-
-function radarChart(canvasId, labels, data, color, fillColor){
-  const ctx = document.getElementById(canvasId);
-  if(!ctx) return;
-  new Chart(ctx, {
-    type:'radar',
-    data:{ labels, datasets:[{ label:'Std. Deviation', data, borderColor:color, backgroundColor:fillColor,
-      pointBackgroundColor:color, pointRadius:3, borderWidth:2 }]},
-    options:{
-      responsive:true,
-      plugins:{legend:{display:false}, tooltip:{callbacks:{label:(c)=>`${c.label}: ${c.formattedValue}`}}},
-      scales:{ r:{ beginAtZero:true, suggestedMax: Math.max(...data)+0.15,
-        pointLabels:{font:{size:10, weight:'700'}}, ticks:{backdropColor:'transparent', font:{size:9}} } }
-    }
-  });
-}
-
-function fourYearBar(canvasId, labels, yearsData, years){
-  const ctx = document.getElementById(canvasId);
-  if(!ctx) return;
-  const cols = [PALETTE.pink, PALETTE.yellow, PALETTE.blue, PALETTE.green];
-  new Chart(ctx, {
-    type:'bar',
-    data:{ labels, datasets: years.map((y,i)=>({label:String(y), data:yearsData[y], backgroundColor:cols[i%4], borderColor:PALETTE.ink, borderWidth:1.2, borderRadius:3})) },
-    options:{ responsive:true,
-      plugins:{legend:{position:'top', labels:{boxWidth:12,font:{weight:'600'}}}},
-      scales:{ y:{ suggestedMin: 6, suggestedMax: 9, title:{display:true,text:'Average Grade'} } } }
-  });
-}
-
-function butterflyChart(canvasId, labels, a24, a25, s24, s25){
-  const ctx = document.getElementById(canvasId);
-  if(!ctx) return;
-  new Chart(ctx, {
-    type:'bar',
-    data:{ labels, datasets:[
-      {label:'2024 Autumn', data:a24, backgroundColor:PALETTE.pink, borderColor:PALETTE.ink, borderWidth:1},
-      {label:'2025 Autumn', data:a25, backgroundColor:PALETTE.green, borderColor:PALETTE.ink, borderWidth:1},
-      {label:'2024 Spring', data:s24, backgroundColor:PALETTE.blue, borderColor:PALETTE.ink, borderWidth:1},
-      {label:'2025 Spring', data:s25, backgroundColor:PALETTE.yellow, borderColor:PALETTE.ink, borderWidth:1},
-    ]},
-    options:{ indexAxis:'y', responsive:true,
-      plugins:{legend:{position:'top', labels:{boxWidth:12,font:{weight:'600'}}}},
-      scales:{ x:{ suggestedMin:6, suggestedMax:9, title:{display:true,text:'Average Grade'} } } }
-  });
-}
-
-// ---- Electives Autumn/Spring ----
-groupedBar('chartElecAutumnG1', CHART_DATA.elecAutumnG1.labels, CHART_DATA.elecAutumnG1.v24, CHART_DATA.elecAutumnG1.v25,
-  'Autumn 2024','Autumn 2025', PALETTE.pink, PALETTE.green, CHART_DATA.elecAutumnG1.n24, CHART_DATA.elecAutumnG1.n25);
-groupedBar('chartElecAutumnG2', CHART_DATA.elecAutumnG2.labels, CHART_DATA.elecAutumnG2.v24, CHART_DATA.elecAutumnG2.v25,
-  'Autumn 2024','Autumn 2025', PALETTE.pink, PALETTE.green, CHART_DATA.elecAutumnG2.n24, CHART_DATA.elecAutumnG2.n25);
-groupedBar('chartElecSpringG1', CHART_DATA.elecSpringG1.labels, CHART_DATA.elecSpringG1.v24, CHART_DATA.elecSpringG1.v25,
-  'Spring 2024','Spring 2025', PALETTE.blue, PALETTE.yellow, CHART_DATA.elecSpringG1.n24, CHART_DATA.elecSpringG1.n25);
-groupedBar('chartElecSpringG2', CHART_DATA.elecSpringG2.labels, CHART_DATA.elecSpringG2.v24, CHART_DATA.elecSpringG2.v25,
-  'Spring 2024','Spring 2025', PALETTE.blue, PALETTE.yellow, CHART_DATA.elecSpringG2.n24, CHART_DATA.elecSpringG2.n25);
-
-// ---- Electives SD radar ----
-radarChart('chartElecSD2025', CHART_DATA.elecSD.labels, CHART_DATA.elecSD.y2025, '#e0784f', 'rgba(224,120,79,0.28)');
-radarChart('chartElecSD2024', CHART_DATA.elecSD.labels, CHART_DATA.elecSD.y2024, '#5b8fd6', 'rgba(91,143,214,0.25)');
-
-// ---- Dept-wise SD radar ----
-radarChart('chartDeptSD2025', CHART_DATA.deptSD.labels, CHART_DATA.deptSD.y2025, '#e0784f', 'rgba(224,120,79,0.28)');
-radarChart('chartDeptSD2024', CHART_DATA.deptSD.labels, CHART_DATA.deptSD.y2024, '#5b8fd6', 'rgba(91,143,214,0.25)');
-
-// ---- Overall dept avg (4-year) ----
-fourYearBar('chartOverallG1', CHART_DATA.overallG1.labels, CHART_DATA.overallG1.data, CHART_DATA.overallG1.years);
-fourYearBar('chartOverallG2', CHART_DATA.overallG2.labels, CHART_DATA.overallG2.data, CHART_DATA.overallG2.years);
-
-// ---- Autumn vs Spring butterfly ----
-butterflyChart('chartAvsG1', CHART_DATA.avsG1.labels, CHART_DATA.avsG1.a24, CHART_DATA.avsG1.a25, CHART_DATA.avsG1.s24, CHART_DATA.avsG1.s25);
-butterflyChart('chartAvsG2', CHART_DATA.avsG2.labels, CHART_DATA.avsG2.a24, CHART_DATA.avsG2.a25, CHART_DATA.avsG2.s24, CHART_DATA.avsG2.s25);
-
-// ---- AA% histogram ----
-(function(){
-  const ctx = document.getElementById('chartAA');
-  new Chart(ctx, { type:'bar',
-    data:{ labels: CHART_DATA.aa.labels, datasets:[
-      {label:'2024', data:CHART_DATA.aa.y2024, backgroundColor:PALETTE.blue, borderColor:PALETTE.ink, borderWidth:1.2, borderRadius:4},
-      {label:'2025', data:CHART_DATA.aa.y2025, backgroundColor:PALETTE.pink, borderColor:PALETTE.ink, borderWidth:1.2, borderRadius:4},
-    ]},
-    options:{ responsive:true,
-      plugins:{legend:{position:'top'}},
-      scales:{ x:{title:{display:true,text:'% of Students Receiving AA (bucket)'}}, y:{title:{display:true,text:'Number of Courses'}} } }
-  });
-})();
-
-// ---- Illustrative normal-ish curve generator ----
-function gaussPoints(mean, sd, lo, hi, step){
-  const pts = [];
-  for(let x=lo; x<=hi; x+=step){
-    const y = Math.exp(-0.5*Math.pow((x-mean)/sd,2));
-    pts.push({x: Math.round(x*100)/100, y});
   }
-  return pts;
+  return '#f4f4f4';
 }
 
-(function(){
-  const ctx = document.getElementById('chartKdeMinors');
-  const colors = ['#7fd399','#f0cf3f','#6fb8de','#e88a8a'];
-  const datasets = CHART_DATA.kdeMinors.map((d,i)=>{
-    const pts = gaussPoints(d.mode, d.sd, 3, 10, 0.15);
-    return { label:`${d.year} (SD=${d.sd}, n=${d.n})`, data: pts.map(p=>p.y), borderColor:colors[i], backgroundColor:'transparent', borderWidth:2.4, pointRadius:0, tension:0.35 };
-  });
-  const labels = gaussPoints(7,1,3,10,0.15).map(p=>p.x);
-  new Chart(ctx, { type:'line', data:{ labels, datasets },
-    options:{ responsive:true, interaction:{mode:'nearest'},
-      plugins:{legend:{position:'bottom', labels:{boxWidth:12,font:{size:10.5,weight:'600'}}}},
-      scales:{ x:{ title:{display:true,text:'Course Average Grade'}, ticks:{maxTicksLimit:8} }, y:{ display:false } } }
-  });
-})();
+function txtColor(rgb){
+  const nums = rgb.replace('rgb(','').replace(')','').split(',');
+  const lum = 0.299*parseInt(nums[0])+0.587*parseInt(nums[1])+0.114*parseInt(nums[2]);
+  return lum>150?'#1a1330':'#ffffff';
+}
 
-(function(){
-  ['2024','2025'].forEach(y=>{
-    const d = CHART_DATA.coursesDist[y];
-    const pts = gaussPoints(d.mean, d.sd, 3, 10, 0.1);
-    const ctx = document.getElementById('chartDist'+y);
-    new Chart(ctx, { type:'line',
-      data:{ labels: pts.map(p=>p.x), datasets:[{ label:`n=${d.n}`, data: pts.map(p=>p.y),
-        borderColor: y==='2024' ? '#6fb8de' : '#e0784f', backgroundColor: y==='2024' ? 'rgba(111,184,222,0.25)':'rgba(224,120,79,0.22)',
-        fill:true, borderWidth:2.4, pointRadius:0, tension:0.35 }]},
-      options:{ responsive:true,
-        plugins:{legend:{display:true, position:'bottom'}},
-        scales:{ x:{ title:{display:true,text:'Course Average Grade (0–10)'}, ticks:{maxTicksLimit:8} }, y:{display:false} } }
+function buildDeptGrid(){
+  const grid = document.getElementById('deptGrid');
+  DEPT_DATA.allDepts.forEach(abbr => {
+    const card = document.createElement('div');
+    card.className = 'dept-card';
+    card.dataset.dept = abbr;
+    card.innerHTML = `<div class="abbr">${abbr}</div><div class="name">${DEPT_DATA.deptNames[abbr]}</div>`;
+    card.addEventListener('click', ()=> selectDept(abbr));
+    grid.appendChild(card);
+  });
+}
+
+function selectDept(abbr){
+  document.querySelectorAll('.dept-card').forEach(c => c.classList.toggle('selected', c.dataset.dept===abbr));
+  document.getElementById('placeholder').style.display='none';
+  document.getElementById('dashboard').classList.add('visible');
+  document.getElementById('sectionNav').classList.add('visible');
+  destroyCharts();
+  renderDashboard(abbr);
+  setTimeout(()=> document.getElementById('statRow').scrollIntoView({behavior:'smooth', block:'start'}), 50);
+  setTimeout(setupScrollSpy, 200);
+}
+
+function renderDashboard(dept){
+  const isDark = document.documentElement.getAttribute('data-theme')==='dark';
+  const tickColor = isDark?'#f0eaf8':'#241C3D';
+  const gridColor = isDark?'rgba(240,234,248,0.2)':'rgba(36,28,61,0.1)';
+
+  const statRow = document.getElementById('statRow');
+  statRow.innerHTML = '';
+
+  const overall = DEPT_DATA.overall[dept];
+  const avs = DEPT_DATA.avs[dept];
+  const elec = DEPT_DATA.electives[dept];
+  const esd = DEPT_DATA.elecSD[dept];
+  const dsd = DEPT_DATA.deptSD[dept];
+  const ap = DEPT_DATA.apDist[dept];
+  const minors = DEPT_DATA.minors[dept];
+
+  const stats = [];
+  if(overall){
+    stats.push({lbl:'2025 Avg', val:overall[3].toFixed(2)});
+    stats.push({lbl:'4yr Mean', val:(overall.reduce((a,b)=>a+b,0)/overall.length).toFixed(2)});
+    const trend = overall[3]-overall[0];
+    stats.push({lbl:'Trend (22→25)', val:(trend>0?'+':'')+trend.toFixed(2)});
+  }
+  if(elec){
+    if(elec.autumn && elec.autumn[1]) stats.push({lbl:'Elec Avg (A25)', val:elec.autumn[1][0].toFixed(2)});
+    if(elec.spring && elec.spring[1]) stats.push({lbl:'Elec Avg (S25)', val:elec.spring[1][0].toFixed(2)});
+  }
+  if(esd) stats.push({lbl:'Elec SD (2025)', val:esd.y2025.toFixed(3)});
+  stats.forEach(s=>{
+    const div = document.createElement('div');
+    div.className='stat-card';
+    div.innerHTML=`<div class="lbl">${s.lbl}</div><div class="val">${s.val}</div>`;
+    statRow.appendChild(div);
+  });
+
+  if(overall){
+    document.getElementById('cardOverall').style.display='';
+    new Chart(document.getElementById('chartDeptOverall'),{
+      type:'bar',
+      data:{labels:DEPT_DATA.overallYears.map(String), datasets:[{label:'Avg Grade', data:overall,
+        backgroundColor:[PALETTE.pink,PALETTE.yellow,PALETTE.blue,PALETTE.green], borderColor:PALETTE.ink, borderWidth:1.5, borderRadius:4}]},
+      options:{responsive:true, plugins:{legend:{display:false}}, scales:{y:{suggestedMin:6,suggestedMax:9,title:{display:true,text:'Average Grade'},ticks:{color:tickColor},grid:{color:gridColor}},x:{ticks:{color:tickColor},grid:{color:gridColor}}}}
     });
-  });
-})();
+    activeCharts.push(Chart.instances[Object.keys(Chart.instances).pop()]);
+  } else { document.getElementById('cardOverall').style.display='none'; }
 
-// ---- Nav interactivity ----
-const toggle = document.getElementById('menuToggle');
-const sidebar = document.getElementById('sidebar');
-toggle.addEventListener('click', ()=> sidebar.classList.toggle('open'));
-document.querySelectorAll('.navlist a, .toc-card').forEach(a=>{
-  a.addEventListener('click', ()=> sidebar.classList.remove('open'));
-});
+  if(avs){
+    new Chart(document.getElementById('chartDeptAvs'),{
+      type:'bar',
+      data:{labels:['Aut 24','Aut 25','Spr 24','Spr 25'], datasets:[{label:'Avg Grade', data:avs,
+        backgroundColor:[PALETTE.pink,PALETTE.green,PALETTE.blue,PALETTE.yellow], borderColor:PALETTE.ink, borderWidth:1.5, borderRadius:4}]},
+      options:{responsive:true, plugins:{legend:{display:false}}, scales:{y:{suggestedMin:6,suggestedMax:9,title:{display:true,text:'Average Grade'},ticks:{color:tickColor},grid:{color:gridColor}},x:{ticks:{color:tickColor},grid:{color:gridColor}}}}
+    });
+    activeCharts.push(Chart.instances[Object.keys(Chart.instances).pop()]);
+  }
 
-const navLinks = document.querySelectorAll('#tocnav a');
-const sections = Array.from(navLinks).map(a=>document.querySelector(a.getAttribute('href')));
-function onScroll(){
-  let idx = 0;
-  const y = window.scrollY + 120;
-  sections.forEach((s,i)=>{ if(s && s.offsetTop <= y) idx = i; });
-  navLinks.forEach((a,i)=> a.classList.toggle('active', i===idx));
+  if(elec){
+    document.getElementById('cardElectives').style.display='';
+    const aData = elec.autumn;
+    const sData = elec.spring;
+    if(aData){
+      new Chart(document.getElementById('chartDeptElecAutumn'),{
+        type:'bar',
+        data:{labels:['2024','2025'], datasets:[{label:'Avg Grade', data:[aData[0]?aData[0][0]:null, aData[1]?aData[1][0]:null],
+          backgroundColor:[PALETTE.pink,PALETTE.green], borderColor:PALETTE.ink, borderWidth:1.5, borderRadius:4}]},
+        options:{responsive:true, plugins:{legend:{display:false}}, scales:{y:{suggestedMin:6,suggestedMax:9,ticks:{color:tickColor},grid:{color:gridColor}},x:{ticks:{color:tickColor},grid:{color:gridColor}}}}
+      });
+      activeCharts.push(Chart.instances[Object.keys(Chart.instances).pop()]);
+    }
+    if(sData){
+      new Chart(document.getElementById('chartDeptElecSpring'),{
+        type:'bar',
+        data:{labels:['2024','2025'], datasets:[{label:'Avg Grade', data:[sData[0]?sData[0][0]:null, sData[1]?sData[1][0]:null],
+          backgroundColor:[PALETTE.blue,PALETTE.yellow], borderColor:PALETTE.ink, borderWidth:1.5, borderRadius:4}]},
+        options:{responsive:true, plugins:{legend:{display:false}}, scales:{y:{suggestedMin:6,suggestedMax:9,ticks:{color:tickColor},grid:{color:gridColor}},x:{ticks:{color:tickColor},grid:{color:gridColor}}}}
+      });
+      activeCharts.push(Chart.instances[Object.keys(Chart.instances).pop()]);
+    }
+  } else { document.getElementById('cardElectives').style.display='none'; }
+
+  if(esd || dsd){
+    document.getElementById('cardSD').style.display='';
+    if(esd){
+      new Chart(document.getElementById('chartDeptElecSD'),{
+        type:'bar',
+        data:{labels:['2024','2025'], datasets:[{label:'Elective SD', data:[esd.y2024,esd.y2025],
+          backgroundColor:[PALETTE.blue,PALETTE.orange], borderColor:PALETTE.ink, borderWidth:1.5, borderRadius:4}]},
+        options:{responsive:true, plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true,suggestedMax:1.6,ticks:{color:tickColor},grid:{color:gridColor}},x:{ticks:{color:tickColor},grid:{color:gridColor}}}}
+      });
+      activeCharts.push(Chart.instances[Object.keys(Chart.instances).pop()]);
+    }
+    if(dsd){
+      new Chart(document.getElementById('chartDeptDeptSD'),{
+        type:'bar',
+        data:{labels:['2024','2025'], datasets:[{label:'Dept SD', data:[dsd.y2024,dsd.y2025],
+          backgroundColor:[PALETTE.blue,PALETTE.orange], borderColor:PALETTE.ink, borderWidth:1.5, borderRadius:4}]},
+        options:{responsive:true, plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true,suggestedMax:1.6,ticks:{color:tickColor},grid:{color:gridColor}},x:{ticks:{color:tickColor},grid:{color:gridColor}}}}
+      });
+      activeCharts.push(Chart.instances[Object.keys(Chart.instances).pop()]);
+    }
+  } else { document.getElementById('cardSD').style.display='none'; }
+
+  if(ap){
+    document.getElementById('cardAP').style.display='';
+    new Chart(document.getElementById('chartDeptAP'),{
+      type:'bar',
+      data:{labels:DEPT_DATA.apYears.map(String), datasets:[{label:'AP %', data:ap,
+        backgroundColor:[PALETTE.blue,PALETTE.green,PALETTE.yellow,PALETTE.pink], borderColor:PALETTE.ink, borderWidth:1.5, borderRadius:4}]},
+      options:{responsive:true, plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true,title:{display:true,text:'% of AP Capacity'},ticks:{color:tickColor},grid:{color:gridColor}},x:{ticks:{color:tickColor},grid:{color:gridColor}}}}
+    });
+    activeCharts.push(Chart.instances[Object.keys(Chart.instances).pop()]);
+  } else { document.getElementById('cardAP').style.display='none'; }
+
+  if(minors && minors.length>0){
+    document.getElementById('cardMinors').style.display='';
+    const cols = ['Autumn 2024','Spring 2024','Autumn 2025','Spring 2025','Autumn 2022','Spring 2022','Autumn 2023','Spring 2023'];
+    let html = '<table class="heatmap-min"><thead><tr><th></th>';
+    cols.forEach(c => html+=`<th>${c}</th>`);
+    html += '</tr></thead><tbody><tr><th class="rowlabel">'+dept+'</th>';
+    const padded = new Array(8).fill(null);
+    minors.forEach((entry,i)=>{ if(entry) padded[i]=entry; });
+    padded.forEach(entry=>{
+      if(!entry){ html+='<td class="empty">—</td>'; }
+      else{
+        const [v,n]=entry;
+        const bg=colorForGrade(v,5,10);
+        html+=`<td style="background:${bg};color:${txtColor(bg)}"><b>${v.toFixed(2)}</b><br><span class="n-tag">n=${n}</span></td>`;
+      }
+    });
+    html += '</tr></tbody></table>';
+    document.getElementById('minorsTableWrap').innerHTML = html;
+  } else { document.getElementById('cardMinors').style.display='none'; }
+
+  if(DEPT_DATA.soph[dept]){
+    document.getElementById('cardSoph').style.display='';
+    const vals = DEPT_DATA.soph[dept];
+    let html = '<table class="heatmap-min"><thead><tr><th></th><th>2024</th><th>2025</th></tr></thead><tbody>';
+    html += `<tr><th class="rowlabel">${dept}</th>`;
+    vals.forEach(v=>{
+      if(v==null){ html+='<td class="empty">—</td>'; }
+      else{ const bg=colorForGrade(v,6,10); html+=`<td style="background:${bg};color:${txtColor(bg)}">${v.toFixed(2)}</td>`; }
+    });
+    html += '</tr></tbody></table>';
+    document.getElementById('sophTableWrap').innerHTML = html;
+  } else { document.getElementById('cardSoph').style.display='none'; }
+
+  if(DEPT_DATA.third[dept]){
+    document.getElementById('cardThird').style.display='';
+    const vals = DEPT_DATA.third[dept];
+    let html = '<table class="heatmap-min"><thead><tr><th></th><th>2024</th><th>2025</th></tr></thead><tbody>';
+    html += `<tr><th class="rowlabel">${dept}</th>`;
+    vals.forEach(v=>{
+      if(v==null){ html+='<td class="empty">—</td>'; }
+      else{ const bg=colorForGrade(v,6,10); html+=`<td style="background:${bg};color:${txtColor(bg)}">${v.toFixed(2)}</td>`; }
+    });
+    html += '</tr></tbody></table>';
+    document.getElementById('thirdTableWrap').innerHTML = html;
+  } else { document.getElementById('cardThird').style.display='none'; }
 }
-window.addEventListener('scroll', onScroll);
-onScroll();
 
-// ---- Dark Mode Toggle ----
+buildDeptGrid();
+
+// ---- Section Nav Scroll-Spy ----
+function setupScrollSpy(){
+  const nav = document.getElementById('sectionNav');
+  const links = nav.querySelectorAll('a');
+  const sections = [];
+  links.forEach(a => {
+    const id = a.getAttribute('href').replace('#','');
+    const el = document.querySelector(`[data-section="${id}"]`);
+    if(el) sections.push({link:a, el});
+  });
+  if(!sections.length) return;
+  links.forEach(a => a.addEventListener('click', e => {
+    e.preventDefault();
+    const id = a.getAttribute('href').replace('#','');
+    const el = document.querySelector(`[data-section="${id}"]`);
+    if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
+  }));
+  function onScroll(){
+    let active = sections[0];
+    const y = window.scrollY + 160;
+    for(const s of sections){ if(s.el.offsetTop <= y) active = s; }
+    sections.forEach(s => s.link.classList.toggle('active', s===active));
+  }
+  window.addEventListener('scroll', onScroll);
+  onScroll();
+}
+
+// ---- Dark Mode ----
 const themeToggle = document.getElementById('themeToggle');
 const htmlEl = document.documentElement;
 
 function applyTheme(theme){
-  const isDark = theme === 'dark';
-  if(isDark){
-    htmlEl.setAttribute('data-theme', 'dark');
-    themeToggle.textContent = '☀️';
-  } else {
-    htmlEl.removeAttribute('data-theme');
-    themeToggle.textContent = '🌙';
-  }
-  const textColor = isDark ? '#f0eaf8' : '#241C3D';
-  const gridColor = isDark ? 'rgba(240,234,248,0.2)' : 'rgba(36,28,61,0.1)';
-  const borderCol = isDark ? '#3d3560' : '#EDE6C8';
+  const isDark = theme==='dark';
+  if(isDark){ htmlEl.setAttribute('data-theme','dark'); themeToggle.textContent='☀️'; }
+  else { htmlEl.removeAttribute('data-theme'); themeToggle.textContent='🌙'; }
+  const textColor = isDark?'#f0eaf8':'#241C3D';
+  const gridColor = isDark?'rgba(240,234,248,0.2)':'rgba(36,28,61,0.1)';
+  const borderCol = isDark?'#3d3560':'#EDE6C8';
   Chart.defaults.color = textColor;
   Chart.defaults.borderColor = borderCol;
-  Chart.defaults.scale = Chart.defaults.scale || {};
-  Chart.defaults.scale.grid = Chart.defaults.scale.grid || {};
-  Chart.defaults.scale.grid.color = gridColor;
-  if(Chart.instances){
-    Object.values(Chart.instances).forEach(c => {
-      if(c.options && c.options.scales){
-        Object.values(c.options.scales).forEach(s => {
-          if(!s) return;
-          s.grid = Object.assign(s.grid || {}, {color: gridColor});
-          s.ticks = Object.assign(s.ticks || {}, {color: textColor});
-          if(s.title) s.title = Object.assign(s.title, {color: textColor});
-          if(s.pointLabels) s.pointLabels = Object.assign(s.pointLabels, {color: textColor});
-        });
-      }
-      if(c.options && c.options.plugins && c.options.plugins.legend && c.options.plugins.legend.labels){
-        c.options.plugins.legend.labels.color = textColor;
-      }
-      c.update();
-    });
-  }
+  Chart.instances && Object.values(Chart.instances).forEach(c => {
+    if(c.options && c.options.scales){
+      Object.values(c.options.scales).forEach(s => {
+        if(!s) return;
+        s.grid = Object.assign(s.grid||{},{color:gridColor});
+        s.ticks = Object.assign(s.ticks||{},{color:textColor});
+        if(s.title) s.title = Object.assign(s.title,{color:textColor});
+        if(s.pointLabels) s.pointLabels = Object.assign(s.pointLabels,{color:textColor});
+      });
+    }
+    if(c.options && c.options.plugins && c.options.plugins.legend && c.options.plugins.legend.labels)
+      c.options.plugins.legend.labels.color = textColor;
+    c.update();
+  });
 }
-
-applyTheme(localStorage.getItem('theme') || 'light');
-
-themeToggle.addEventListener('click', ()=>{
-  const next = htmlEl.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-  localStorage.setItem('theme', next);
+applyTheme(localStorage.getItem('theme')||'light');
+themeToggle.addEventListener('click',()=>{
+  const next = htmlEl.getAttribute('data-theme')==='dark'?'light':'dark';
+  localStorage.setItem('theme',next);
   applyTheme(next);
 });
 </script>
