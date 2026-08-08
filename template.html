@@ -296,6 +296,13 @@ footer{
   body{background:#fff;}
 }
 
+/* ---------- LOGOS ---------- */
+.logo-corner{position:absolute; z-index:10; pointer-events:none;}
+.logo-ugac{top:16px; left:16px;}
+.logo-dav{top:16px; right:16px;}
+.logo-corner img{height:50px; width:auto; filter:drop-shadow(0 2px 6px rgba(0,0,0,0.15));}
+@media(max-width:980px){.logo-corner img{height:38px;}}
+
 /* ---------- DARK MODE ---------- */
 [data-theme="dark"] body{
   background-image:
@@ -371,7 +378,9 @@ footer{
     </div>
   </nav>
 
-  <main class="main">
+  <main class="main" style="position:relative;">
+    <div class="logo-corner logo-ugac"><img src="images/ugac.jpg" alt="UGAC"></div>
+    <div class="logo-corner logo-dav" style="display:flex;align-items:center;gap:8px;"><span style="font-size:12px;font-weight:700;color:var(--ink-soft);white-space:nowrap;">Data Analytics and Visualization Team</span><img src="images/dav.png" alt="DAV Team"></div>
 
     <!-- HERO -->
     <section id="home" class="block">
@@ -382,7 +391,7 @@ footer{
           <div class="pill"><b>Contributed by</b>Harsh, Ummehani, Vishakha, Zubair</div>
           <div class="pill"><b>Project Led By</b>Rakshana</div>
           <div class="pill"><b>Source</b>Internal ASC · UG-open courses only</div>
-          <a href="dept.html" class="pill" style="cursor:pointer;text-decoration:none;background:var(--ink);color:var(--cream);"><b>Explore →</b>Department Dashboard</a>
+          <a href="dept.html" class="pill" style="cursor:pointer;text-decoration:none;background:var(--ink);color:var(--cream);transition:transform .15s ease, box-shadow .15s ease;" onmouseover="this.style.transform='translate(-3px,-3px)';this.style.boxShadow='6px 6px 0 var(--yellow)'" onmouseout="this.style.transform='';this.style.boxShadow=''"><b>Explore →</b>Department Dashboard</a>
         </div>
       </div>
 
