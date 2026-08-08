@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Grading Stats Report 3.0 — DAV Team, UGAC</title>
+<title>Grading Stats Report 3.0, DAV Team, UGAC</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 <script>/*!
@@ -68,12 +68,18 @@ body{
   color:var(--ink);
   background:var(--cream);
   background-image:
-    repeating-linear-gradient(135deg, rgba(255,255,255,0.55) 0 26px, transparent 26px 60px);
+    linear-gradient(rgba(36,28,61,0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(36,28,61,0.06) 1px, transparent 1px),
+    linear-gradient(180deg, #ffffff 0%, #ffffff 180px, var(--cream) 52%, var(--pink-pale) 100%);
+  background-size:40px 40px, 40px 40px, 100% 100%;
   min-height:100vh;
 }
-h1,h2,h3,h4{font-family:'Baloo 2',system-ui,sans-serif; margin:0; letter-spacing:.2px;}
+h1,h2,h3,h4{font-family:'Baloo 2',system-ui,sans-serif; margin:0; letter-spacing:.2px; transition:color .15s ease, text-shadow .15s ease;}
+h1:hover,h2:hover,h3:hover,h4:hover{color:var(--pink-deep); text-shadow:0 2px 8px rgba(255,158,158,0.3);}
 p{line-height:1.6;}
 a{color:inherit;}
+b{transition:color .15s ease, text-shadow .15s ease; cursor:default;}
+b:hover{color:var(--pink-deep); text-shadow:0 1px 6px rgba(255,158,158,0.25);}
 .mono{font-family:'JetBrains Mono',monospace;}
 
 /* ---------- LAYOUT ---------- */
@@ -94,10 +100,10 @@ a{color:inherit;}
 }
 .brand-badge{
   width:44px;height:44px;border-radius:14px;
-  background:linear-gradient(135deg,var(--pink),var(--yellow));
+  background:linear-gradient(135deg,var(--cream-deep),var(--paper));
   display:flex;align-items:center;justify-content:center;
-  font-size:22px; border:2px solid var(--ink);
-  flex:0 0 44px;
+  font-size:20px; border:1.5px solid var(--line);
+  flex:0 0 44px; color:var(--ink-soft);
 }
 .brand-text{line-height:1.15;}
 .brand-text .t1{font-family:'Baloo 2'; font-weight:700; font-size:15.5px;}
@@ -125,7 +131,7 @@ a{color:inherit;}
 .sidebar-foot{margin-top:22px; font-size:11px; color:var(--ink-soft); padding:10px 8px; border-top:2px dashed var(--line);}
 
 .menutoggle{
-  display:none; position:fixed; top:14px; right:14px; z-index:100;
+  display:none; position:fixed; top:18px; right:68px; z-index:200;
   width:46px;height:46px;border-radius:13px; border:2px solid var(--ink);
   background:var(--yellow); font-size:20px; align-items:center; justify-content:center;
   box-shadow:var(--shadow);
@@ -228,10 +234,31 @@ section.block{
 
 .formula-box{
   background:var(--cream-deep); border:2px solid var(--ink); border-radius:16px;
-  padding:18px 20px; font-family:'JetBrains Mono',monospace; font-size:14.5px;
-  overflow-x:auto; text-align:center;
+  padding:22px 24px; font-family:'Times New Roman','Georgia',serif; font-size:17px;
+  overflow-x:auto; text-align:center; line-height:1.8; letter-spacing:.3px;
 }
-.formula-box .frac{display:inline-block; vertical-align:middle;}
+.frac{
+  display:inline-flex; flex-direction:column; align-items:center;
+  vertical-align:middle; margin:0 6px; padding:0 2px;
+}
+.frac-num{
+  padding:0 8px 4px; white-space:nowrap; order:1;
+}
+.frac::after{
+  content:"";
+  width:100%;
+  border-bottom:2px solid var(--ink);
+  order:2;
+}
+.frac-den{
+  padding:4px 8px 0; white-space:nowrap; order:3;
+}
+.formula-box sub{font-size:.7em; vertical-align:sub;}
+.formula-box sup{font-size:.7em; vertical-align:super;}
+.formula-box .sig{margin:0 4px; font-style:normal;}
+.formula-box .fn{font-style:normal; font-weight:700;}
+.formula-box .var{font-style:italic;}
+.formula-box .eq{margin:0 8px; font-weight:700;}
 
 .chart-wrap{
   background:var(--paper); border:2px solid var(--line); border-radius:16px;
@@ -259,7 +286,10 @@ table.heatmap.minors td.hm-cell{font-size:12px; line-height:1.3;}
 @media (max-width:900px){.course-grid{grid-template-columns:repeat(3,1fr);}}
 .course-tile{
   border-radius:12px; padding:10px 6px; text-align:center; border:2px solid var(--ink);
+  transition:transform .15s ease, box-shadow .15s ease;
+  cursor:default;
 }
+.course-tile:hover{transform:translateY(-4px) scale(1.05); box-shadow:0 6px 18px rgba(36,28,61,0.2);}
 .course-code{font-family:'JetBrains Mono'; font-weight:700; font-size:12px;}
 .course-n{font-size:16px; font-weight:800; font-family:'Baloo 2'; margin-top:2px;}
 .course-legend{font-size:12px; color:var(--ink-soft); margin-top:10px; font-style:italic;}
@@ -290,8 +320,9 @@ footer{
 .thankyou p{margin-top:10px; color:var(--ink-soft); font-weight:600; font-size:15px;}
 .icon-orb{
   width:90px;height:90px; border-radius:50%; background:var(--paper); border:3px solid var(--ink);
-  display:flex; align-items:center; justify-content:center; margin:22px auto 0; font-size:38px;
+  display:flex; align-items:center; justify-content:center; margin:22px auto 0; overflow:hidden;
 }
+.icon-orb img{width:60px; height:auto;}
 
 .credit-tag{font-size:11.5px; background:var(--paper); border:2px solid var(--ink); border-radius:999px; padding:4px 12px; font-weight:700;}
 
@@ -313,14 +344,17 @@ footer{
 /* ---------- LOGOS ---------- */
 .logo-corner{position:absolute; z-index:10; pointer-events:none;}
 .logo-ugac{top:16px; left:16px;}
-.logo-dav{top:16px; right:16px;}
+.logo-dav{top:16px; right:70px;}
 .logo-corner img{height:50px; width:auto; filter:drop-shadow(0 2px 6px rgba(0,0,0,0.15));}
 @media(max-width:980px){.logo-corner img{height:38px;}}
 
 /* ---------- DARK MODE ---------- */
 [data-theme="dark"] body{
   background-image:
-    repeating-linear-gradient(135deg, rgba(60,50,100,0.3) 0 26px, transparent 26px 60px);
+    linear-gradient(rgba(240,234,248,0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(240,234,248,0.07) 1px, transparent 1px),
+    linear-gradient(180deg, #1a1333 0%, #1a1333 180px, var(--cream) 52%, var(--pink-pale) 100%);
+  background-size:40px 40px, 40px 40px, 100% 100%;
 }
 [data-theme="dark"] .hero::after{
   background:repeating-linear-gradient(135deg, rgba(60,50,100,0.2) 0 18px, transparent 18px 40px);
@@ -334,26 +368,27 @@ footer{
 
 /* ---------- THEME TOGGLE ---------- */
 .theme-toggle{
+  position:fixed; top:18px; right:18px; z-index:200;
   display:inline-flex; align-items:center; justify-content:center;
-  width:38px;height:38px;border-radius:12px; border:2px solid var(--ink);
+  width:40px;height:40px;border-radius:12px; border:2px solid var(--ink);
   background:var(--yellow); font-size:18px; cursor:pointer;
   transition:transform .15s ease, box-shadow .15s ease;
-  box-shadow:3px 3px 0 var(--ink); flex:0 0 38px;
+  box-shadow:3px 3px 0 var(--ink);
 }
 .theme-toggle:hover{transform:translate(-1px,-1px); box-shadow:4px 4px 0 var(--ink);}
 .theme-toggle:active{transform:translate(1px,1px); box-shadow:1px 1px 0 var(--ink);}
-.sidebar-foot-toggle{display:flex; align-items:center; gap:10px; margin-top:22px; padding:10px 8px; border-top:2px dashed var(--line);}
-.sidebar-foot-toggle .foot-text{font-size:11px; color:var(--ink-soft); flex:1;}
+.sidebar-foot-toggle{display:none;}
 </style>
 </head>
 <body>
 
 <button class="menutoggle" id="menuToggle" aria-label="Toggle navigation">☰</button>
+<button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">🌙</button>
 
 <div class="app">
   <nav class="sidebar" id="sidebar">
     <div class="brand">
-      <div class="brand-badge">📊</div>
+      <div class="brand-badge">⚙</div>
       <div class="brand-text">
         <div class="t1">Grading Stats 3.0</div>
         <div class="t2">Data Analytics &amp; Visualization Team</div>
@@ -362,8 +397,8 @@ footer{
 
     <div class="navlabel">Overview</div>
     <ul class="navlist">
-      <li><a href="#home">🏠 Home</a></li>
-      <li><a href="#methodology">🧮 Methodology</a></li>
+      <li><a href="#home">Home</a></li>
+      <li><a href="#methodology">Methodology</a></li>
     </ul>
 
     <div class="navlabel">Topics Covered</div>
@@ -382,14 +417,6 @@ footer{
       <li><a href="#recommender"><span class="navnum">12</span> Course Recommender</a></li>
     </ul>
 
-    <div class="sidebar-foot-toggle">
-      <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">🌙</button>
-      <span class="foot-text">Dark Mode</span>
-    </div>
-    <div class="sidebar-foot">
-      Contributed by Harsh, Ummehani, Vishakha &amp; Zubair · Project led by Rakshana<br><br>
-      <em>Web edition — data faithfully reproduced from the original PDF report.</em>
-    </div>
   </nav>
 
   <main class="main" style="position:relative;">
@@ -404,7 +431,6 @@ footer{
         <div class="hero-meta">
           <div class="pill"><b>Contributed by</b>Harsh, Ummehani, Vishakha, Zubair</div>
           <div class="pill"><b>Project Led By</b>Rakshana</div>
-          <div class="pill"><b>Source</b>Internal ASC · UG-open courses only</div>
           <a href="dept.html" class="pill" style="cursor:pointer;text-decoration:none;background:var(--ink);color:var(--cream);transition:transform .15s ease, box-shadow .15s ease;" onmouseover="this.style.transform='translate(-3px,-3px)';this.style.boxShadow='6px 6px 0 var(--yellow)'" onmouseout="this.style.transform='';this.style.boxShadow=''"><b>Explore →</b>Department Dashboard</a>
         </div>
       </div>
@@ -443,8 +469,20 @@ footer{
             <li>We have used only the courses that are open to the <b>Undergraduate</b> students for all our analyses.</li>
           </ul>
           <div class="grid-2" style="margin-top:18px;">
-            <div class="formula-box">CourseAverage&nbsp;=&nbsp;Σ(GradePoint × StudentCount)&nbsp;/&nbsp;TotalStudents&nbsp;(excluding NP | PP)</div>
-            <div class="formula-box">Dept. Average&nbsp;=&nbsp;Σ(CourseAverage × Credits)&nbsp;/&nbsp;Σ(Credits)</div>
+            <div class="formula-box">
+              <span class="var">CourseAverage</span><span class="eq">=</span>
+              <span class="frac">
+                <span class="frac-num">Σ(<span class="var">GradePoint</span> × <span class="var">StudentCount</span>)</span>
+                <span class="frac-den"><span class="var">TotalStudents</span> <span style="font-size:.85em;font-style:normal;color:var(--ink-soft)">(excluding NP | PP)</span></span>
+              </span>
+            </div>
+            <div class="formula-box">
+              <span class="var">Dept. Average</span><span class="eq">=</span>
+              <span class="frac">
+                <span class="frac-num">Σ(<span class="var">CourseAverage</span> × <span class="var">Credits</span>)</span>
+                <span class="frac-den">Σ(<span class="var">Credits</span>)</span>
+              </span>
+            </div>
           </div>
         </div>
       </div>
@@ -472,10 +510,10 @@ footer{
 
     <section id="sophies" class="block">
       <div class="card">
-        <div class="card-header pink"><h2>② Mandatory Core Courses — Sophomores</h2></div>
+        <div class="card-header pink"><h2>② Mandatory Core Courses · Sophomores</h2></div>
         <div class="card-body">
           <div class="two-col">
-            <div class="table-scroll"><table class="heatmap"><thead><tr><th></th><th>2024</th><th>2025</th></tr></thead><tbody><tr><th class='rowlabel'>AE</th><td class="hm-cell" style="background:rgb(232,237,176);color:#1a1330">7.21</td><td class="hm-cell" style="background:rgb(234,236,174);color:#1a1330">7.27</td></tr><tr><th class='rowlabel'>CE</th><td class="hm-cell" style="background:rgb(229,237,179);color:#1a1330">7.08</td><td class="hm-cell" style="background:rgb(237,236,172);color:#1a1330">7.37</td></tr><tr><th class='rowlabel'>CL</th><td class="hm-cell" style="background:rgb(228,237,179);color:#1a1330">7.07</td><td class="hm-cell" style="background:rgb(227,237,181);color:#1a1330">7.01</td></tr><tr><th class='rowlabel'>CS</th><td class="hm-cell" style="background:rgb(233,237,175);color:#1a1330">7.23</td><td class="hm-cell" style="background:rgb(233,237,176);color:#1a1330">7.22</td></tr><tr><th class='rowlabel'>EE</th><td class="hm-cell" style="background:rgb(242,236,167);color:#1a1330">7.56</td><td class="hm-cell" style="background:rgb(238,236,171);color:#1a1330">7.40</td></tr><tr><th class='rowlabel'>EN</th><td class="hm-cell" style="background:rgb(235,236,173);color:#1a1330">7.31</td><td class="hm-cell" style="background:rgb(220,237,186);color:#1a1330">6.78</td></tr><tr><th class='rowlabel'>EP</th><td class="hm-cell" style="background:rgb(225,237,182);color:#1a1330">6.96</td><td class="hm-cell" style="background:rgb(227,237,180);color:#1a1330">7.02</td></tr><tr><th class='rowlabel'>ES</th><td class="hm-cell" style="background:rgb(245,236,164);color:#1a1330">7.66</td><td class="hm-cell" style="background:rgb(251,235,160);color:#1a1330">7.86</td></tr><tr><th class='rowlabel'>IEOR</th><td class="hm-cell hm-empty">—</td><td class="hm-cell" style="background:rgb(254,214,148);color:#1a1330">8.33</td></tr><tr><th class='rowlabel'>ME</th><td class="hm-cell" style="background:rgb(239,236,170);color:#1a1330">7.44</td><td class="hm-cell" style="background:rgb(236,236,172);color:#1a1330">7.34</td></tr><tr><th class='rowlabel'>MM</th><td class="hm-cell" style="background:rgb(239,236,170);color:#1a1330">7.44</td><td class="hm-cell" style="background:rgb(227,237,180);color:#1a1330">7.03</td></tr></tbody></table></div>
+            <div class="table-scroll"><table class="heatmap"><thead><tr><th></th><th>2024</th><th>2025</th></tr></thead><tbody><tr><th class='rowlabel'>AE</th><td class="hm-cell" style="background:rgb(232,237,176);color:#1a1330">7.21</td><td class="hm-cell" style="background:rgb(234,236,174);color:#1a1330">7.27</td></tr><tr><th class='rowlabel'>CE</th><td class="hm-cell" style="background:rgb(229,237,179);color:#1a1330">7.08</td><td class="hm-cell" style="background:rgb(237,236,172);color:#1a1330">7.37</td></tr><tr><th class='rowlabel'>CL</th><td class="hm-cell" style="background:rgb(228,237,179);color:#1a1330">7.07</td><td class="hm-cell" style="background:rgb(227,237,181);color:#1a1330">7.01</td></tr><tr><th class='rowlabel'>CS</th><td class="hm-cell" style="background:rgb(233,237,175);color:#1a1330">7.23</td><td class="hm-cell" style="background:rgb(233,237,176);color:#1a1330">7.22</td></tr><tr><th class='rowlabel'>EE</th><td class="hm-cell" style="background:rgb(242,236,167);color:#1a1330">7.56</td><td class="hm-cell" style="background:rgb(238,236,171);color:#1a1330">7.40</td></tr><tr><th class='rowlabel'>EN</th><td class="hm-cell" style="background:rgb(235,236,173);color:#1a1330">7.31</td><td class="hm-cell" style="background:rgb(220,237,186);color:#1a1330">6.78</td></tr><tr><th class='rowlabel'>EP</th><td class="hm-cell" style="background:rgb(225,237,182);color:#1a1330">6.96</td><td class="hm-cell" style="background:rgb(227,237,180);color:#1a1330">7.02</td></tr><tr><th class='rowlabel'>ES</th><td class="hm-cell" style="background:rgb(245,236,164);color:#1a1330">7.66</td><td class="hm-cell" style="background:rgb(251,235,160);color:#1a1330">7.86</td></tr><tr><th class='rowlabel'>IEOR</th><td class="hm-cell hm-empty"></td><td class="hm-cell" style="background:rgb(254,214,148);color:#1a1330">8.33</td></tr><tr><th class='rowlabel'>ME</th><td class="hm-cell" style="background:rgb(239,236,170);color:#1a1330">7.44</td><td class="hm-cell" style="background:rgb(236,236,172);color:#1a1330">7.34</td></tr><tr><th class='rowlabel'>MM</th><td class="hm-cell" style="background:rgb(239,236,170);color:#1a1330">7.44</td><td class="hm-cell" style="background:rgb(227,237,180);color:#1a1330">7.03</td></tr></tbody></table></div>
             <div class="note-box">
               <h4>Reading this heatmap</h4>
               <p>Compares the average grades of second-year students across the 2024 and 2025 academic batches. Averages are calculated exclusively using mandatory department core courses.</p>
@@ -487,10 +525,10 @@ footer{
 
     <section id="thirdies" class="block">
       <div class="card">
-        <div class="card-header pink"><h2>③ Mandatory Core Courses — Thirdies</h2></div>
+        <div class="card-header pink"><h2>③ Mandatory Core Courses · Thirdies</h2></div>
         <div class="card-body">
           <div class="two-col">
-            <div class="table-scroll"><table class="heatmap"><thead><tr><th></th><th>2024</th><th>2025</th></tr></thead><tbody><tr><th class='rowlabel'>AE</th><td class="hm-cell" style="background:rgb(236,236,172);color:#1a1330">7.35</td><td class="hm-cell" style="background:rgb(238,236,170);color:#1a1330">7.42</td></tr><tr><th class='rowlabel'>CE</th><td class="hm-cell" style="background:rgb(231,237,177);color:#1a1330">7.15</td><td class="hm-cell" style="background:rgb(240,236,169);color:#1a1330">7.48</td></tr><tr><th class='rowlabel'>CL</th><td class="hm-cell" style="background:rgb(230,237,178);color:#1a1330">7.12</td><td class="hm-cell" style="background:rgb(225,237,182);color:#1a1330">6.95</td></tr><tr><th class='rowlabel'>CS</th><td class="hm-cell" style="background:rgb(235,236,174);color:#1a1330">7.30</td><td class="hm-cell" style="background:rgb(234,236,174);color:#1a1330">7.28</td></tr><tr><th class='rowlabel'>EE</th><td class="hm-cell" style="background:rgb(244,236,166);color:#1a1330">7.62</td><td class="hm-cell" style="background:rgb(242,236,167);color:#1a1330">7.55</td></tr><tr><th class='rowlabel'>EN</th><td class="hm-cell" style="background:rgb(237,236,172);color:#1a1330">7.38</td><td class="hm-cell" style="background:rgb(229,237,178);color:#1a1330">7.10</td></tr><tr><th class='rowlabel'>EP</th><td class="hm-cell" style="background:rgb(227,237,180);color:#1a1330">7.02</td><td class="hm-cell" style="background:rgb(228,237,180);color:#1a1330">7.05</td></tr><tr><th class='rowlabel'>ES</th><td class="hm-cell" style="background:rgb(247,236,163);color:#1a1330">7.72</td><td class="hm-cell" style="background:rgb(253,235,158);color:#1a1330">7.92</td></tr><tr><th class='rowlabel'>IEOR</th><td class="hm-cell hm-empty">—</td><td class="hm-cell hm-empty">—</td></tr><tr><th class='rowlabel'>ME</th><td class="hm-cell" style="background:rgb(234,236,175);color:#1a1330">7.25</td><td class="hm-cell" style="background:rgb(238,236,171);color:#1a1330">7.41</td></tr><tr><th class='rowlabel'>MM</th><td class="hm-cell" style="background:rgb(241,236,168);color:#1a1330">7.51</td><td class="hm-cell" style="background:rgb(232,237,176);color:#1a1330">7.18</td></tr></tbody></table></div>
+            <div class="table-scroll"><table class="heatmap"><thead><tr><th></th><th>2024</th><th>2025</th></tr></thead><tbody><tr><th class='rowlabel'>AE</th><td class="hm-cell" style="background:rgb(236,236,172);color:#1a1330">7.35</td><td class="hm-cell" style="background:rgb(238,236,170);color:#1a1330">7.42</td></tr><tr><th class='rowlabel'>CE</th><td class="hm-cell" style="background:rgb(231,237,177);color:#1a1330">7.15</td><td class="hm-cell" style="background:rgb(240,236,169);color:#1a1330">7.48</td></tr><tr><th class='rowlabel'>CL</th><td class="hm-cell" style="background:rgb(230,237,178);color:#1a1330">7.12</td><td class="hm-cell" style="background:rgb(225,237,182);color:#1a1330">6.95</td></tr><tr><th class='rowlabel'>CS</th><td class="hm-cell" style="background:rgb(235,236,174);color:#1a1330">7.30</td><td class="hm-cell" style="background:rgb(234,236,174);color:#1a1330">7.28</td></tr><tr><th class='rowlabel'>EE</th><td class="hm-cell" style="background:rgb(244,236,166);color:#1a1330">7.62</td><td class="hm-cell" style="background:rgb(242,236,167);color:#1a1330">7.55</td></tr><tr><th class='rowlabel'>EN</th><td class="hm-cell" style="background:rgb(237,236,172);color:#1a1330">7.38</td><td class="hm-cell" style="background:rgb(229,237,178);color:#1a1330">7.10</td></tr><tr><th class='rowlabel'>EP</th><td class="hm-cell" style="background:rgb(227,237,180);color:#1a1330">7.02</td><td class="hm-cell" style="background:rgb(228,237,180);color:#1a1330">7.05</td></tr><tr><th class='rowlabel'>ES</th><td class="hm-cell" style="background:rgb(247,236,163);color:#1a1330">7.72</td><td class="hm-cell" style="background:rgb(253,235,158);color:#1a1330">7.92</td></tr><tr><th class='rowlabel'>IEOR</th><td class="hm-cell hm-empty"></td><td class="hm-cell hm-empty"></td></tr><tr><th class='rowlabel'>ME</th><td class="hm-cell" style="background:rgb(234,236,175);color:#1a1330">7.25</td><td class="hm-cell" style="background:rgb(238,236,171);color:#1a1330">7.41</td></tr><tr><th class='rowlabel'>MM</th><td class="hm-cell" style="background:rgb(241,236,168);color:#1a1330">7.51</td><td class="hm-cell" style="background:rgb(232,237,176);color:#1a1330">7.18</td></tr></tbody></table></div>
             <div class="note-box">
               <h4>Reading this heatmap</h4>
               <p>Compares the average grades of third-year students across the 2024 and 2025 academic batches, again using mandatory department core courses only.</p>
@@ -537,7 +575,7 @@ footer{
           </div>
           <div class="note-box">
             <h4>Why standard deviation?</h4>
-            <p>Standard deviation measures how spread out students' grades are. If two courses share the same average grade, the one with higher SD has grades more widely dispersed — a "high risk, high reward" scenario with more top (10) and low (6) grades. A course with lower SD keeps grades concentrated around 7–8, a "safer route" with fewer extremes.</p>
+            <p>Standard deviation measures how spread out students' grades are. If two courses share the same average grade, the one with higher SD has grades more widely dispersed, a "high risk, high reward" scenario with more top (10) and low (6) grades. A course with lower SD keeps grades concentrated around 7–8, a "safer route" with fewer extremes.</p>
             <p style="margin-top:8px;"><b>How it's calculated:</b> we first find the weighted average grade for each course offering in a department, then measure the statistical spread of those course averages relative to the department's collective mean.</p>
           </div>
         </div>
@@ -553,18 +591,18 @@ footer{
         </div>
         <div class="card-body">
           <div class="sec-kicker">2024 &amp; 2025</div>
-          <div class="table-scroll"><table class="heatmap minors"><thead><tr><th></th><th>Autumn 2024</th><th>Spring 2024</th><th>Autumn 2025</th><th>Spring 2025</th></tr></thead><tbody><tr><th class='rowlabel'>AE</th><td class="hm-cell" style="background:rgb(242,236,168);color:#1a1330"><b>6.91</b><br><span class="n-tag">n=8</span></td><td class="hm-cell" style="background:rgb(227,237,180);color:#1a1330"><b>6.29</b><br><span class="n-tag">n=4</span></td><td class="hm-cell" style="background:rgb(226,237,181);color:#1a1330"><b>6.23</b><br><span class="n-tag">n=4</span></td><td class="hm-cell" style="background:rgb(231,237,177);color:#1a1330"><b>6.45</b><br><span class="n-tag">n=4</span></td></tr><tr><th class='rowlabel'>BB</th><td class="hm-cell" style="background:rgb(254,212,147);color:#1a1330"><b>7.95</b><br><span class="n-tag">n=4</span></td><td class="hm-cell" style="background:rgb(252,185,137);color:#1a1330"><b>8.47</b><br><span class="n-tag">n=6</span></td><td class="hm-cell" style="background:rgb(255,232,155);color:#1a1330"><b>7.56</b><br><span class="n-tag">n=7</span></td><td class="hm-cell" style="background:rgb(254,219,150);color:#1a1330"><b>7.81</b><br><span class="n-tag">n=4</span></td></tr><tr><th class='rowlabel'>CS</th><td class="hm-cell" style="background:rgb(248,235,162);color:#1a1330"><b>7.19</b><br><span class="n-tag">n=5</span></td><td class="hm-cell" style="background:rgb(215,238,191);color:#1a1330"><b>5.76</b><br><span class="n-tag">n=4</span></td><td class="hm-cell" style="background:rgb(255,234,156);color:#1a1330"><b>7.52</b><br><span class="n-tag">n=4</span></td><td class="hm-cell" style="background:rgb(230,237,178);color:#1a1330"><b>6.42</b><br><span class="n-tag">n=4</span></td></tr><tr><th class='rowlabel'>DH</th><td class="hm-cell" style="background:rgb(254,213,148);color:#1a1330"><b>7.92</b><br><span class="n-tag">n=4</span></td><td class="hm-cell" style="background:rgb(254,208,146);color:#1a1330"><b>8.02</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(255,227,153);color:#1a1330"><b>7.65</b><br><span class="n-tag">n=5</span></td><td class="hm-cell" style="background:rgb(251,165,130);color:#1a1330"><b>8.85</b><br><span class="n-tag">n=4</span></td></tr><tr><th class='rowlabel'>OS</th><td class="hm-cell" style="background:rgb(245,236,164);color:#1a1330"><b>7.08</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(251,235,160);color:#1a1330"><b>7.32</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(241,236,168);color:#1a1330"><b>6.88</b><br><span class="n-tag">n=1</span></td><td class="hm-cell" style="background:rgb(255,234,156);color:#1a1330"><b>7.51</b><br><span class="n-tag">n=2</span></td></tr><tr><th class='rowlabel'>EC</th><td class="hm-cell" style="background:rgb(215,238,191);color:#1a1330"><b>5.76</b><br><span class="n-tag">n=1</span></td><td class="hm-cell hm-empty">—</td><td class="hm-cell" style="background:rgb(205,239,200);color:#1a1330"><b>5.30</b><br><span class="n-tag">n=1</span></td><td class="hm-cell hm-empty">—</td></tr><tr><th class='rowlabel'>EE</th><td class="hm-cell" style="background:rgb(233,237,175);color:#1a1330"><b>6.54</b><br><span class="n-tag">n=4</span></td><td class="hm-cell" style="background:rgb(219,238,188);color:#1a1330"><b>5.91</b><br><span class="n-tag">n=5</span></td><td class="hm-cell" style="background:rgb(235,236,173);color:#1a1330"><b>6.64</b><br><span class="n-tag">n=4</span></td><td class="hm-cell hm-empty">—</td></tr><tr><th class='rowlabel'>ENT</th><td class="hm-cell" style="background:rgb(255,227,153);color:#1a1330"><b>7.65</b><br><span class="n-tag">n=8</span></td><td class="hm-cell" style="background:rgb(254,215,149);color:#1a1330"><b>7.88</b><br><span class="n-tag">n=9</span></td><td class="hm-cell" style="background:rgb(253,193,140);color:#1a1330"><b>8.31</b><br><span class="n-tag">n=8</span></td><td class="hm-cell" style="background:rgb(253,196,141);color:#1a1330"><b>8.25</b><br><span class="n-tag">n=12</span></td></tr><tr><th class='rowlabel'>ES</th><td class="hm-cell" style="background:rgb(216,238,190);color:#1a1330"><b>5.80</b><br><span class="n-tag">n=1</span></td><td class="hm-cell" style="background:rgb(248,105,107);color:#ffffff"><b>10.00</b><br><span class="n-tag">n=1</span></td><td class="hm-cell" style="background:rgb(252,174,133);color:#1a1330"><b>8.67</b><br><span class="n-tag">n=1</span></td><td class="hm-cell hm-empty">—</td></tr><tr><th class='rowlabel'>HSS</th><td class="hm-cell" style="background:rgb(251,154,125);color:#1a1330"><b>9.06</b><br><span class="n-tag">n=1</span></td><td class="hm-cell hm-empty">—</td><td class="hm-cell" style="background:rgb(253,205,145);color:#1a1330"><b>8.08</b><br><span class="n-tag">n=1</span></td><td class="hm-cell" style="background:rgb(253,198,142);color:#1a1330"><b>8.21</b><br><span class="n-tag">n=3</span></td></tr><tr><th class='rowlabel'>MA</th><td class="hm-cell" style="background:rgb(234,236,175);color:#1a1330"><b>6.57</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(247,236,163);color:#1a1330"><b>7.16</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(248,235,162);color:#1a1330"><b>7.21</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(234,236,174);color:#1a1330"><b>6.58</b><br><span class="n-tag">n=2</span></td></tr><tr><th class='rowlabel'>MG</th><td class="hm-cell" style="background:rgb(254,235,157);color:#1a1330"><b>7.46</b><br><span class="n-tag">n=4</span></td><td class="hm-cell" style="background:rgb(218,238,188);color:#1a1330"><b>5.89</b><br><span class="n-tag">n=1</span></td><td class="hm-cell" style="background:rgb(249,235,161);color:#1a1330"><b>7.25</b><br><span class="n-tag">n=3</span></td><td class="hm-cell" style="background:rgb(246,236,164);color:#1a1330"><b>7.12</b><br><span class="n-tag">n=2</span></td></tr><tr><th class='rowlabel'>MM</th><td class="hm-cell hm-empty">—</td><td class="hm-cell hm-empty">—</td><td class="hm-cell hm-empty">—</td><td class="hm-cell" style="background:rgb(254,209,146);color:#1a1330"><b>8.00</b><br><span class="n-tag">n=1</span></td></tr><tr><th class='rowlabel'>PH</th><td class="hm-cell" style="background:rgb(255,226,153);color:#1a1330"><b>7.67</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(250,235,161);color:#1a1330"><b>7.27</b><br><span class="n-tag">n=1</span></td><td class="hm-cell" style="background:rgb(243,236,167);color:#1a1330"><b>6.97</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(220,237,187);color:#1a1330"><b>5.96</b><br><span class="n-tag">n=2</span></td></tr><tr><th class='rowlabel'>Robotics</th><td class="hm-cell" style="background:rgb(233,237,175);color:#1a1330"><b>6.53</b><br><span class="n-tag">n=4</span></td><td class="hm-cell hm-empty">—</td><td class="hm-cell" style="background:rgb(198,239,206);color:#1a1330"><b>5.02</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(255,229,154);color:#1a1330"><b>7.61</b><br><span class="n-tag">n=3</span></td></tr><tr><th class='rowlabel'>SysCon</th><td class="hm-cell" style="background:rgb(246,236,164);color:#1a1330"><b>7.12</b><br><span class="n-tag">n=9</span></td><td class="hm-cell" style="background:rgb(247,236,163);color:#1a1330"><b>7.17</b><br><span class="n-tag">n=3</span></td><td class="hm-cell" style="background:rgb(254,217,149);color:#1a1330"><b>7.85</b><br><span class="n-tag">n=10</span></td><td class="hm-cell" style="background:rgb(253,206,145);color:#1a1330"><b>8.06</b><br><span class="n-tag">n=7</span></td></tr><tr><th class='rowlabel'>SI</th><td class="hm-cell" style="background:rgb(252,235,158);color:#1a1330"><b>7.38</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(253,195,141);color:#1a1330"><b>8.27</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(251,169,131);color:#1a1330"><b>8.76</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(253,199,142);color:#1a1330"><b>8.19</b><br><span class="n-tag">n=2</span></td></tr></tbody></table></div>
+          <div class="table-scroll"><table class="heatmap minors"><thead><tr><th></th><th>Autumn 2024</th><th>Spring 2024</th><th>Autumn 2025</th><th>Spring 2025</th></tr></thead><tbody><tr><th class='rowlabel'>AE</th><td class="hm-cell" style="background:rgb(242,236,168);color:#1a1330"><b>6.91</b><br><span class="n-tag">n=8</span></td><td class="hm-cell" style="background:rgb(227,237,180);color:#1a1330"><b>6.29</b><br><span class="n-tag">n=4</span></td><td class="hm-cell" style="background:rgb(226,237,181);color:#1a1330"><b>6.23</b><br><span class="n-tag">n=4</span></td><td class="hm-cell" style="background:rgb(231,237,177);color:#1a1330"><b>6.45</b><br><span class="n-tag">n=4</span></td></tr><tr><th class='rowlabel'>BB</th><td class="hm-cell" style="background:rgb(254,212,147);color:#1a1330"><b>7.95</b><br><span class="n-tag">n=4</span></td><td class="hm-cell" style="background:rgb(252,185,137);color:#1a1330"><b>8.47</b><br><span class="n-tag">n=6</span></td><td class="hm-cell" style="background:rgb(255,232,155);color:#1a1330"><b>7.56</b><br><span class="n-tag">n=7</span></td><td class="hm-cell" style="background:rgb(254,219,150);color:#1a1330"><b>7.81</b><br><span class="n-tag">n=4</span></td></tr><tr><th class='rowlabel'>CS</th><td class="hm-cell" style="background:rgb(248,235,162);color:#1a1330"><b>7.19</b><br><span class="n-tag">n=5</span></td><td class="hm-cell" style="background:rgb(215,238,191);color:#1a1330"><b>5.76</b><br><span class="n-tag">n=4</span></td><td class="hm-cell" style="background:rgb(255,234,156);color:#1a1330"><b>7.52</b><br><span class="n-tag">n=4</span></td><td class="hm-cell" style="background:rgb(230,237,178);color:#1a1330"><b>6.42</b><br><span class="n-tag">n=4</span></td></tr><tr><th class='rowlabel'>DH</th><td class="hm-cell" style="background:rgb(254,213,148);color:#1a1330"><b>7.92</b><br><span class="n-tag">n=4</span></td><td class="hm-cell" style="background:rgb(254,208,146);color:#1a1330"><b>8.02</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(255,227,153);color:#1a1330"><b>7.65</b><br><span class="n-tag">n=5</span></td><td class="hm-cell" style="background:rgb(251,165,130);color:#1a1330"><b>8.85</b><br><span class="n-tag">n=4</span></td></tr><tr><th class='rowlabel'>OS</th><td class="hm-cell" style="background:rgb(245,236,164);color:#1a1330"><b>7.08</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(251,235,160);color:#1a1330"><b>7.32</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(241,236,168);color:#1a1330"><b>6.88</b><br><span class="n-tag">n=1</span></td><td class="hm-cell" style="background:rgb(255,234,156);color:#1a1330"><b>7.51</b><br><span class="n-tag">n=2</span></td></tr><tr><th class='rowlabel'>EC</th><td class="hm-cell" style="background:rgb(215,238,191);color:#1a1330"><b>5.76</b><br><span class="n-tag">n=1</span></td><td class="hm-cell hm-empty"></td><td class="hm-cell" style="background:rgb(205,239,200);color:#1a1330"><b>5.30</b><br><span class="n-tag">n=1</span></td><td class="hm-cell hm-empty"></td></tr><tr><th class='rowlabel'>EE</th><td class="hm-cell" style="background:rgb(233,237,175);color:#1a1330"><b>6.54</b><br><span class="n-tag">n=4</span></td><td class="hm-cell" style="background:rgb(219,238,188);color:#1a1330"><b>5.91</b><br><span class="n-tag">n=5</span></td><td class="hm-cell" style="background:rgb(235,236,173);color:#1a1330"><b>6.64</b><br><span class="n-tag">n=4</span></td><td class="hm-cell hm-empty"></td></tr><tr><th class='rowlabel'>ENT</th><td class="hm-cell" style="background:rgb(255,227,153);color:#1a1330"><b>7.65</b><br><span class="n-tag">n=8</span></td><td class="hm-cell" style="background:rgb(254,215,149);color:#1a1330"><b>7.88</b><br><span class="n-tag">n=9</span></td><td class="hm-cell" style="background:rgb(253,193,140);color:#1a1330"><b>8.31</b><br><span class="n-tag">n=8</span></td><td class="hm-cell" style="background:rgb(253,196,141);color:#1a1330"><b>8.25</b><br><span class="n-tag">n=12</span></td></tr><tr><th class='rowlabel'>ES</th><td class="hm-cell" style="background:rgb(216,238,190);color:#1a1330"><b>5.80</b><br><span class="n-tag">n=1</span></td><td class="hm-cell" style="background:rgb(248,105,107);color:#ffffff"><b>10.00</b><br><span class="n-tag">n=1</span></td><td class="hm-cell" style="background:rgb(252,174,133);color:#1a1330"><b>8.67</b><br><span class="n-tag">n=1</span></td><td class="hm-cell hm-empty"></td></tr><tr><th class='rowlabel'>HSS</th><td class="hm-cell" style="background:rgb(251,154,125);color:#1a1330"><b>9.06</b><br><span class="n-tag">n=1</span></td><td class="hm-cell hm-empty"></td><td class="hm-cell" style="background:rgb(253,205,145);color:#1a1330"><b>8.08</b><br><span class="n-tag">n=1</span></td><td class="hm-cell" style="background:rgb(253,198,142);color:#1a1330"><b>8.21</b><br><span class="n-tag">n=3</span></td></tr><tr><th class='rowlabel'>MA</th><td class="hm-cell" style="background:rgb(234,236,175);color:#1a1330"><b>6.57</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(247,236,163);color:#1a1330"><b>7.16</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(248,235,162);color:#1a1330"><b>7.21</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(234,236,174);color:#1a1330"><b>6.58</b><br><span class="n-tag">n=2</span></td></tr><tr><th class='rowlabel'>MG</th><td class="hm-cell" style="background:rgb(254,235,157);color:#1a1330"><b>7.46</b><br><span class="n-tag">n=4</span></td><td class="hm-cell" style="background:rgb(218,238,188);color:#1a1330"><b>5.89</b><br><span class="n-tag">n=1</span></td><td class="hm-cell" style="background:rgb(249,235,161);color:#1a1330"><b>7.25</b><br><span class="n-tag">n=3</span></td><td class="hm-cell" style="background:rgb(246,236,164);color:#1a1330"><b>7.12</b><br><span class="n-tag">n=2</span></td></tr><tr><th class='rowlabel'>MM</th><td class="hm-cell hm-empty"></td><td class="hm-cell hm-empty"></td><td class="hm-cell hm-empty"></td><td class="hm-cell" style="background:rgb(254,209,146);color:#1a1330"><b>8.00</b><br><span class="n-tag">n=1</span></td></tr><tr><th class='rowlabel'>PH</th><td class="hm-cell" style="background:rgb(255,226,153);color:#1a1330"><b>7.67</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(250,235,161);color:#1a1330"><b>7.27</b><br><span class="n-tag">n=1</span></td><td class="hm-cell" style="background:rgb(243,236,167);color:#1a1330"><b>6.97</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(220,237,187);color:#1a1330"><b>5.96</b><br><span class="n-tag">n=2</span></td></tr><tr><th class='rowlabel'>Robotics</th><td class="hm-cell" style="background:rgb(233,237,175);color:#1a1330"><b>6.53</b><br><span class="n-tag">n=4</span></td><td class="hm-cell hm-empty"></td><td class="hm-cell" style="background:rgb(198,239,206);color:#1a1330"><b>5.02</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(255,229,154);color:#1a1330"><b>7.61</b><br><span class="n-tag">n=3</span></td></tr><tr><th class='rowlabel'>SysCon</th><td class="hm-cell" style="background:rgb(246,236,164);color:#1a1330"><b>7.12</b><br><span class="n-tag">n=9</span></td><td class="hm-cell" style="background:rgb(247,236,163);color:#1a1330"><b>7.17</b><br><span class="n-tag">n=3</span></td><td class="hm-cell" style="background:rgb(254,217,149);color:#1a1330"><b>7.85</b><br><span class="n-tag">n=10</span></td><td class="hm-cell" style="background:rgb(253,206,145);color:#1a1330"><b>8.06</b><br><span class="n-tag">n=7</span></td></tr><tr><th class='rowlabel'>SI</th><td class="hm-cell" style="background:rgb(252,235,158);color:#1a1330"><b>7.38</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(253,195,141);color:#1a1330"><b>8.27</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(251,169,131);color:#1a1330"><b>8.76</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(253,199,142);color:#1a1330"><b>8.19</b><br><span class="n-tag">n=2</span></td></tr></tbody></table></div>
 
           <div class="sec-kicker" style="margin-top:24px;">2022 &amp; 2023</div>
-          <div class="table-scroll"><table class="heatmap minors"><thead><tr><th></th><th>Autumn 2022</th><th>Spring 2022</th><th>Autumn 2023</th><th>Spring 2023</th></tr></thead><tbody><tr><th class='rowlabel'>AE</th><td class="hm-cell" style="background:rgb(211,238,194);color:#1a1330"><b>5.58</b><br><span class="n-tag">n=7</span></td><td class="hm-cell" style="background:rgb(200,239,204);color:#1a1330"><b>5.08</b><br><span class="n-tag">n=6</span></td><td class="hm-cell" style="background:rgb(210,238,195);color:#1a1330"><b>5.54</b><br><span class="n-tag">n=8</span></td><td class="hm-cell" style="background:rgb(205,238,200);color:#1a1330"><b>5.32</b><br><span class="n-tag">n=5</span></td></tr><tr><th class='rowlabel'>BB</th><td class="hm-cell" style="background:rgb(247,236,163);color:#1a1330"><b>7.13</b><br><span class="n-tag">n=5</span></td><td class="hm-cell" style="background:rgb(251,154,125);color:#1a1330"><b>9.06</b><br><span class="n-tag">n=5</span></td><td class="hm-cell" style="background:rgb(255,228,153);color:#1a1330"><b>7.64</b><br><span class="n-tag">n=6</span></td><td class="hm-cell" style="background:rgb(253,203,144);color:#1a1330"><b>8.12</b><br><span class="n-tag">n=5</span></td></tr><tr><th class='rowlabel'>CS</th><td class="hm-cell" style="background:rgb(247,236,163);color:#1a1330"><b>7.14</b><br><span class="n-tag">n=3</span></td><td class="hm-cell" style="background:rgb(242,236,168);color:#1a1330"><b>6.91</b><br><span class="n-tag">n=3</span></td><td class="hm-cell" style="background:rgb(232,237,176);color:#1a1330"><b>6.48</b><br><span class="n-tag">n=3</span></td><td class="hm-cell" style="background:rgb(245,236,165);color:#1a1330"><b>7.04</b><br><span class="n-tag">n=4</span></td></tr><tr><th class='rowlabel'>DH</th><td class="hm-cell" style="background:rgb(251,157,127);color:#1a1330"><b>9.00</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(221,237,186);color:#1a1330"><b>6.00</b><br><span class="n-tag">n=3</span></td><td class="hm-cell" style="background:rgb(252,171,132);color:#1a1330"><b>8.74</b><br><span class="n-tag">n=3</span></td><td class="hm-cell" style="background:rgb(247,236,163);color:#1a1330"><b>7.16</b><br><span class="n-tag">n=4</span></td></tr><tr><th class='rowlabel'>DS</th><td class="hm-cell" style="background:rgb(253,198,142);color:#1a1330"><b>8.21</b><br><span class="n-tag">n=1</span></td><td class="hm-cell" style="background:rgb(250,235,160);color:#1a1330"><b>7.29</b><br><span class="n-tag">n=1</span></td><td class="hm-cell" style="background:rgb(254,218,150);color:#1a1330"><b>7.82</b><br><span class="n-tag">n=1</span></td><td class="hm-cell" style="background:rgb(239,236,170);color:#1a1330"><b>6.79</b><br><span class="n-tag">n=2</span></td></tr><tr><th class='rowlabel'>EC</th><td class="hm-cell hm-empty">—</td><td class="hm-cell hm-empty">—</td><td class="hm-cell hm-empty">—</td><td class="hm-cell hm-empty">—</td></tr><tr><th class='rowlabel'>EE</th><td class="hm-cell" style="background:rgb(255,228,153);color:#1a1330"><b>7.63</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(235,236,173);color:#1a1330"><b>6.63</b><br><span class="n-tag">n=3</span></td><td class="hm-cell" style="background:rgb(248,235,162);color:#1a1330"><b>7.19</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(224,237,183);color:#1a1330"><b>6.13</b><br><span class="n-tag">n=3</span></td></tr><tr><th class='rowlabel'>ENT</th><td class="hm-cell" style="background:rgb(253,195,141);color:#1a1330"><b>8.27</b><br><span class="n-tag">n=3</span></td><td class="hm-cell" style="background:rgb(252,235,158);color:#1a1330"><b>7.38</b><br><span class="n-tag">n=3</span></td><td class="hm-cell" style="background:rgb(252,187,138);color:#1a1330"><b>8.43</b><br><span class="n-tag">n=4</span></td><td class="hm-cell" style="background:rgb(255,227,153);color:#1a1330"><b>7.65</b><br><span class="n-tag">n=5</span></td></tr><tr><th class='rowlabel'>ES</th><td class="hm-cell" style="background:rgb(251,163,129);color:#1a1330"><b>8.88</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(254,209,146);color:#1a1330"><b>8.00</b><br><span class="n-tag">n=1</span></td><td class="hm-cell" style="background:rgb(252,175,133);color:#1a1330"><b>8.65</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(247,236,163);color:#1a1330"><b>7.17</b><br><span class="n-tag">n=2</span></td></tr><tr><th class='rowlabel'>HSS</th><td class="hm-cell" style="background:rgb(255,235,156);color:#1a1330"><b>7.48</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(253,195,141);color:#1a1330"><b>8.27</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(252,178,134);color:#1a1330"><b>8.60</b><br><span class="n-tag">n=1</span></td><td class="hm-cell" style="background:rgb(252,183,136);color:#1a1330"><b>8.50</b><br><span class="n-tag">n=1</span></td></tr><tr><th class='rowlabel'>MA</th><td class="hm-cell" style="background:rgb(215,238,191);color:#1a1330"><b>5.74</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(237,236,172);color:#1a1330"><b>6.71</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(254,235,157);color:#1a1330"><b>7.44</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(234,236,174);color:#1a1330"><b>6.58</b><br><span class="n-tag">n=2</span></td></tr><tr><th class='rowlabel'>MG</th><td class="hm-cell" style="background:rgb(254,224,152);color:#1a1330"><b>7.72</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(250,235,161);color:#1a1330"><b>7.27</b><br><span class="n-tag">n=3</span></td><td class="hm-cell" style="background:rgb(254,219,150);color:#1a1330"><b>7.80</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(243,236,166);color:#1a1330"><b>6.98</b><br><span class="n-tag">n=1</span></td></tr><tr><th class='rowlabel'>MM</th><td class="hm-cell" style="background:rgb(248,105,107);color:#ffffff"><b>10.00</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(254,209,146);color:#1a1330"><b>8.00</b><br><span class="n-tag">n=2</span></td><td class="hm-cell hm-empty">—</td><td class="hm-cell hm-empty">—</td></tr><tr><th class='rowlabel'>PH</th><td class="hm-cell" style="background:rgb(254,215,148);color:#1a1330"><b>7.89</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(252,235,158);color:#1a1330"><b>7.38</b><br><span class="n-tag">n=1</span></td><td class="hm-cell" style="background:rgb(254,235,157);color:#1a1330"><b>7.46</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(214,238,192);color:#1a1330"><b>5.71</b><br><span class="n-tag">n=1</span></td></tr><tr><th class='rowlabel'>Robotics</th><td class="hm-cell hm-empty">—</td><td class="hm-cell hm-empty">—</td><td class="hm-cell hm-empty">—</td><td class="hm-cell hm-empty">—</td></tr><tr><th class='rowlabel'>SysCon</th><td class="hm-cell" style="background:rgb(227,237,180);color:#1a1330"><b>6.29</b><br><span class="n-tag">n=8</span></td><td class="hm-cell" style="background:rgb(253,207,145);color:#1a1330"><b>8.04</b><br><span class="n-tag">n=10</span></td><td class="hm-cell" style="background:rgb(254,218,150);color:#1a1330"><b>7.82</b><br><span class="n-tag">n=9</span></td><td class="hm-cell" style="background:rgb(255,229,154);color:#1a1330"><b>7.61</b><br><span class="n-tag">n=11</span></td></tr><tr><th class='rowlabel'>SI</th><td class="hm-cell" style="background:rgb(252,235,158);color:#1a1330"><b>7.38</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(253,195,141);color:#1a1330"><b>8.27</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(247,236,163);color:#1a1330"><b>7.14</b><br><span class="n-tag">n=2</span></td><td class="hm-cell hm-empty">—</td></tr></tbody></table></div>
+          <div class="table-scroll"><table class="heatmap minors"><thead><tr><th></th><th>Autumn 2022</th><th>Spring 2022</th><th>Autumn 2023</th><th>Spring 2023</th></tr></thead><tbody><tr><th class='rowlabel'>AE</th><td class="hm-cell" style="background:rgb(211,238,194);color:#1a1330"><b>5.58</b><br><span class="n-tag">n=7</span></td><td class="hm-cell" style="background:rgb(200,239,204);color:#1a1330"><b>5.08</b><br><span class="n-tag">n=6</span></td><td class="hm-cell" style="background:rgb(210,238,195);color:#1a1330"><b>5.54</b><br><span class="n-tag">n=8</span></td><td class="hm-cell" style="background:rgb(205,238,200);color:#1a1330"><b>5.32</b><br><span class="n-tag">n=5</span></td></tr><tr><th class='rowlabel'>BB</th><td class="hm-cell" style="background:rgb(247,236,163);color:#1a1330"><b>7.13</b><br><span class="n-tag">n=5</span></td><td class="hm-cell" style="background:rgb(251,154,125);color:#1a1330"><b>9.06</b><br><span class="n-tag">n=5</span></td><td class="hm-cell" style="background:rgb(255,228,153);color:#1a1330"><b>7.64</b><br><span class="n-tag">n=6</span></td><td class="hm-cell" style="background:rgb(253,203,144);color:#1a1330"><b>8.12</b><br><span class="n-tag">n=5</span></td></tr><tr><th class='rowlabel'>CS</th><td class="hm-cell" style="background:rgb(247,236,163);color:#1a1330"><b>7.14</b><br><span class="n-tag">n=3</span></td><td class="hm-cell" style="background:rgb(242,236,168);color:#1a1330"><b>6.91</b><br><span class="n-tag">n=3</span></td><td class="hm-cell" style="background:rgb(232,237,176);color:#1a1330"><b>6.48</b><br><span class="n-tag">n=3</span></td><td class="hm-cell" style="background:rgb(245,236,165);color:#1a1330"><b>7.04</b><br><span class="n-tag">n=4</span></td></tr><tr><th class='rowlabel'>DH</th><td class="hm-cell" style="background:rgb(251,157,127);color:#1a1330"><b>9.00</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(221,237,186);color:#1a1330"><b>6.00</b><br><span class="n-tag">n=3</span></td><td class="hm-cell" style="background:rgb(252,171,132);color:#1a1330"><b>8.74</b><br><span class="n-tag">n=3</span></td><td class="hm-cell" style="background:rgb(247,236,163);color:#1a1330"><b>7.16</b><br><span class="n-tag">n=4</span></td></tr><tr><th class='rowlabel'>DS</th><td class="hm-cell" style="background:rgb(253,198,142);color:#1a1330"><b>8.21</b><br><span class="n-tag">n=1</span></td><td class="hm-cell" style="background:rgb(250,235,160);color:#1a1330"><b>7.29</b><br><span class="n-tag">n=1</span></td><td class="hm-cell" style="background:rgb(254,218,150);color:#1a1330"><b>7.82</b><br><span class="n-tag">n=1</span></td><td class="hm-cell" style="background:rgb(239,236,170);color:#1a1330"><b>6.79</b><br><span class="n-tag">n=2</span></td></tr><tr><th class='rowlabel'>EC</th><td class="hm-cell hm-empty"></td><td class="hm-cell hm-empty"></td><td class="hm-cell hm-empty"></td><td class="hm-cell hm-empty"></td></tr><tr><th class='rowlabel'>EE</th><td class="hm-cell" style="background:rgb(255,228,153);color:#1a1330"><b>7.63</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(235,236,173);color:#1a1330"><b>6.63</b><br><span class="n-tag">n=3</span></td><td class="hm-cell" style="background:rgb(248,235,162);color:#1a1330"><b>7.19</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(224,237,183);color:#1a1330"><b>6.13</b><br><span class="n-tag">n=3</span></td></tr><tr><th class='rowlabel'>ENT</th><td class="hm-cell" style="background:rgb(253,195,141);color:#1a1330"><b>8.27</b><br><span class="n-tag">n=3</span></td><td class="hm-cell" style="background:rgb(252,235,158);color:#1a1330"><b>7.38</b><br><span class="n-tag">n=3</span></td><td class="hm-cell" style="background:rgb(252,187,138);color:#1a1330"><b>8.43</b><br><span class="n-tag">n=4</span></td><td class="hm-cell" style="background:rgb(255,227,153);color:#1a1330"><b>7.65</b><br><span class="n-tag">n=5</span></td></tr><tr><th class='rowlabel'>ES</th><td class="hm-cell" style="background:rgb(251,163,129);color:#1a1330"><b>8.88</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(254,209,146);color:#1a1330"><b>8.00</b><br><span class="n-tag">n=1</span></td><td class="hm-cell" style="background:rgb(252,175,133);color:#1a1330"><b>8.65</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(247,236,163);color:#1a1330"><b>7.17</b><br><span class="n-tag">n=2</span></td></tr><tr><th class='rowlabel'>HSS</th><td class="hm-cell" style="background:rgb(255,235,156);color:#1a1330"><b>7.48</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(253,195,141);color:#1a1330"><b>8.27</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(252,178,134);color:#1a1330"><b>8.60</b><br><span class="n-tag">n=1</span></td><td class="hm-cell" style="background:rgb(252,183,136);color:#1a1330"><b>8.50</b><br><span class="n-tag">n=1</span></td></tr><tr><th class='rowlabel'>MA</th><td class="hm-cell" style="background:rgb(215,238,191);color:#1a1330"><b>5.74</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(237,236,172);color:#1a1330"><b>6.71</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(254,235,157);color:#1a1330"><b>7.44</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(234,236,174);color:#1a1330"><b>6.58</b><br><span class="n-tag">n=2</span></td></tr><tr><th class='rowlabel'>MG</th><td class="hm-cell" style="background:rgb(254,224,152);color:#1a1330"><b>7.72</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(250,235,161);color:#1a1330"><b>7.27</b><br><span class="n-tag">n=3</span></td><td class="hm-cell" style="background:rgb(254,219,150);color:#1a1330"><b>7.80</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(243,236,166);color:#1a1330"><b>6.98</b><br><span class="n-tag">n=1</span></td></tr><tr><th class='rowlabel'>MM</th><td class="hm-cell" style="background:rgb(248,105,107);color:#ffffff"><b>10.00</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(254,209,146);color:#1a1330"><b>8.00</b><br><span class="n-tag">n=2</span></td><td class="hm-cell hm-empty"></td><td class="hm-cell hm-empty"></td></tr><tr><th class='rowlabel'>PH</th><td class="hm-cell" style="background:rgb(254,215,148);color:#1a1330"><b>7.89</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(252,235,158);color:#1a1330"><b>7.38</b><br><span class="n-tag">n=1</span></td><td class="hm-cell" style="background:rgb(254,235,157);color:#1a1330"><b>7.46</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(214,238,192);color:#1a1330"><b>5.71</b><br><span class="n-tag">n=1</span></td></tr><tr><th class='rowlabel'>Robotics</th><td class="hm-cell hm-empty"></td><td class="hm-cell hm-empty"></td><td class="hm-cell hm-empty"></td><td class="hm-cell hm-empty"></td></tr><tr><th class='rowlabel'>SysCon</th><td class="hm-cell" style="background:rgb(227,237,180);color:#1a1330"><b>6.29</b><br><span class="n-tag">n=8</span></td><td class="hm-cell" style="background:rgb(253,207,145);color:#1a1330"><b>8.04</b><br><span class="n-tag">n=10</span></td><td class="hm-cell" style="background:rgb(254,218,150);color:#1a1330"><b>7.82</b><br><span class="n-tag">n=9</span></td><td class="hm-cell" style="background:rgb(255,229,154);color:#1a1330"><b>7.61</b><br><span class="n-tag">n=11</span></td></tr><tr><th class='rowlabel'>SI</th><td class="hm-cell" style="background:rgb(252,235,158);color:#1a1330"><b>7.38</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(253,195,141);color:#1a1330"><b>8.27</b><br><span class="n-tag">n=2</span></td><td class="hm-cell" style="background:rgb(247,236,163);color:#1a1330"><b>7.14</b><br><span class="n-tag">n=2</span></td><td class="hm-cell hm-empty"></td></tr></tbody></table></div>
 
           <div class="note-box" style="margin-top:18px;">
             <h4>Notes</h4>
             <ul style="margin:0;padding-left:18px;">
               <li><b>Scope:</b> covers the 17 minor departments running in the upcoming 2026–27 academic year (16 home departments + Robotics), using data tracked from 2022 to 2025.</li>
               <li><b>Course standardization:</b> focuses exclusively on core M-tagged courses under the Division column to establish a consistent departmental baseline. Fluctuation-heavy minor electives are excluded, as they vary entirely by individual student choice.</li>
-              <li><b>Robotics overlap:</b> Robotics courses are cross-listed from courses of home departments — e.g. EE309 (Microprocessors) counts identically for both Electrical and Robotics since it is M-tagged in both.</li>
-              <li><b>Data reliability:</b> some departments have far more data than others. Entrepreneurship (37 courses), Systems &amp; Control (29) and BSBE (21) have solid baselines, while MM (1), Earth Sciences (2), Energy (3) and Humanities (5) have very few data points — treat those averages as rough indicators, not final proof.</li>
+              <li><b>Robotics overlap:</b> Robotics courses are cross-listed from courses of home departments, e.g. EE309 (Microprocessors) counts identically for both Electrical and Robotics since it is M-tagged in both.</li>
+              <li><b>Data reliability:</b> some departments have far more data than others. Entrepreneurship (37 courses), Systems &amp; Control (29) and BSBE (21) have solid baselines, while MM (1), Earth Sciences (2), Energy (3) and Humanities (5) have very few data points, treat those averages as rough indicators, not final proof.</li>
             </ul>
           </div>
 
@@ -573,7 +611,7 @@ footer{
             <div class="chart-wrap"><h4>Illustrative distribution (from reported mean / SD)</h4><canvas id="chartKdeMinors" height="260"></canvas></div>
             <div class="note-box">
               <h4>Distribution stability vs. widening variance</h4>
-              <p>Peak grade concentration (mode) stays fairly steady around 7.22–7.79 across all years, but the course-average spread widens over time — from the tightest distribution in 2023 (SD = 0.987) to the flattest in 2025 (SD = 1.216).</p>
+              <p>Peak grade concentration (mode) stays fairly steady around 7.22–7.79 across all years, but the course-average spread widens over time, from the tightest distribution in 2023 (SD = 0.987) to the flattest in 2025 (SD = 1.216).</p>
               <div class="stat-row" style="margin-top:12px;">
                 <div class="stat-card"><div class="lbl">2022</div><div class="val">SD 1.146</div></div>
                 <div class="stat-card"><div class="lbl">2023</div><div class="val">SD 0.987</div></div>
@@ -591,12 +629,24 @@ footer{
       <div class="card">
         <div class="card-header pink"><h2>⑥ CBS Analysis &amp; Top 30 Courses</h2></div>
         <div class="card-body">
-          <p style="font-size:16px;font-weight:600;margin-bottom:18px;">Eager to know about the CPI-boosting courses? Voila! We got you covered. 🎓</p>
+          <p style="font-size:16px;font-weight:600;margin-bottom:18px;">Eager to know about the CPI-boosting courses? Voila! We got you covered.</p>
 
           <div class="two-col">
             <div>
-              <div class="formula-box" style="margin-bottom:12px;">CBS&nbsp;=&nbsp;Σ<sub>semesters in analysis</sub>&nbsp;(weight × F<sub>i</sub>)&nbsp;/&nbsp;(NS)</div>
-              <div class="formula-box">F(X, N, σ², N₀, k)&nbsp;=&nbsp;X&nbsp;/&nbsp;[(1+(10^(−N/N₀))σ²)(1+(N₀ᵏ/(N₀ᵏ+Nᵏ))L)]</div>
+              <div class="formula-box" style="margin-bottom:12px;">
+                <span class="var">CBS</span><span class="eq">=</span>
+                <span class="frac">
+                  <span class="frac-num">Σ<sub style="font-size:.7em;font-style:normal;">semesters</sub> (<span class="var">weight</span> × <span class="var">F<sub>i</sub></span>)</span>
+                  <span class="frac-den"><span class="var">NS</span></span>
+                </span>
+              </div>
+              <div class="formula-box">
+                <span class="fn">F</span>(<span class="var">X, N, σ², N₀, k</span>)<span class="eq">=</span>
+                <span class="frac">
+                  <span class="frac-num"><span class="var">X</span></span>
+                  <span class="frac-den">[(1+(10<sup>−<span class="var">N</span>/<span class="var">N₀</span></sup>)<span class="var">σ²</span>)(1+(<span class="var">N₀</span><sup><span class="var">k</span></sup>/(<span class="var">N₀</span><sup><span class="var">k</span></sup>+<span class="var">N</span><sup><span class="var">k</span></sup>))<span class="var">L</span>)]</span>
+                </span>
+              </div>
             </div>
             <div class="note-box">
               <h4>The CPI Booster Score (CBS) <span class="credit-tag">Credits: Rudra G</span></h4>
@@ -604,12 +654,12 @@ footer{
             </div>
           </div>
 
-          <div class="sec-kicker" style="margin-top:26px;">Top 30 Courses by CBS — Autumn Semester</div>
+          <div class="sec-kicker" style="margin-top:26px;">Top 30 Courses by CBS · Autumn Semester</div>
           <div class="sec-sub">Tile value = average enrolled students</div>
           <div class="course-grid"><div class="course-tile" style="background:rgb(199,21,110);color:#ffffff"><div class="course-code">DE6103</div><div class="course-n">96</div></div><div class="course-tile" style="background:rgb(199,21,110);color:#ffffff"><div class="course-code">DE348</div><div class="course-n">96</div></div><div class="course-tile" style="background:rgb(202,29,110);color:#ffffff"><div class="course-code">DE334</div><div class="course-n">94</div></div><div class="course-tile" style="background:rgb(206,40,110);color:#ffffff"><div class="course-code">DE343</div><div class="course-n">91</div></div><div class="course-tile" style="background:rgb(212,55,110);color:#ffffff"><div class="course-code">EE721</div><div class="course-n">87</div></div><div class="course-tile" style="background:rgb(224,89,110);color:#ffffff"><div class="course-code">EE789</div><div class="course-n">78</div></div><div class="course-tile" style="background:rgb(247,150,110);color:#1a1330"><div class="course-code">ES451</div><div class="course-n">62</div></div><div class="course-tile" style="background:rgb(248,154,110);color:#1a1330"><div class="course-code">HS472</div><div class="course-n">61</div></div><div class="course-tile" style="background:rgb(250,160,111);color:#1a1330"><div class="course-code">SOM622</div><div class="course-n">59</div></div><div class="course-tile" style="background:rgb(250,162,113);color:#1a1330"><div class="course-code">DE347</div><div class="course-n">58</div></div><div class="course-tile" style="background:rgb(250,166,117);color:#1a1330"><div class="course-code">PS635</div><div class="course-n">56</div></div><div class="course-tile" style="background:rgb(251,170,122);color:#1a1330"><div class="course-code">CL461</div><div class="course-n">54</div></div><div class="course-tile" style="background:rgb(251,180,132);color:#1a1330"><div class="course-code">ES657</div><div class="course-n">49</div></div><div class="course-tile" style="background:rgb(252,186,139);color:#1a1330"><div class="course-code">DE335</div><div class="course-n">46</div></div><div class="course-tile" style="background:rgb(252,190,143);color:#1a1330"><div class="course-code">CL443</div><div class="course-n">44</div></div><div class="course-tile" style="background:rgb(252,192,145);color:#1a1330"><div class="course-code">DE353</div><div class="course-n">43</div></div><div class="course-tile" style="background:rgb(252,198,151);color:#1a1330"><div class="course-code">DE205</div><div class="course-n">40</div></div><div class="course-tile" style="background:rgb(252,200,153);color:#1a1330"><div class="course-code">GS527</div><div class="course-n">39</div></div><div class="course-tile" style="background:rgb(252,200,153);color:#1a1330"><div class="course-code">DE203</div><div class="course-n">39</div></div><div class="course-tile" style="background:rgb(252,200,153);color:#1a1330"><div class="course-code">GS421</div><div class="course-n">39</div></div><div class="course-tile" style="background:rgb(253,204,158);color:#1a1330"><div class="course-code">HS471</div><div class="course-n">37</div></div><div class="course-tile" style="background:rgb(253,204,158);color:#1a1330"><div class="course-code">DE201</div><div class="course-n">37</div></div><div class="course-tile" style="background:rgb(253,206,160);color:#1a1330"><div class="course-code">DE113</div><div class="course-n">36</div></div><div class="course-tile" style="background:rgb(253,206,160);color:#1a1330"><div class="course-code">DE111</div><div class="course-n">36</div></div><div class="course-tile" style="background:rgb(253,209,164);color:#1a1330"><div class="course-code">MM751</div><div class="course-n">34</div></div><div class="course-tile" style="background:rgb(253,213,168);color:#1a1330"><div class="course-code">ENT623</div><div class="course-n">32</div></div><div class="course-tile" style="background:rgb(253,213,168);color:#1a1330"><div class="course-code">BB653</div><div class="course-n">32</div></div><div class="course-tile" style="background:rgb(253,215,170);color:#1a1330"><div class="course-code">CH801</div><div class="course-n">31</div></div><div class="course-tile" style="background:rgb(254,221,177);color:#1a1330"><div class="course-code">BB619</div><div class="course-n">28</div></div><div class="course-tile" style="background:rgb(255,247,204);color:#1a1330"><div class="course-code">SC650</div><div class="course-n">15</div></div></div>
           <div class="course-legend">*We neither endorse nor discourage any courses; this analysis is solely for statistical purposes.</div>
 
-          <div class="sec-kicker" style="margin-top:26px;">Top 30 Courses by CBS — Spring Semester</div>
+          <div class="sec-kicker" style="margin-top:26px;">Top 30 Courses by CBS · Spring Semester</div>
           <div class="sec-sub">Tile value = average enrolled students</div>
           <div class="course-grid"><div class="course-tile" style="background:rgb(199,21,110);color:#ffffff"><div class="course-code">DE344</div><div class="course-n">82</div></div><div class="course-tile" style="background:rgb(221,79,110);color:#ffffff"><div class="course-code">DE614</div><div class="course-n">70</div></div><div class="course-tile" style="background:rgb(222,84,110);color:#ffffff"><div class="course-code">DE612</div><div class="course-n">69</div></div><div class="course-tile" style="background:rgb(224,89,110);color:#ffffff"><div class="course-code">CM801</div><div class="course-n">68</div></div><div class="course-tile" style="background:rgb(233,113,110);color:#ffffff"><div class="course-code">SOM725</div><div class="course-n">63</div></div><div class="course-tile" style="background:rgb(246,148,110);color:#1a1330"><div class="course-code">CM703</div><div class="course-n">56</div></div><div class="course-tile" style="background:rgb(246,148,110);color:#1a1330"><div class="course-code">DH308</div><div class="course-n">56</div></div><div class="course-tile" style="background:rgb(251,173,125);color:#1a1330"><div class="course-code">DE335</div><div class="course-n">48</div></div><div class="course-tile" style="background:rgb(251,176,128);color:#1a1330"><div class="course-code">DE342</div><div class="course-n">47</div></div><div class="course-tile" style="background:rgb(251,181,133);color:#1a1330"><div class="course-code">GS540</div><div class="course-n">45</div></div><div class="course-tile" style="background:rgb(252,186,139);color:#1a1330"><div class="course-code">CL445</div><div class="course-n">43</div></div><div class="course-tile" style="background:rgb(252,191,144);color:#1a1330"><div class="course-code">ENT606</div><div class="course-n">41</div></div><div class="course-tile" style="background:rgb(252,196,150);color:#1a1330"><div class="course-code">GS538</div><div class="course-n">39</div></div><div class="course-tile" style="background:rgb(252,196,150);color:#1a1330"><div class="course-code">GS438</div><div class="course-n">39</div></div><div class="course-tile" style="background:rgb(252,196,150);color:#1a1330"><div class="course-code">MM739</div><div class="course-n">39</div></div><div class="course-tile" style="background:rgb(252,199,152);color:#1a1330"><div class="course-code">ME770</div><div class="course-n">38</div></div><div class="course-tile" style="background:rgb(252,199,152);color:#1a1330"><div class="course-code">GS450</div><div class="course-n">38</div></div><div class="course-tile" style="background:rgb(252,199,152);color:#1a1330"><div class="course-code">DE118</div><div class="course-n">38</div></div><div class="course-tile" style="background:rgb(252,201,155);color:#1a1330"><div class="course-code">DE126</div><div class="course-n">37</div></div><div class="course-tile" style="background:rgb(252,201,155);color:#1a1330"><div class="course-code">TD626</div><div class="course-n">37</div></div><div class="course-tile" style="background:rgb(252,201,155);color:#1a1330"><div class="course-code">DE203</div><div class="course-n">37</div></div><div class="course-tile" style="background:rgb(252,201,155);color:#1a1330"><div class="course-code">DE138</div><div class="course-n">37</div></div><div class="course-tile" style="background:rgb(252,201,155);color:#1a1330"><div class="course-code">ENT624</div><div class="course-n">37</div></div><div class="course-tile" style="background:rgb(253,206,161);color:#1a1330"><div class="course-code">DE112</div><div class="course-n">35</div></div><div class="course-tile" style="background:rgb(253,206,161);color:#1a1330"><div class="course-code">GP516</div><div class="course-n">35</div></div><div class="course-tile" style="background:rgb(253,211,166);color:#1a1330"><div class="course-code">MM674</div><div class="course-n">33</div></div><div class="course-tile" style="background:rgb(253,214,169);color:#1a1330"><div class="course-code">DE114</div><div class="course-n">32</div></div><div class="course-tile" style="background:rgb(253,214,169);color:#1a1330"><div class="course-code">ENT605</div><div class="course-n">32</div></div><div class="course-tile" style="background:rgb(253,217,171);color:#1a1330"><div class="course-code">TD642</div><div class="course-n">31</div></div><div class="course-tile" style="background:rgb(255,247,204);color:#1a1330"><div class="course-code">ME761</div><div class="course-n">19</div></div></div>
           <div class="course-legend">*We neither endorse nor discourage any courses; this analysis is solely for statistical purposes.</div>
@@ -630,10 +680,10 @@ footer{
             <h4>Analysis</h4>
             <ul style="margin:0 0 10px;padding-left:18px;">
               <li>ENT, IDC, and GP consistently tend to have high grades, with averages reliably exceeding the 8.0 mark.</li>
-              <li>ES has the most consistent grades, with its four-year average fluctuating by a mere 0.12 points — a highly predictable pattern closely matched by departments like EC, MG, and CS.</li>
+              <li>ES has the most consistent grades, with its four-year average fluctuating by a mere 0.12 points, a highly predictable pattern closely matched by departments like EC, MG, and CS.</li>
               <li>The 2024 macro-level grade expansion: academic year 2024 marked a widespread upward shift in grades across the institute, with 13 of the 19 tracked departments recording a higher average grade than their 2023 baselines.</li>
             </ul>
-            <p style="font-size:12.5px;color:var(--ink-soft)">Note: department-wise averages aggregate all course types (mandatory core, electives, minors). "Group 1"/"Group 2" is purely a layout split — it carries no metric or category meaning.</p>
+            <p style="font-size:12.5px;color:var(--ink-soft)">Note: department-wise averages aggregate all course types (mandatory core, electives, minors). "Group 1"/"Group 2" is purely a layout split, it carries no metric or category meaning.</p>
           </div>
 
           <div class="sec-kicker" style="margin-top:26px;">Department-wise Standard Deviation of Average Grades</div>
@@ -685,7 +735,7 @@ footer{
           <div class="chart-wrap"><canvas id="chartAA" height="280"></canvas></div>
           <div class="note-box">
             <ul style="margin:0;padding-left:18px;">
-              <li>Both years exhibit a steep right-skewed distribution, showing that the vast majority of courses award the top "AA" grade to only a small fraction of students — a massive chunk of offerings cluster tightly within the 0–20% bracket.</li>
+              <li>Both years exhibit a steep right-skewed distribution, showing that the vast majority of courses award the top "AA" grade to only a small fraction of students, a massive chunk of offerings cluster tightly within the 0–20% bracket.</li>
               <li>In 2025, the 10–20% bin saw the most substantial growth.</li>
             </ul>
           </div>
@@ -741,11 +791,11 @@ footer{
     <div class="thankyou">
       <h2>Thank You</h2>
       <p>Grading Stats Report 3.0 · Data Analytics and Visualization Team · UGAC</p>
-      <div class="icon-orb">📈</div>
+      <div class="icon-orb"><img src="images/dav.png" alt="DAV Team"></div>
     </div>
 
     <footer>
-      Web edition generated from the original PDF report — all figures reproduced as published by the DAV Team.
+      Web edition generated from the original PDF report, all figures reproduced as published by the DAV Team.
     </footer>
   </main>
 </div>
@@ -763,6 +813,117 @@ const PALETTE = {
   yellow:'#F9E27D', yellowB:'#f0cf3f',
   ink:'#241C3D'
 };
+
+const tickHoverPlugin = {
+  id: 'tickHover',
+  afterInit(chart) {
+    chart._tickHover = { active: -1, scaleKey: null };
+  },
+  beforeEvent(chart, args) {
+    const ev = args.event;
+    if (ev.type !== 'mousemove' && ev.type !== 'mouseout') return;
+    if (ev.type === 'mouseout') { chart._tickHover = { active: -1, scaleKey: null }; chart.setActiveElements([]); chart.update('none'); return; }
+    const { x, y } = ev;
+    const scales = chart.scales;
+    for (const key of Object.keys(scales)) {
+      const sc = scales[key];
+      if (!sc || !sc.ticks || !sc.ticks.length) continue;
+      const isHorizontal = sc.isHorizontal();
+      for (let i = 0; i < sc.ticks.length; i++) {
+        const pixel = sc.getPixelForTick(i);
+        let hit = false;
+        if (isHorizontal) {
+          const next = i < sc.ticks.length - 1 ? sc.getPixelForTick(i + 1) : sc.right;
+          const prev = i > 0 ? sc.getPixelForTick(i - 1) : sc.left;
+          const half = (next - prev) / 2;
+          hit = x >= pixel - half && x <= pixel + half && y >= sc.top && y <= sc.bottom;
+        } else {
+          const next = i < sc.ticks.length - 1 ? sc.getPixelForTick(i + 1) : sc.bottom;
+          const prev = i > 0 ? sc.getPixelForTick(i - 1) : sc.top;
+          const half = (next - prev) / 2;
+          hit = y >= pixel - half && y <= pixel + half && x >= sc.left && x <= sc.right;
+        }
+        if (hit) {
+          if (chart._tickHover.active !== i || chart._tickHover.scaleKey !== key) {
+            chart._tickHover = { active: i, scaleKey: key };
+            chart.update('none');
+          }
+          return;
+        }
+      }
+    }
+    if (chart._tickHover.active !== -1) { chart._tickHover = { active: -1, scaleKey: null }; chart.update('none'); }
+  },
+  afterDraw(chart) {
+    const { active, scaleKey } = chart._tickHover || {};
+    if (active == null || active < 0 || !scaleKey) return;
+    const sc = chart.scales[scaleKey];
+    if (!sc || !sc.ticks || !sc.ticks[active]) return;
+    const ctx = chart.ctx;
+    const pixel = sc.getPixelForTick(active);
+    const isHorizontal = sc.isHorizontal();
+    ctx.save();
+    if (isHorizontal) {
+      const label = sc.ticks[active].label || String(sc.ticks[active]);
+      const tw = ctx.measureText(label).width;
+      const px = pixel - tw / 2 - 6;
+      const py = sc.top - 6;
+      const pw = tw + 12;
+      const ph = sc.ticks.length > 0 ? 20 : 0;
+      ctx.fillStyle = 'rgba(36,28,61,0.9)';
+      ctx.shadowColor = 'rgba(255,158,158,0.5)';
+      ctx.shadowBlur = 12;
+      ctx.beginPath();
+      const r = 6;
+      ctx.moveTo(px + r, py);
+      ctx.lineTo(px + pw - r, py);
+      ctx.quadraticCurveTo(px + pw, py, px + pw, py + r);
+      ctx.lineTo(px + pw, py + ph - r);
+      ctx.quadraticCurveTo(px + pw, py + ph, px + pw - r, py + ph);
+      ctx.lineTo(px + r, py + ph);
+      ctx.quadraticCurveTo(px, py + ph, px, py + ph - r);
+      ctx.lineTo(px, py + r);
+      ctx.quadraticCurveTo(px, py, px + r, py);
+      ctx.fill();
+      ctx.shadowBlur = 0;
+      ctx.fillStyle = '#fff';
+      ctx.font = "bold 12px 'Inter', sans-serif";
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(label, pixel, py + ph / 2);
+    } else {
+      const label = sc.ticks[active].label || String(sc.ticks[active]);
+      const tw = ctx.measureText(label).width;
+      const px = sc.left - tw - 14;
+      const py = pixel - 11;
+      const pw = tw + 12;
+      const ph = 22;
+      ctx.fillStyle = 'rgba(36,28,61,0.9)';
+      ctx.shadowColor = 'rgba(255,158,158,0.5)';
+      ctx.shadowBlur = 12;
+      ctx.beginPath();
+      const r = 6;
+      ctx.moveTo(px + r, py);
+      ctx.lineTo(px + pw - r, py);
+      ctx.quadraticCurveTo(px + pw, py, px + pw, py + r);
+      ctx.lineTo(px + pw, py + ph - r);
+      ctx.quadraticCurveTo(px + pw, py + ph, px + pw - r, py + ph);
+      ctx.lineTo(px + r, py + ph);
+      ctx.quadraticCurveTo(px, py + ph, px, py + ph - r);
+      ctx.lineTo(px, py + r);
+      ctx.quadraticCurveTo(px, py, px + r, py);
+      ctx.fill();
+      ctx.shadowBlur = 0;
+      ctx.fillStyle = '#fff';
+      ctx.font = "bold 12px 'Inter', sans-serif";
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(label, px + pw / 2, py + ph / 2);
+    }
+    ctx.restore();
+  }
+};
+Chart.register(tickHoverPlugin);
 
 function groupedBar(canvasId, labels, seriesA, seriesB, nameA, nameB, colorA, colorB, nA, nB){
   const ctx = document.getElementById(canvasId);

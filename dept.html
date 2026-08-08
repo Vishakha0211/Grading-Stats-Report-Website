@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Department Dashboard — Grading Stats 3.0</title>
+<title>Department Dashboard, Grading Stats 3.0</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 <script>/*!
@@ -42,10 +42,14 @@
 }
 *{box-sizing:border-box;} html{scroll-behavior:smooth;}
 body{margin:0; font-family:'Inter',system-ui,sans-serif; color:var(--ink); background:var(--cream);
-  background-image:repeating-linear-gradient(135deg, rgba(255,255,255,0.55) 0 26px, transparent 26px 60px); min-height:100vh;}
-[data-theme="dark"] body{background-image:repeating-linear-gradient(135deg, rgba(60,50,100,0.3) 0 26px, transparent 26px 60px);}
-h1,h2,h3,h4{font-family:'Baloo 2',system-ui,sans-serif; margin:0; letter-spacing:.2px;}
+  background-image:linear-gradient(rgba(36,28,61,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(36,28,61,0.06) 1px, transparent 1px), linear-gradient(180deg, #ffffff 0%, #ffffff 180px, var(--cream) 52%, var(--pink-pale) 100%);
+  background-size:40px 40px, 40px 40px, 100% 100%; min-height:100vh;}
+[data-theme="dark"] body{background-image:linear-gradient(rgba(240,234,248,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(240,234,248,0.07) 1px, transparent 1px), linear-gradient(180deg, #1a1333 0%, #1a1333 180px, var(--cream) 52%, var(--pink-pale) 100%); background-size:40px 40px, 40px 40px, 100% 100%;}
+h1,h2,h3,h4{font-family:'Baloo 2',system-ui,sans-serif; margin:0; letter-spacing:.2px; transition:color .15s ease, text-shadow .15s ease;}
+h1:hover,h2:hover,h3:hover,h4:hover{color:var(--pink-deep); text-shadow:0 2px 8px rgba(255,158,158,0.3);}
 p{line-height:1.6;} a{color:inherit;}
+b{transition:color .15s ease, text-shadow .15s ease; cursor:default;}
+b:hover{color:var(--pink-deep); text-shadow:0 1px 6px rgba(255,158,158,0.25);}
 
 .container{max-width:1100px; margin:0 auto; padding:36px 32px 80px;}
 .dept-layout{display:flex; gap:24px; align-items:flex-start;}
@@ -79,11 +83,12 @@ p{line-height:1.6;} a{color:inherit;}
 .back-btn:hover{transform:translate(-2px,-2px); box-shadow:6px 6px 0 var(--ink);}
 
 .theme-toggle{
+  position:fixed; top:18px; right:18px; z-index:200;
   display:inline-flex; align-items:center; justify-content:center;
-  width:38px;height:38px;border-radius:12px; border:2px solid var(--ink);
-  background:var(--yellow); font-size:18px; cursor:pointer; margin-left:auto;
+  width:40px;height:40px;border-radius:12px; border:2px solid var(--ink);
+  background:var(--yellow); font-size:18px; cursor:pointer;
   transition:transform .15s ease, box-shadow .15s ease;
-  box-shadow:3px 3px 0 var(--ink); flex:0 0 38px;
+  box-shadow:3px 3px 0 var(--ink);
 }
 .theme-toggle:hover{transform:translate(-1px,-1px); box-shadow:4px 4px 0 var(--ink);}
 
@@ -105,9 +110,9 @@ p{line-height:1.6;} a{color:inherit;}
 .dept-card{
   background:var(--paper); border:2.5px solid var(--ink); border-radius:14px;
   padding:14px 16px; cursor:pointer; text-decoration:none; color:var(--ink);
-  box-shadow:3px 3px 0 var(--ink); transition:transform .12s, box-shadow .12s, background .12s;
+  box-shadow:3px 3px 0 var(--ink); transition:transform .15s ease, box-shadow .15s ease, background .12s;
 }
-.dept-card:hover{transform:translate(-2px,-2px); box-shadow:5px 5px 0 var(--ink);}
+.dept-card:hover{transform:translateY(-4px) scale(1.05); box-shadow:0 6px 18px rgba(36,28,61,0.25);}
 .dept-card.selected{background:var(--ink); color:var(--cream); box-shadow:5px 5px 0 var(--yellow);}
 .dept-card .abbr{font-family:'JetBrains Mono'; font-weight:700; font-size:15px;}
 .dept-card .name{font-size:12px; font-weight:500; margin-top:2px; opacity:.85;}
@@ -156,15 +161,16 @@ canvas{max-width:100%;}
 @media print{.back-btn,.theme-toggle{display:none;} body{background:#fff;}}
 
 /* ---------- LOGOS ---------- */
-.logo-corner{position:fixed !important; z-index:9999; pointer-events:none;}
+.logo-corner{position:absolute !important; z-index:10; pointer-events:none;}
 .logo-ugac{top:16px; left:16px;}
-.logo-dav{top:16px; right:16px;}
+.logo-dav{top:16px; right:70px;}
 .logo-corner img{height:50px; width:auto; filter:drop-shadow(0 2px 6px rgba(0,0,0,0.15));}
 @media(max-width:700px){.logo-corner img{height:38px;}}
 </style>
 </head>
 <body>
 
+<button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">🌙</button>
 <div class="logo-corner logo-ugac"><img src="images/ugac.jpg" alt="UGAC"></div>
 <div class="logo-corner logo-dav" style="display:flex;align-items:center;gap:8px;"><span style="font-size:12px;font-weight:700;color:var(--ink-soft);white-space:nowrap;">Data Analytics and Visualization Team</span><img src="images/dav.png" alt="DAV Team"></div>
 
@@ -178,7 +184,6 @@ canvas{max-width:100%;}
       <h1>Department Dashboard</h1>
       <div class="sub">Select your department below to view detailed grading statistics</div>
     </div>
-    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" style="position:absolute; top:50%; right:-54px; transform:translateY(-50%);">🌙</button>
   </div>
 
   <div class="selector-label">Select Department</div>
@@ -444,7 +449,7 @@ function renderDashboard(dept){
     const padded = new Array(8).fill(null);
     minors.forEach((entry,i)=>{ if(entry) padded[i]=entry; });
     padded.forEach(entry=>{
-      if(!entry){ html+='<td class="empty">—</td>'; }
+      if(!entry){ html+='<td class="empty"></td>'; }
       else{
         const [v,n]=entry;
         const bg=colorForGrade(v,5,10);
@@ -461,7 +466,7 @@ function renderDashboard(dept){
     let html = '<table class="heatmap-min"><thead><tr><th></th><th>2024</th><th>2025</th></tr></thead><tbody>';
     html += `<tr><th class="rowlabel">${dept}</th>`;
     vals.forEach(v=>{
-      if(v==null){ html+='<td class="empty">—</td>'; }
+      if(v==null){ html+='<td class="empty"></td>'; }
       else{ const bg=colorForGrade(v,6,10); html+=`<td style="background:${bg};color:${txtColor(bg)}">${v.toFixed(2)}</td>`; }
     });
     html += '</tr></tbody></table>';
@@ -474,7 +479,7 @@ function renderDashboard(dept){
     let html = '<table class="heatmap-min"><thead><tr><th></th><th>2024</th><th>2025</th></tr></thead><tbody>';
     html += `<tr><th class="rowlabel">${dept}</th>`;
     vals.forEach(v=>{
-      if(v==null){ html+='<td class="empty">—</td>'; }
+      if(v==null){ html+='<td class="empty"></td>'; }
       else{ const bg=colorForGrade(v,6,10); html+=`<td style="background:${bg};color:${txtColor(bg)}">${v.toFixed(2)}</td>`; }
     });
     html += '</tr></tbody></table>';
