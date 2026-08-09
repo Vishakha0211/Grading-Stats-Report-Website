@@ -68,11 +68,17 @@ body{
   color:var(--ink);
   background:var(--cream);
   background-image:
-    linear-gradient(rgba(36,28,61,0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(36,28,61,0.06) 1px, transparent 1px),
     linear-gradient(180deg, #ffffff 0%, #ffffff 180px, var(--cream) 52%, var(--pink-pale) 100%);
-  background-size:40px 40px, 40px 40px, 100% 100%;
   min-height:100vh;
+}
+body::before{
+  content:""; position:fixed; inset:0; z-index:0; pointer-events:none;
+  background-image:
+    linear-gradient(rgba(36,28,61,0.14) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(36,28,61,0.14) 1px, transparent 1px);
+  background-size:40px 40px;
+  mask-image:linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.3) 30%, rgba(0,0,0,0.8) 60%, rgba(0,0,0,1) 100%);
+  -webkit-mask-image:linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.3) 30%, rgba(0,0,0,0.8) 60%, rgba(0,0,0,1) 100%);
 }
 h1,h2,h3,h4{font-family:'Baloo 2',system-ui,sans-serif; margin:0; letter-spacing:.2px; transition:color .15s ease, text-shadow .15s ease;}
 h1:hover,h2:hover,h3:hover,h4:hover{color:var(--pink-deep); text-shadow:0 2px 8px rgba(255,158,158,0.3);}
@@ -83,7 +89,7 @@ b:hover{color:var(--pink-deep); text-shadow:0 1px 6px rgba(255,158,158,0.25);}
 .mono{font-family:'JetBrains Mono',monospace;}
 
 /* ---------- LAYOUT ---------- */
-.app{display:flex; min-height:100vh;}
+.app{display:flex; min-height:100vh; position:relative; z-index:1;}
 .sidebar{
   width:280px; flex:0 0 280px;
   background:var(--paper);
@@ -340,13 +346,31 @@ footer{
   body{background:#fff;}
 }
 
+/* ---------- SECTION VIEW ---------- */
+body.section-active .block:not(.section-visible){display:none;}
+body.section-active .hero-sec{display:none;}
+body.section-active .toc-sec{display:none;}
+body.section-active #backBtn{display:inline-flex;}
+.back-btn{
+  display:none; position:fixed; bottom:28px; left:50%; transform:translateX(-50%);
+  z-index:200; padding:12px 28px; border-radius:14px; border:2.5px solid var(--ink);
+  background:var(--yellow); font-size:14px; font-weight:700; cursor:pointer;
+  box-shadow:4px 4px 0 var(--ink); transition:transform .15s ease, box-shadow .15s ease;
+  font-family:'Inter',system-ui,sans-serif; color:var(--ink);
+}
+.back-btn:hover{transform:translate(-2px,-2px); box-shadow:6px 6px 0 var(--ink);}
+.back-btn:active{transform:translate(1px,1px); box-shadow:2px 2px 0 var(--ink);}
+
 /* ---------- DARK MODE ---------- */
 [data-theme="dark"] body{
   background-image:
-    linear-gradient(rgba(240,234,248,0.07) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(240,234,248,0.07) 1px, transparent 1px),
     linear-gradient(180deg, #1a1333 0%, #1a1333 180px, var(--cream) 52%, var(--pink-pale) 100%);
-  background-size:40px 40px, 40px 40px, 100% 100%;
+}
+[data-theme="dark"] body::before{
+  background-image:
+    linear-gradient(rgba(240,234,248,0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(240,234,248,0.1) 1px, transparent 1px);
+  background-size:40px 40px;
 }
 [data-theme="dark"] .hero::after{
   background:repeating-linear-gradient(135deg, rgba(60,50,100,0.2) 0 18px, transparent 18px 40px);
@@ -376,6 +400,7 @@ footer{
 
 <button class="menutoggle" id="menuToggle" aria-label="Toggle navigation">☰</button>
 <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">🌙</button>
+<button class="back-btn" id="backBtn">← Back to Overview</button>
 
 <div class="app">
   <nav class="sidebar" id="sidebar">
@@ -389,24 +414,24 @@ footer{
 
     <div class="navlabel">Overview</div>
     <ul class="navlist">
-      <li><a href="#home">Home</a></li>
+      <li><a href="#" onclick="showOverview(); return false;">Home</a></li>
       <li><a href="#methodology">Methodology</a></li>
     </ul>
 
     <div class="navlabel">Topics Covered</div>
     <ul class="navlist" id="tocnav">
-      <li><a href="#freshies"><span class="navnum">1</span> Average Grades of Freshies</a></li>
-      <li><a href="#sophies"><span class="navnum">2</span> Average Grades of Sophies</a></li>
-      <li><a href="#thirdies"><span class="navnum">3</span> Average Grades of Thirdies</a></li>
-      <li><a href="#electives"><span class="navnum">4</span> Dept-wise Electives Avg Grades</a></li>
-      <li><a href="#minors"><span class="navnum">5</span> Dept-wise Minors Avg Grades</a></li>
-      <li><a href="#cbs"><span class="navnum">6</span> CBS Analysis &amp; Top 30 Courses</a></li>
-      <li><a href="#deptavg"><span class="navnum">7</span> Dept-wise Average Grades</a></li>
-      <li><a href="#autumnspring"><span class="navnum">8</span> Autumn &amp; Spring Avg Grades</a></li>
-      <li><a href="#apgrades"><span class="navnum">9</span> AP Grade Distribution</a></li>
-      <li><a href="#aapercent"><span class="navnum">10</span> Courses vs % of AAs</a></li>
-      <li><a href="#coursesavg"><span class="navnum">11</span> Courses vs Average Grades</a></li>
-      <li><a href="#recommender"><span class="navnum">12</span> Course Recommender</a></li>
+      <li><a href="#" onclick="showSection('freshies'); return false;"><span class="navnum">1</span> Average Grades of Freshies</a></li>
+      <li><a href="#" onclick="showSection('sophies'); return false;"><span class="navnum">2</span> Average Grades of Sophies</a></li>
+      <li><a href="#" onclick="showSection('thirdies'); return false;"><span class="navnum">3</span> Average Grades of Thirdies</a></li>
+      <li><a href="#" onclick="showSection('electives'); return false;"><span class="navnum">4</span> Dept-wise Electives Avg Grades</a></li>
+      <li><a href="#" onclick="showSection('minors'); return false;"><span class="navnum">5</span> Dept-wise Minors Avg Grades</a></li>
+      <li><a href="#" onclick="showSection('cbs'); return false;"><span class="navnum">6</span> CBS Analysis &amp; Top 30 Courses</a></li>
+      <li><a href="#" onclick="showSection('deptavg'); return false;"><span class="navnum">7</span> Dept-wise Average Grades</a></li>
+      <li><a href="#" onclick="showSection('autumnspring'); return false;"><span class="navnum">8</span> Autumn &amp; Spring Avg Grades</a></li>
+      <li><a href="#" onclick="showSection('apgrades'); return false;"><span class="navnum">9</span> AP Grade Distribution</a></li>
+      <li><a href="#" onclick="showSection('aapercent'); return false;"><span class="navnum">10</span> Courses vs % of AAs</a></li>
+      <li><a href="#" onclick="showSection('coursesavg'); return false;"><span class="navnum">11</span> Courses vs Average Grades</a></li>
+      <li><a href="#" onclick="showSection('recommender'); return false;"><span class="navnum">12</span> Course Recommender</a></li>
     </ul>
 
   </nav>
@@ -415,7 +440,7 @@ footer{
 
     <!-- HERO -->
     <section id="home" class="block">
-      <div class="hero">
+      <div class="hero hero-sec">
         <span class="hero-eyebrow">UGAC · Undergraduate Academic Council</span>
         <h1>Grading Stats<br>Report 3.0</h1>
         <div class="sub">Data Analytics and Visualization Team</div>
@@ -425,25 +450,25 @@ footer{
         </div>
       </div>
 
-      <div class="card">
+      <div class="card toc-sec">
         <div class="card-header yellow">
           <h2>Topics Covered</h2>
           <span class="tag">Click any card to jump</span>
         </div>
         <div class="card-body">
           <div class="toc-grid">
-            <a class="toc-card" href="#freshies"><span class="toc-num">1</span><span class="label">Average Grades of Freshies</span></a>
-            <a class="toc-card" href="#sophies"><span class="toc-num">2</span><span class="label">Average Grades of Sophies</span></a>
-            <a class="toc-card" href="#thirdies"><span class="toc-num">3</span><span class="label">Average Grades of Thirdies</span></a>
-            <a class="toc-card" href="#electives"><span class="toc-num">4</span><span class="label">Dept wise Electives Average Grades</span></a>
-            <a class="toc-card" href="#minors"><span class="toc-num">5</span><span class="label">Dept wise Minors Average Grades</span></a>
-            <a class="toc-card" href="#cbs"><span class="toc-num">6</span><span class="label">CBS Analysis &amp; Top 30 Courses</span></a>
-            <a class="toc-card" href="#deptavg"><span class="toc-num">7</span><span class="label">Dept wise Average Grades</span></a>
-            <a class="toc-card" href="#autumnspring"><span class="toc-num">8</span><span class="label">Dept wise Autumn &amp; Spring Average Grades</span></a>
-            <a class="toc-card" href="#apgrades"><span class="toc-num">9</span><span class="label">AP Grade Distribution</span></a>
-            <a class="toc-card" href="#aapercent"><span class="toc-num">10</span><span class="label">Number of Courses Vs % of AAs</span></a>
-            <a class="toc-card" href="#coursesavg"><span class="toc-num">11</span><span class="label">Number of Courses Vs Average Grades</span></a>
-            <a class="toc-card" href="#recommender"><span class="toc-num">12</span><span class="label">Course Recommender</span></a>
+            <a class="toc-card" href="#" onclick="showSection('freshies'); return false;"><span class="toc-num">1</span><span class="label">Average Grades of Freshies</span></a>
+            <a class="toc-card" href="#" onclick="showSection('sophies'); return false;"><span class="toc-num">2</span><span class="label">Average Grades of Sophies</span></a>
+            <a class="toc-card" href="#" onclick="showSection('thirdies'); return false;"><span class="toc-num">3</span><span class="label">Average Grades of Thirdies</span></a>
+            <a class="toc-card" href="#" onclick="showSection('electives'); return false;"><span class="toc-num">4</span><span class="label">Dept wise Electives Average Grades</span></a>
+            <a class="toc-card" href="#" onclick="showSection('minors'); return false;"><span class="toc-num">5</span><span class="label">Dept wise Minors Average Grades</span></a>
+            <a class="toc-card" href="#" onclick="showSection('cbs'); return false;"><span class="toc-num">6</span><span class="label">CBS Analysis &amp; Top 30 Courses</span></a>
+            <a class="toc-card" href="#" onclick="showSection('deptavg'); return false;"><span class="toc-num">7</span><span class="label">Dept wise Average Grades</span></a>
+            <a class="toc-card" href="#" onclick="showSection('autumnspring'); return false;"><span class="toc-num">8</span><span class="label">Dept wise Autumn &amp; Spring Average Grades</span></a>
+            <a class="toc-card" href="#" onclick="showSection('apgrades'); return false;"><span class="toc-num">9</span><span class="label">AP Grade Distribution</span></a>
+            <a class="toc-card" href="#" onclick="showSection('aapercent'); return false;"><span class="toc-num">10</span><span class="label">Number of Courses Vs % of AAs</span></a>
+            <a class="toc-card" href="#" onclick="showSection('coursesavg'); return false;"><span class="toc-num">11</span><span class="label">Number of Courses Vs Average Grades</span></a>
+            <a class="toc-card" href="#" onclick="showSection('recommender'); return false;"><span class="toc-num">12</span><span class="label">Course Recommender</span></a>
           </div>
         </div>
       </div>
@@ -773,7 +798,7 @@ footer{
             <li><b>Conflict Detection:</b> automatically highlights potential scheduling conflicts between prospective electives/minors and mandatory core courses.</li>
             <li><b>Prerequisite Information:</b> outlines the necessary prerequisites required prior to enrolling in specific courses.</li>
           </ul>
-          <p style="text-align:center; font-family:'Baloo 2'; font-weight:800; font-size:22px; margin-top:20px;">Coming Soon!! 🚀</p>
+          <p style="text-align:center; font-family:'Baloo 2'; font-weight:800; font-size:22px; margin-top:20px;">Coming Soon!!</p>
         </div>
       </div>
     </section>
@@ -1042,6 +1067,34 @@ function gaussPoints(mean, sd, lo, hi, step){
   });
 })();
 
+// ---- Section View Navigation ----
+function showSection(sectionId){
+  document.body.classList.add('section-active');
+  document.querySelectorAll('.block').forEach(b => b.classList.remove('section-visible'));
+  const target = document.getElementById(sectionId);
+  if(target){
+    target.classList.add('section-visible');
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+  setTimeout(()=> resizeVisibleCharts(), 100);
+}
+function showOverview(){
+  document.body.classList.remove('section-active');
+  document.querySelectorAll('.block').forEach(b => b.classList.remove('section-visible'));
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+function resizeVisibleCharts(){
+  if(typeof Chart !== 'undefined' && Chart.instances){
+    Object.values(Chart.instances).forEach(c => {
+      const canvas = c.canvas;
+      if(canvas && canvas.closest('.block.section-visible')){
+        c.resize();
+      }
+    });
+  }
+}
+document.getElementById('backBtn').addEventListener('click', showOverview);
+
 // ---- Nav interactivity ----
 const toggle = document.getElementById('menuToggle');
 const sidebar = document.getElementById('sidebar');
@@ -1053,6 +1106,7 @@ document.querySelectorAll('.navlist a, .toc-card').forEach(a=>{
 const navLinks = document.querySelectorAll('#tocnav a');
 const sections = Array.from(navLinks).map(a=>document.querySelector(a.getAttribute('href')));
 function onScroll(){
+  if(document.body.classList.contains('section-active')) return;
   let idx = 0;
   const y = window.scrollY + 120;
   sections.forEach((s,i)=>{ if(s && s.offsetTop <= y) idx = i; });

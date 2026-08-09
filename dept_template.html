@@ -28,16 +28,21 @@
 }
 *{box-sizing:border-box;} html{scroll-behavior:smooth;}
 body{margin:0; font-family:'Inter',system-ui,sans-serif; color:var(--ink); background:var(--cream);
-  background-image:linear-gradient(rgba(36,28,61,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(36,28,61,0.06) 1px, transparent 1px), linear-gradient(180deg, #ffffff 0%, #ffffff 180px, var(--cream) 52%, var(--pink-pale) 100%);
-  background-size:40px 40px, 40px 40px, 100% 100%; min-height:100vh;}
-[data-theme="dark"] body{background-image:linear-gradient(rgba(240,234,248,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(240,234,248,0.07) 1px, transparent 1px), linear-gradient(180deg, #1a1333 0%, #1a1333 180px, var(--cream) 52%, var(--pink-pale) 100%); background-size:40px 40px, 40px 40px, 100% 100%;}
+  background-image:linear-gradient(180deg, #ffffff 0%, #ffffff 180px, var(--cream) 52%, var(--pink-pale) 100%); min-height:100vh;}
+body::before{content:""; position:fixed; inset:0; z-index:0; pointer-events:none;
+  background-image:linear-gradient(rgba(36,28,61,0.14) 1px, transparent 1px), linear-gradient(90deg, rgba(36,28,61,0.14) 1px, transparent 1px);
+  background-size:40px 40px;
+  mask-image:linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.3) 30%, rgba(0,0,0,0.8) 60%, rgba(0,0,0,1) 100%);
+  -webkit-mask-image:linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.3) 30%, rgba(0,0,0,0.8) 60%, rgba(0,0,0,1) 100%);}
+[data-theme="dark"] body{background-image:linear-gradient(180deg, #1a1333 0%, #1a1333 180px, var(--cream) 52%, var(--pink-pale) 100%);}
+[data-theme="dark"] body::before{background-image:linear-gradient(rgba(240,234,248,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(240,234,248,0.1) 1px, transparent 1px); background-size:40px 40px;}
 h1,h2,h3,h4{font-family:'Baloo 2',system-ui,sans-serif; margin:0; letter-spacing:.2px; transition:color .15s ease, text-shadow .15s ease;}
 h1:hover,h2:hover,h3:hover,h4:hover{color:var(--pink-deep); text-shadow:0 2px 8px rgba(255,158,158,0.3);}
 p{line-height:1.6;} a{color:inherit;}
 b{transition:color .15s ease, text-shadow .15s ease; cursor:default;}
 b:hover{color:var(--pink-deep); text-shadow:0 1px 6px rgba(255,158,158,0.25);}
 
-.container{max-width:1100px; margin:0 auto; padding:36px 32px 80px;}
+.container{max-width:1100px; margin:0 auto; padding:36px 32px 80px; position:relative; z-index:1;}
 .dept-layout{display:flex; gap:24px; align-items:flex-start;}
 .dept-main{flex:1; min-width:0;}
 
@@ -251,7 +256,7 @@ canvas{max-width:100%;}
     </div>
   </div>
 
-  <div id="placeholder" class="placeholder-msg">👆 Select a department above to view its grading dashboard</div>
+
   </div>
 </div>
 
