@@ -92,6 +92,11 @@ b:hover{color:var(--pink-deep); text-shadow:0 1px 6px rgba(255,158,158,0.25);}
 }
 .hero h1{font-size:clamp(34px,5vw,58px); font-weight:800; margin:18px 0 6px; position:relative; z-index:1; line-height:1.02;}
 .hero .sub{font-size:18px; font-weight:600; color:var(--ink-soft); position:relative; z-index:1;}
+.sub-pill{
+  display:inline-block;
+  background:var(--paper); border:2px solid var(--ink); border-radius:999px;
+  padding:6px 16px; font-size:14px; font-weight:700; color:var(--ink);
+}
 .hero-meta{display:flex; flex-wrap:wrap; gap:12px; margin-top:26px; position:relative; z-index:1;}
 .pill{
   background:var(--paper); border:2px solid var(--ink); border-radius:14px;
@@ -201,7 +206,7 @@ footer{
 
   <section class="hero">
     <h1>Grading Stats<br>Report 3.0</h1>
-    <div class="sub">Data Analytics and Visualization Team</div>
+    <div class="sub"><span class="sub-pill">Data Analytics and Visualization Team</span></div>
     <div class="hero-meta">
       <div class="pill"><b>Contributed by</b>Harsh, Ummehani, Vishakha, Zubair</div>
       <div class="pill"><b>Project Led By</b>Rakshana</div>
