@@ -323,7 +323,8 @@ function buildDeptGrid(){
 
 function selectDept(abbr){
   document.querySelectorAll('.dept-card').forEach(c => c.classList.toggle('selected', c.dataset.dept===abbr));
-  document.getElementById('placeholder').style.display='none';
+  const ph = document.getElementById('placeholder');
+  if(ph) ph.style.display='none';
   document.getElementById('dashboard').classList.add('visible');
   document.getElementById('sectionNav').classList.add('visible');
   destroyCharts();
