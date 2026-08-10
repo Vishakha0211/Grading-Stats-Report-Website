@@ -1,15 +1,24 @@
 import json
 
-# ---- Build index.html (main report) ----
+# ---- Load shared data ----
 with open("data_out.json") as f:
     comp = json.load(f)
 with open("chart_data.json") as f:
     chart_data = json.load(f)
+with open("node_modules/chart.js/dist/chart.umd.js", encoding="utf-8") as f:
+    chartjs_src = f.read()
+
+# ---- Build index.html (home page) ----
+with open("home_template.html", encoding="utf-8") as f:
+    html = f.read()
+with open("index.html", "w", encoding="utf-8") as f:
+    f.write(html)
+print("Written: index.html   size(kb)=", round(len(html)/1024,1))
+
+# ---- Build report.html (full report) ----
 with open("template.html", encoding="utf-8") as f:
     html = f.read()
 
-with open("node_modules/chart.js/dist/chart.umd.js", encoding="utf-8") as f:
-    chartjs_src = f.read()
 html = html.replace("/*__CHARTJS_INLINE__*/", chartjs_src)
 
 replacements = {
@@ -29,9 +38,9 @@ for k, v in replacements.items():
         print("WARNING: placeholder not found:", k)
     html = html.replace(k, v)
 
-with open("index.html", "w", encoding="utf-8") as f:
+with open("report.html", "w", encoding="utf-8") as f:
     f.write(html)
-print("Written: index.html  size(kb)=", round(len(html)/1024,1))
+print("Written: report.html  size(kb)=", round(len(html)/1024,1))
 
 # ---- Build dept.html (department dashboard) ----
 with open("dept_data.json") as f:
