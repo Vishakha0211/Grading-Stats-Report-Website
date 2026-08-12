@@ -1056,15 +1056,15 @@ function processLogo(){
     for(let i = 0; i < px.length; i += 4){
       const r = px[i], g = px[i+1], b = px[i+2];
       const brightness = (r + g + b) / 3;
-      if(brightness > 200){
+      if(brightness > 180){
         px[i] = 0x1a; px[i+1] = 0x13; px[i+2] = 0x33; px[i+3] = 255;
-      } else if(brightness < 80){
+      } else if(brightness < 140){
         px[i] = 0xf0; px[i+1] = 0xea; px[i+2] = 0xf8; px[i+3] = 255;
       } else {
-        const t = brightness / 255;
-        px[i]   = Math.round(0x1a + (0xf0 - 0x1a) * t);
-        px[i+1] = Math.round(0x13 + (0xea - 0x13) * t);
-        px[i+2] = Math.round(0x33 + (0xf8 - 0x33) * t);
+        const t = (brightness - 140) / (180 - 140);
+        px[i]   = Math.round(0xf0 + (0x1a - 0xf0) * t);
+        px[i+1] = Math.round(0xea + (0x13 - 0xea) * t);
+        px[i+2] = Math.round(0xf8 + (0x33 - 0xf8) * t);
         px[i+3] = 255;
       }
     }
