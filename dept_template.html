@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Department Dashboard, Grading Stats 3.0</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=DM+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 <script>/*__CHARTJS_INLINE__*/</script>
 <style>
 :root{
@@ -27,7 +27,7 @@
   --shadow: 0 6px 24px rgba(0,0,0,0.3); --shadow-lift: 0 14px 34px rgba(0,0,0,0.4);
 }
 *{box-sizing:border-box;} html{scroll-behavior:smooth;}
-body{margin:0; font-family:'Inter',system-ui,sans-serif; color:var(--ink); background:var(--cream);
+body{margin:0; font-family:'DM Sans',system-ui,sans-serif; color:var(--ink); background:var(--cream);
   background-image:linear-gradient(180deg, #ffffff 0%, #ffffff 180px, var(--cream) 52%, var(--pink-pale) 100%); min-height:100vh;}
 body::before{content:""; position:fixed; inset:0; z-index:0; pointer-events:none;
   background-image:linear-gradient(rgba(36,28,61,0.14) 1px, transparent 1px), linear-gradient(90deg, rgba(36,28,61,0.14) 1px, transparent 1px);
@@ -36,7 +36,7 @@ body::before{content:""; position:fixed; inset:0; z-index:0; pointer-events:none
   -webkit-mask-image:linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.3) 30%, rgba(0,0,0,0.8) 60%, rgba(0,0,0,1) 100%);}
 [data-theme="dark"] body{background-image:linear-gradient(180deg, #1a1333 0%, #1a1333 180px, var(--cream) 52%, var(--pink-pale) 100%);}
 [data-theme="dark"] body::before{background-image:linear-gradient(rgba(240,234,248,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(240,234,248,0.1) 1px, transparent 1px); background-size:40px 40px;}
-h1,h2,h3,h4{font-family:'Baloo 2',system-ui,sans-serif; margin:0; letter-spacing:.2px; transition:color .15s ease, text-shadow .15s ease;}
+h1,h2,h3,h4{font-family:'Outfit',system-ui,sans-serif; margin:0; letter-spacing:.2px; transition:color .15s ease, text-shadow .15s ease;}
 h1:hover,h2:hover,h3:hover,h4:hover{color:var(--pink-deep); text-shadow:0 2px 8px rgba(255,158,158,0.3);}
 p{line-height:1.6;} a{color:inherit;}
 b{transition:color .15s ease, text-shadow .15s ease; cursor:default;}
@@ -90,8 +90,7 @@ b:hover{color:var(--pink-deep); text-shadow:0 1px 6px rgba(255,158,158,0.25);}
   padding:44px 40px; margin-bottom:28px; position:relative; overflow:hidden;
   box-shadow:var(--shadow-lift);
 }
-.hero::after{content:""; position:absolute; inset:0;
-  background:repeating-linear-gradient(135deg, rgba(255,255,255,0.4) 0 18px, transparent 18px 40px); pointer-events:none;}
+.hero::after{content:""; position:absolute; inset:0; pointer-events:none;}
 .hero h1{font-size:clamp(30px,4vw,48px); font-weight:800; position:relative; z-index:1; line-height:1.05;}
 .hero .sub{font-size:16px; font-weight:600; color:var(--ink-soft); position:relative; z-index:1; margin-top:4px;}
 
@@ -124,7 +123,7 @@ b:hover{color:var(--pink-deep); text-shadow:0 1px 6px rgba(255,158,158,0.25);}
 .stat-row{display:flex; gap:14px; flex-wrap:wrap; margin-bottom:16px;}
 .stat-card{flex:1; min-width:120px; background:var(--paper); border:2.5px solid var(--ink); border-radius:14px; padding:14px 16px; box-shadow:3px 3px 0 var(--ink);}
 .stat-card .lbl{font-size:11px; text-transform:uppercase; letter-spacing:.6px; color:var(--ink-soft); font-weight:700;}
-.stat-card .val{font-family:'Baloo 2'; font-size:22px; font-weight:800; margin-top:2px;}
+.stat-card .val{font-family:'Outfit'; font-size:22px; font-weight:800; margin-top:2px;}
 
 .grid-2{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
 @media(max-width:860px){.grid-2{grid-template-columns:1fr;}}
@@ -137,7 +136,7 @@ canvas{max-width:100%;}
 .note-box ul{margin:0; padding-left:18px;} .note-box li{margin-bottom:8px;}
 
 .heatmap-min{border-collapse:collapse; width:100%; font-size:13px;}
-.heatmap-min th{font-family:'Baloo 2'; font-weight:700; text-align:center; padding:8px 6px; font-size:12px;}
+.heatmap-min th{font-family:'Outfit'; font-weight:700; text-align:center; padding:8px 6px; font-size:12px;}
 .heatmap-min td{textAlign:center; padding:8px 6px; border:2px solid var(--paper); font-weight:700; border-radius:6px; text-align:center;}
 .heatmap-min td.empty{background:#f1eee0 !important; color:#b6b0a0 !important; font-weight:500;}
 .heatmap-min th.rowlabel{text-align:left; padding-left:10px; background:var(--ink); color:var(--cream); border-radius:8px; border-bottom:2px solid var(--paper);}
@@ -155,14 +154,17 @@ canvas{max-width:100%;}
 .logo-corner{position:absolute !important; z-index:10; pointer-events:none;}
 .logo-ugac{top:16px; left:16px;}
 .logo-dav{top:16px; right:70px;}
-.logo-corner img{height:50px; width:auto; filter:drop-shadow(0 2px 6px rgba(0,0,0,0.15));}
+.logo-corner img{height:50px; width:auto; mix-blend-mode:multiply;}
+.logo-dark{display:none;}
+[data-theme="dark"] .logo-light{display:none;}
+[data-theme="dark"] .logo-dark{display:block;}
 @media(max-width:700px){.logo-corner img{height:38px;}}
 </style>
 </head>
 <body>
 
 <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">🌙</button>
-<div class="logo-corner logo-ugac"><img src="images/ugac.jpg" alt="UGAC"></div>
+<div class="logo-corner logo-ugac"><img src="images/ugac.jpg" alt="UGAC" class="logo-light"><img src="images/ugac.jpg" alt="UGAC" class="logo-dark"></div>
 <div class="logo-corner logo-dav" style="display:flex;align-items:center;gap:8px;"><span style="font-size:12px;font-weight:700;color:var(--ink-soft);white-space:nowrap;">Data Analytics and Visualization Team</span><img src="images/dav.png" alt="DAV Team"></div>
 
 <div class="container" style="padding-top:80px;">
@@ -567,6 +569,40 @@ function setupScrollSpy(){
 // ---- Dark Mode ----
 const themeToggle = document.getElementById('themeToggle');
 const htmlEl = document.documentElement;
+const ugacDark = document.querySelector('.logo-dark');
+
+function processLogo(){
+  if(!ugacDark) return;
+  const img = new Image();
+  img.crossOrigin = 'anonymous';
+  img.onload = function(){
+    const c = document.createElement('canvas');
+    c.width = img.naturalWidth; c.height = img.naturalHeight;
+    const ctx = c.getContext('2d');
+    ctx.drawImage(img, 0, 0);
+    const d = ctx.getImageData(0, 0, c.width, c.height);
+    const px = d.data;
+    for(let i = 0; i < px.length; i += 4){
+      const r = px[i], g = px[i+1], b = px[i+2];
+      const brightness = (r + g + b) / 3;
+      if(brightness > 200){
+        px[i] = 0x1a; px[i+1] = 0x13; px[i+2] = 0x33; px[i+3] = 255;
+      } else if(brightness < 80){
+        px[i] = 0xf0; px[i+1] = 0xea; px[i+2] = 0xf8; px[i+3] = 255;
+      } else {
+        const t = brightness / 255;
+        px[i]   = Math.round(0x1a + (0xf0 - 0x1a) * t);
+        px[i+1] = Math.round(0x13 + (0xea - 0x13) * t);
+        px[i+2] = Math.round(0x33 + (0xf8 - 0x33) * t);
+        px[i+3] = 255;
+      }
+    }
+    ctx.putImageData(d, 0, 0);
+    ugacDark.src = c.toDataURL();
+  };
+  img.src = 'images/ugac.jpg';
+}
+processLogo();
 
 function applyTheme(theme){
   const isDark = theme==='dark';

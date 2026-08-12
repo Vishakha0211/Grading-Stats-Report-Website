@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Grading Stats Report 3.0, DAV Team, UGAC</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=DM+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 <script>/*__CHARTJS_INLINE__*/</script>
 <style>
 :root{
@@ -50,7 +50,7 @@
 html{scroll-behavior:smooth;}
 body{
   margin:0;
-  font-family:'Inter',system-ui,sans-serif;
+  font-family:'DM Sans',system-ui,sans-serif;
   color:var(--ink);
   background:var(--cream);
   background-image:
@@ -66,7 +66,7 @@ body::before{
   mask-image:linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.3) 30%, rgba(0,0,0,0.8) 60%, rgba(0,0,0,1) 100%);
   -webkit-mask-image:linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.3) 30%, rgba(0,0,0,0.8) 60%, rgba(0,0,0,1) 100%);
 }
-h1,h2,h3,h4{font-family:'Baloo 2',system-ui,sans-serif; margin:0; letter-spacing:.2px; transition:color .15s ease, text-shadow .15s ease;}
+h1,h2,h3,h4{font-family:'Outfit',system-ui,sans-serif; margin:0; letter-spacing:.2px; transition:color .15s ease, text-shadow .15s ease;}
 h1:hover,h2:hover,h3:hover,h4:hover{color:var(--pink-deep); text-shadow:0 2px 8px rgba(255,158,158,0.3);}
 p{line-height:1.6;}
 a{color:inherit;}
@@ -77,47 +77,48 @@ b:hover{color:var(--pink-deep); text-shadow:0 1px 6px rgba(255,158,158,0.25);}
 /* ---------- LAYOUT ---------- */
 .app{display:flex; min-height:100vh; position:relative; z-index:1;}
 .sidebar{
-  width:280px; flex:0 0 280px;
+  width:260px; flex:0 0 260px;
   background:var(--paper);
-  border-right:3px solid var(--ink);
+  border-right:2px solid var(--ink);
   position:sticky; top:0; height:100vh; overflow-y:auto;
-  padding:22px 18px 30px;
+  padding:20px 14px 30px;
   z-index:50;
 }
 .brand{
   display:flex; gap:10px; align-items:center;
-  padding:6px 8px 18px;
-  border-bottom:2px dashed var(--line);
-  margin-bottom:14px;
+  padding:6px 6px 16px;
+  border-bottom:1px solid var(--line);
+  margin-bottom:12px;
 }
 .brand-badge{
-  width:44px;height:44px;border-radius:14px;
+  width:40px;height:40px;border-radius:12px;
   background:linear-gradient(135deg,var(--cream-deep),var(--paper));
   display:flex;align-items:center;justify-content:center;
-  font-size:20px; border:1.5px solid var(--line);
-  flex:0 0 44px; color:var(--ink-soft);
+  border:1px solid var(--line);
+  flex:0 0 40px;
 }
+.brand-badge img{width:26px;height:auto;}
 .brand-text{line-height:1.15;}
-.brand-text .t1{font-family:'Baloo 2'; font-weight:700; font-size:15.5px;}
-.brand-text .t2{font-size:11.5px; color:var(--ink-soft); font-weight:600;}
+.brand-text .t1{font-family:'Outfit'; font-weight:700; font-size:15px;}
+.brand-text .t2{font-size:11px; color:var(--ink-soft); font-weight:600;}
 .navlabel{
-  font-size:11px; text-transform:uppercase; letter-spacing:1.2px;
-  color:var(--ink-soft); font-weight:700; margin:16px 4px 8px;
+  font-size:10.5px; text-transform:uppercase; letter-spacing:1px;
+  color:var(--ink-soft); font-weight:700; margin:14px 4px 6px;
 }
-.navlist{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:3px;}
+.navlist{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:1px;}
 .navlist a{
-  display:flex; gap:10px; align-items:flex-start;
-  text-decoration:none; padding:9px 10px; border-radius:11px;
-  font-size:13.6px; font-weight:600; color:var(--ink);
-  transition:background .15s ease, transform .15s ease;
+  display:flex; gap:8px; align-items:center;
+  text-decoration:none; padding:7px 8px; border-radius:9px;
+  font-size:13px; font-weight:600; color:var(--ink);
+  transition:background .12s ease;
 }
-.navlist a:hover{background:var(--pink-pale); transform:translateX(2px);}
+.navlist a:hover{background:var(--pink-pale);}
 .navlist a.active{background:var(--ink); color:var(--cream);}
 .navnum{
-  font-family:'JetBrains Mono'; font-size:11px; font-weight:700;
-  width:20px;height:20px;border-radius:7px;flex:0 0 20px;
+  font-family:'JetBrains Mono'; font-size:10px; font-weight:700;
+  width:18px;height:18px;border-radius:6px;flex:0 0 18px;
   display:flex;align-items:center;justify-content:center;
-  background:var(--pink); color:var(--ink); margin-top:1px;
+  background:var(--pink); color:var(--ink);
 }
 .navlist a.active .navnum{background:var(--yellow); color:var(--ink);}
 .sidebar-foot{margin-top:22px; font-size:11px; color:var(--ink-soft); padding:10px 8px; border-top:2px dashed var(--line);}
@@ -140,7 +141,6 @@ b:hover{color:var(--pink-deep); text-shadow:0 1px 6px rgba(255,158,158,0.25);}
 }
 .hero::after{
   content:""; position:absolute; inset:0;
-  background:repeating-linear-gradient(135deg, rgba(255,255,255,0.4) 0 18px, transparent 18px 40px);
   pointer-events:none;
 }
 .hero-eyebrow{
@@ -156,7 +156,7 @@ b:hover{color:var(--pink-deep); text-shadow:0 1px 6px rgba(255,158,158,0.25);}
   background:var(--paper); border:2px solid var(--ink); border-radius:14px;
   padding:10px 16px; font-size:13px; font-weight:600;
 }
-.pill b{font-family:'Baloo 2'; display:block; font-size:14.5px; margin-bottom:1px;}
+.pill b{font-family:'Outfit'; display:block; font-size:14.5px; margin-bottom:1px;}
 
 /* ---------- TOC GRID (intro) ---------- */
 .toc-grid{
@@ -264,7 +264,7 @@ canvas{max-width:100%;}
 
 /* heatmap tables */
 table.heatmap{border-collapse:collapse; width:100%; font-size:13.5px;}
-table.heatmap th{font-family:'Baloo 2'; font-weight:700; text-align:center; padding:8px 6px; font-size:13px;}
+table.heatmap th{font-family:'Outfit'; font-weight:700; text-align:center; padding:8px 6px; font-size:13px;}
 table.heatmap td.hm-cell{text-align:center; padding:9px 6px; border:2px solid var(--paper); font-weight:700; border-radius:6px;}
 table.heatmap td.hm-empty{background:#f1eee0 !important; color:#b6b0a0 !important; font-weight:500;}
 table.heatmap th.rowlabel{text-align:left; padding-left:10px; background:var(--ink); color:var(--cream); border-radius:8px; border-bottom:2px solid var(--paper);}
@@ -283,7 +283,7 @@ table.heatmap.minors td.hm-cell{font-size:12px; line-height:1.3;}
 }
 .course-tile:hover{transform:translateY(-4px) scale(1.05); box-shadow:0 6px 18px rgba(36,28,61,0.2);}
 .course-code{font-family:'JetBrains Mono'; font-weight:700; font-size:12px;}
-.course-n{font-size:16px; font-weight:800; font-family:'Baloo 2'; margin-top:2px;}
+.course-n{font-size:16px; font-weight:800; font-family:'Outfit'; margin-top:2px;}
 .course-legend{font-size:12px; color:var(--ink-soft); margin-top:10px; font-style:italic;}
 
 /* stat cards */
@@ -293,7 +293,7 @@ table.heatmap.minors td.hm-cell{font-size:12px; line-height:1.3;}
   padding:14px 16px; box-shadow:3px 3px 0 var(--ink);
 }
 .stat-card .lbl{font-size:11.5px; text-transform:uppercase; letter-spacing:.6px; color:var(--ink-soft); font-weight:700;}
-.stat-card .val{font-family:'Baloo 2'; font-size:24px; font-weight:800; margin-top:2px;}
+.stat-card .val{font-family:'Outfit'; font-size:24px; font-weight:800; margin-top:2px;}
 
 /* legend swatches */
 .legend-row{display:flex; gap:16px; flex-wrap:wrap; margin:8px 0 16px; font-size:12.5px; font-weight:600;}
@@ -340,7 +340,7 @@ footer{
   z-index:200; padding:12px 28px; border-radius:14px; border:2.5px solid var(--ink);
   background:var(--yellow); font-size:14px; font-weight:700; cursor:pointer;
   box-shadow:4px 4px 0 var(--ink); transition:transform .15s ease, box-shadow .15s ease;
-  font-family:'Inter',system-ui,sans-serif; color:var(--ink);
+  font-family:'DM Sans',system-ui,sans-serif; color:var(--ink);
 }
 .back-btn:hover{transform:translate(-2px,-2px); box-shadow:6px 6px 0 var(--ink);}
 .back-btn:active{transform:translate(1px,1px); box-shadow:2px 2px 0 var(--ink);}
@@ -349,7 +349,10 @@ footer{
 .logo-corner{position:absolute; z-index:10; pointer-events:none;}
 .logo-ugac{top:16px; left:16px;}
 .logo-dav{top:16px; right:70px;}
-.logo-corner img{height:50px; width:auto; filter:drop-shadow(0 2px 6px rgba(0,0,0,0.15));}
+.logo-corner img{height:50px; width:auto; mix-blend-mode:multiply;}
+.logo-dark{display:none;}
+[data-theme="dark"] .logo-light{display:none;}
+[data-theme="dark"] .logo-dark{display:block;}
 @media(max-width:980px){.logo-corner img{height:38px;}}
 
 /* ---------- DARK MODE ---------- */
@@ -362,9 +365,6 @@ footer{
     linear-gradient(rgba(240,234,248,0.1) 1px, transparent 1px),
     linear-gradient(90deg, rgba(240,234,248,0.1) 1px, transparent 1px);
   background-size:40px 40px;
-}
-[data-theme="dark"] .hero::after{
-  background:repeating-linear-gradient(135deg, rgba(60,50,100,0.2) 0 18px, transparent 18px 40px);
 }
 [data-theme="dark"] table.heatmap td.hm-empty{background:#2a2050 !important; color:#6a6090 !important;}
 [data-theme="dark"] .navlist a:hover{background:var(--pink-pale);}
@@ -396,7 +396,7 @@ footer{
 <div class="app">
   <nav class="sidebar" id="sidebar">
     <div class="brand">
-      <div class="brand-badge">⚙</div>
+      <div class="brand-badge"><img src="images/dav.png" alt="DAV" style="width:28px;height:auto;"></div>
       <div class="brand-text">
         <div class="t1">Grading Stats 3.0</div>
         <div class="t2">Data Analytics &amp; Visualization Team</div>
@@ -422,7 +422,7 @@ footer{
   </nav>
 
   <main class="main" style="position:relative;">
-    <div class="logo-corner logo-ugac"><img src="images/ugac.jpg" alt="UGAC"></div>
+    <div class="logo-corner logo-ugac"><img src="images/ugac.jpg" alt="UGAC" class="logo-light"><img src="images/ugac.jpg" alt="UGAC" class="logo-dark"></div>
     <div class="logo-corner logo-dav" style="display:flex;align-items:center;gap:8px;"><span style="font-size:12px;font-weight:700;color:var(--ink-soft);white-space:nowrap;">Data Analytics and Visualization Team</span><img src="images/dav.png" alt="DAV Team"></div>
 
     <!-- METHODOLOGY -->
@@ -749,7 +749,7 @@ footer{
             <li><b>Conflict Detection:</b> automatically highlights potential scheduling conflicts between prospective electives/minors and mandatory core courses.</li>
             <li><b>Prerequisite Information:</b> outlines the necessary prerequisites required prior to enrolling in specific courses.</li>
           </ul>
-          <p style="text-align:center; font-family:'Baloo 2'; font-weight:800; font-size:22px; margin-top:20px;">Coming Soon!!</p>
+          <p style="text-align:center; font-family:'Outfit'; font-weight:800; font-size:22px; margin-top:20px;">Coming Soon!!</p>
         </div>
       </div>
     </section>
@@ -769,7 +769,7 @@ footer{
 <script>
 const CHART_DATA = __CHART_DATA_JSON__;
 
-Chart.defaults.font.family = "'Inter', sans-serif";
+Chart.defaults.font.family = "'DM Sans', sans-serif";
 Chart.defaults.color = '#241C3D';
 
 const PALETTE = {
@@ -1040,6 +1040,40 @@ onScroll();
 // ---- Dark Mode Toggle ----
 const themeToggle = document.getElementById('themeToggle');
 const htmlEl = document.documentElement;
+const ugacDark = document.querySelector('.logo-dark');
+
+function processLogo(){
+  if(!ugacDark) return;
+  const img = new Image();
+  img.crossOrigin = 'anonymous';
+  img.onload = function(){
+    const c = document.createElement('canvas');
+    c.width = img.naturalWidth; c.height = img.naturalHeight;
+    const ctx = c.getContext('2d');
+    ctx.drawImage(img, 0, 0);
+    const d = ctx.getImageData(0, 0, c.width, c.height);
+    const px = d.data;
+    for(let i = 0; i < px.length; i += 4){
+      const r = px[i], g = px[i+1], b = px[i+2];
+      const brightness = (r + g + b) / 3;
+      if(brightness > 200){
+        px[i] = 0x1a; px[i+1] = 0x13; px[i+2] = 0x33; px[i+3] = 255;
+      } else if(brightness < 80){
+        px[i] = 0xf0; px[i+1] = 0xea; px[i+2] = 0xf8; px[i+3] = 255;
+      } else {
+        const t = brightness / 255;
+        px[i]   = Math.round(0x1a + (0xf0 - 0x1a) * t);
+        px[i+1] = Math.round(0x13 + (0xea - 0x13) * t);
+        px[i+2] = Math.round(0x33 + (0xf8 - 0x33) * t);
+        px[i+3] = 255;
+      }
+    }
+    ctx.putImageData(d, 0, 0);
+    ugacDark.src = c.toDataURL();
+  };
+  img.src = 'images/ugac.jpg';
+}
+processLogo();
 
 function applyTheme(theme){
   const isDark = theme === 'dark';
