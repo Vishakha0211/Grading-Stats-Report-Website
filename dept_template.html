@@ -159,6 +159,75 @@ canvas{max-width:100%;}
 [data-theme="dark"] .logo-light{display:none;}
 [data-theme="dark"] .logo-dark{display:block;}
 @media(max-width:700px){.logo-corner img{height:38px;}}
+
+/* ---------- PAGE ENTRANCE ---------- */
+.container{opacity:0; transform:translateY(20px); transition:opacity .5s ease, transform .5s ease;}
+.container.revealed{opacity:1; transform:translateY(0);}
+
+/* ---------- HERO ENTRANCE + PARALLAX ---------- */
+.hero{opacity:0; transform:translateY(24px) scale(0.97); transition:opacity .5s ease .1s, transform .5s cubic-bezier(.25,.46,.45,.94) .1s, box-shadow .3s ease;}
+.hero.revealed{opacity:1; transform:translateY(0) scale(1);}
+.hero.parallax-hero-up{transform:translateY(-14px) scale(1.005); box-shadow:0 22px 60px rgba(36,28,61,0.18);}
+
+/* ---------- FLOATING BADGE ---------- */
+@keyframes floatBadge{0%,100%{transform:translateY(0);}50%{transform:translateY(-5px);}}
+
+/* ---------- DEPT CARD STAGGER ---------- */
+.dept-card{
+  opacity:0; transform:translateY(14px) scale(0.96);
+  transition:opacity .35s ease, transform .35s cubic-bezier(.25,.46,.45,.94), box-shadow .15s ease, border-color .15s ease;
+}
+.dept-card.revealed{opacity:1; transform:translateY(0) scale(1);}
+
+/* ---------- CARD PARALLAX SCALING ---------- */
+.card{
+  transition:transform .45s cubic-bezier(.25,.46,.45,.94), opacity .45s ease, filter .45s ease, box-shadow .2s ease;
+  will-change:transform, opacity;
+}
+.card.parallax-active{transform:scale(1.015); z-index:5; filter:brightness(1.01);}
+.card.parallax-above, .card.parallax-below{transform:scale(0.978); opacity:0.84; filter:brightness(0.97);}
+.card.parallax-far{transform:scale(0.95); opacity:0.6; filter:brightness(0.94);}
+
+/* ---------- CARD ENTRANCE ---------- */
+.card.revealed{opacity:1; transform:translateY(0) scale(1);}
+
+/* ---------- CHART / TABLE / NOTE REVEAL ---------- */
+.chart-wrap, .note-box, .stat-card, .stat-row, .formula-box, .table-scroll{
+  opacity:0; transform:translateY(18px);
+  transition:opacity .45s ease, transform .45s cubic-bezier(.25,.46,.45,.94);
+}
+.chart-wrap.revealed, .note-box.revealed, .stat-card.revealed, .stat-row.revealed, .formula-box.revealed, .table-scroll.revealed{
+  opacity:1; transform:translateY(0);
+}
+
+/* ---------- STAT CARD COUNTER PULSE ---------- */
+.stat-card .val{transition:transform .2s ease, text-shadow .2s ease;}
+.stat-card:hover .val{transform:scale(1.08); text-shadow:0 2px 10px rgba(36,28,61,0.15);}
+
+/* ---------- SECTION NAV HOVER + ACTIVE ---------- */
+.section-nav a{transition:background .12s, transform .15s, box-shadow .15s;}
+.section-nav a.active{transform:translateX(3px); box-shadow:inset 3px 0 0 var(--yellow);}
+
+/* ---------- BACK BUTTON BOUNCE ---------- */
+@keyframes bounceIn{
+  0%{transform:translateY(16px); opacity:0;}
+  60%{transform:translateY(-3px); opacity:1;}
+  100%{transform:translateY(0);}
+}
+.back-btn{animation:bounceIn .35s ease both;}
+
+/* ---------- DEPT CARD HOVER 3D ---------- */
+.dept-card{transition:opacity .35s ease, transform .35s cubic-bezier(.25,.46,.45,.94), box-shadow .15s ease, border-color .15s ease; will-change:transform;}
+.dept-card.parallax-focus{transform:scale(1.08); box-shadow:0 10px 32px rgba(36,28,61,0.2); border-color:var(--pink-deep); z-index:2;}
+.dept-card.parallax-far{transform:scale(0.93); opacity:0.65;}
+
+/* ---------- REDUCED MOTION ---------- */
+@media(prefers-reduced-motion:reduce){
+  .container, .hero, .dept-card, .card, .chart-wrap, .note-box, .stat-card, .stat-row, .formula-box, .table-scroll, .back-btn{
+    transition:none !important; animation:none !important;
+    transform:none !important; opacity:1 !important;
+  }
+}
 </style>
 </head>
 <body>
@@ -633,6 +702,136 @@ themeToggle.addEventListener('click',()=>{
   const next = htmlEl.getAttribute('data-theme')==='dark'?'light':'dark';
   localStorage.setItem('theme',next);
   applyTheme(next);
+});
+
+// ---- Page entrance reveal ----
+setTimeout(() => {
+  document.querySelector('.container').classList.add('revealed');
+}, 80);
+setTimeout(() => {
+  const hero = document.querySelector('.hero');
+  if(hero) hero.classList.add('revealed');
+}, 200);
+
+// ---- Dept card stagger ----
+const deptCards = document.querySelectorAll('.dept-card');
+deptCards.forEach((c, i) => {
+  c.style.transitionDelay = (300 + i * 40) + 'ms';
+  setTimeout(() => c.classList.add('revealed'), 100);
+});
+
+// ---- Chart/table/note reveal ----
+const revealEls = document.querySelectorAll('.chart-wrap, .note-box, .stat-card, .formula-box, .table-scroll');
+const revealObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if(e.isIntersecting){ e.target.classList.add('revealed'); revealObs.unobserve(e.target); }
+  });
+}, {threshold: 0.1, rootMargin: '0px 0px -40px 0px'});
+revealEls.forEach(el => revealObs.observe(el));
+
+// ---- Re-observe charts when dashboard becomes visible ----
+const dashObs = new MutationObserver(() => {
+  document.querySelectorAll('#dashboard .chart-wrap, #dashboard .note-box, #dashboard .stat-card, #dashboard .stat-row, #dashboard .table-scroll').forEach(el => {
+    if(!el.classList.contains('revealed')) revealObs.observe(el);
+  });
+});
+dashObs.observe(document.getElementById('dashboard'), {attributes: true, attributeFilter: ['class']});
+
+// ---- Hero parallax depth on scroll ----
+const heroEl = document.querySelector('.hero');
+function updateHeroParallax(){
+  if(!heroEl) return;
+  const rect = heroEl.getBoundingClientRect();
+  const viewH = window.innerHeight;
+  if(rect.bottom > 0 && rect.top < viewH){
+    const center = viewH / 2;
+    const hCenter = rect.top + rect.height / 2;
+    const dist = Math.abs(center - hCenter);
+    heroEl.classList.toggle('parallax-hero-up', dist < viewH * 0.4);
+  }
+}
+
+// ---- Dashboard card parallax scaling ----
+function updateCardParallax(){
+  const viewH = window.innerHeight;
+  const viewCenter = viewH / 2;
+  const dashboardCards = Array.from(document.querySelectorAll('#dashboard .card')).filter(c => c.style.display !== 'none');
+
+  dashboardCards.forEach(card => {
+    const rect = card.getBoundingClientRect();
+
+    card.classList.remove('parallax-active','parallax-above','parallax-below','parallax-far');
+
+    const coversCenter = rect.top <= viewCenter && rect.bottom >= viewCenter;
+
+    if(coversCenter){
+      card.classList.add('parallax-active');
+    } else {
+      const distToEdge = rect.bottom < viewCenter ? viewCenter - rect.bottom : rect.top - viewCenter;
+      if(distToEdge < viewH * 0.25){
+        if(rect.bottom < viewCenter){
+          card.classList.add('parallax-above');
+        } else {
+          card.classList.add('parallax-below');
+        }
+      } else {
+        card.classList.add('parallax-far');
+      }
+    }
+  });
+}
+
+// ---- Dept card parallax on home grid ----
+function updateDeptCardParallax(){
+  const viewH = window.innerHeight;
+  const center = viewH / 2;
+  deptCards.forEach(card => {
+    const rect = card.getBoundingClientRect();
+    const cardCenter = rect.top + rect.height / 2;
+    const dist = Math.abs(center - cardCenter);
+    const maxDist = viewH * 0.5;
+    if(dist < maxDist * 0.3){
+      card.classList.add('parallax-focus');
+      card.classList.remove('parallax-far');
+    } else if(dist > maxDist){
+      card.classList.add('parallax-far');
+      card.classList.remove('parallax-focus');
+    } else {
+      card.classList.remove('parallax-focus');
+      card.classList.remove('parallax-far');
+    }
+  });
+}
+
+// ---- Unified scroll handler ----
+let ticking = false;
+function onAllParallaxScroll(){
+  if(!ticking){
+    requestAnimationFrame(() => {
+      updateHeroParallax();
+      updateCardParallax();
+      updateDeptCardParallax();
+      ticking = false;
+    });
+    ticking = true;
+  }
+}
+window.addEventListener('scroll', onAllParallaxScroll, {passive: true});
+updateHeroParallax();
+updateCardParallax();
+updateDeptCardParallax();
+
+// ---- Dept card 3D tilt on hover ----
+deptCards.forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const rect = card.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    card.style.transform = `translateY(-4px) scale(1.05) perspective(400px) rotateX(${-y*6}deg) rotateY(${x*6}deg)`;
+  });
+  card.addEventListener('mouseleave', () => {
+    card.style.transform = '';
+  });
 });
 </script>
 </body>

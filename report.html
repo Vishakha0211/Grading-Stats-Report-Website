@@ -90,6 +90,17 @@ b:hover{color:var(--pink-deep); text-shadow:0 1px 6px rgba(255,158,158,0.25);}
 
 /* ---------- LAYOUT ---------- */
 .app{display:flex; min-height:100vh; position:relative; z-index:1;}
+
+/* ---------- PAGE TRANSITION ---------- */
+.page-enter{animation:pageIn .5s ease both;}
+@keyframes pageIn{
+  from{opacity:0; transform:translateY(20px);}
+  to{opacity:1; transform:translateY(0);}
+}
+
+/* ---------- SCROLL REVEAL ---------- */
+.reveal{opacity:0; transform:translateY(24px); transition:opacity .5s ease, transform .5s ease;}
+.reveal.visible{opacity:1; transform:translateY(0);}
 .sidebar{
   width:260px; flex:0 0 260px;
   background:var(--paper);
@@ -399,6 +410,134 @@ footer{
 .theme-toggle:hover{transform:translate(-1px,-1px); box-shadow:4px 4px 0 var(--ink);}
 .theme-toggle:active{transform:translate(1px,1px); box-shadow:1px 1px 0 var(--ink);}
 .sidebar-foot-toggle{display:none;}
+
+/* ---------- PARALLAX SECTION SCALING ---------- */
+section.block{
+  transition:transform .45s cubic-bezier(.25,.46,.45,.94), opacity .45s ease, filter .45s ease;
+  will-change:transform, opacity;
+}
+section.block.parallax-active{
+  transform:scale(1.018);
+  z-index:5;
+  filter:brightness(1.01);
+}
+section.block.parallax-above,
+section.block.parallax-below{
+  transform:scale(0.975);
+  opacity:0.82;
+  filter:brightness(0.97);
+}
+section.block.parallax-far{
+  transform:scale(0.94);
+  opacity:0.55;
+  filter:brightness(0.93);
+}
+
+/* ---------- STAGGERED CARD ENTRANCE ---------- */
+.card{
+  opacity:0;
+  transform:translateY(32px) scale(0.97);
+  transition:opacity .55s ease, transform .55s cubic-bezier(.25,.46,.45,.94), box-shadow .2s ease;
+}
+.card.revealed{
+  opacity:1;
+  transform:translateY(0) scale(1);
+}
+.card:hover{box-shadow:var(--shadow-lift);}
+
+/* ---------- CHART / TABLE / NOTE-BOX REVEALS ---------- */
+.chart-wrap, .table-scroll, .note-box, .formula-box, .stat-card, .course-tile, .stat-row, .legend-row, .course-legend, .sec-kicker, .sec-sub, .sec-title, .bullet-list, .icon-orb{
+  opacity:0;
+  transform:translateY(20px);
+  transition:opacity .5s ease, transform .5s cubic-bezier(.25,.46,.45,.94);
+}
+.chart-wrap.revealed, .table-scroll.revealed, .note-box.revealed, .formula-box.revealed,
+.stat-card.revealed, .course-tile.revealed, .stat-row.revealed, .legend-row.revealed,
+.course-legend.revealed, .sec-kicker.revealed, .sec-sub.revealed, .sec-title.revealed,
+.bullet-list.revealed, .icon-orb.revealed{
+  opacity:1;
+  transform:translateY(0);
+}
+
+/* ---------- HERO PARALLAX DEPTH ---------- */
+.hero{
+  transition:transform .3s ease, box-shadow .3s ease;
+}
+.hero.parallax-hero-up{
+  transform:translateY(-18px) scale(1.005);
+  box-shadow:0 22px 60px rgba(36,28,61,0.18);
+}
+
+/* ---------- FLOATING BADGE ANIMATION ---------- */
+@keyframes floatBadge{
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(-6px);}
+}
+.hero-eyebrow{animation:floatBadge 3s ease-in-out infinite;}
+
+/* ---------- SECTION HEADER GLOW ---------- */
+.card-header h2{
+  transition:text-shadow .3s ease, transform .3s ease;
+}
+.card-header h2:hover{
+  text-shadow:0 0 18px rgba(255,158,158,0.4);
+}
+
+/* ---------- STAT CARD COUNTER PULSE ---------- */
+.stat-card .val{
+  transition:transform .2s ease, text-shadow .2s ease;
+}
+.stat-card:hover .val{
+  transform:scale(1.08);
+  text-shadow:0 2px 10px rgba(36,28,61,0.15);
+}
+
+/* ---------- THANKYOU SECTION ENTRANCE ---------- */
+.thankyou{
+  opacity:0;
+  transform:translateY(40px) scale(0.96);
+  transition:opacity .7s ease, transform .7s cubic-bezier(.25,.46,.45,.94);
+}
+.thankyou.revealed{
+  opacity:1;
+  transform:translateY(0) scale(1);
+}
+
+/* ---------- NAV ACTIVE INDICATOR ---------- */
+.navlist a{
+  transition:background .12s ease, transform .15s ease, box-shadow .15s ease;
+}
+.navlist a.active{
+  transform:translateX(3px);
+  box-shadow:inset 3px 0 0 var(--yellow);
+}
+
+/* ---------- BACK BUTTON BOUNCE ---------- */
+@keyframes bounceIn{
+  0%{transform:translateX(-50%) translateY(30px); opacity:0;}
+  60%{transform:translateX(-50%) translateY(-4px); opacity:1;}
+  100%{transform:translateX(-50%) translateY(0);}
+}
+.back-btn{
+  animation:bounceIn .4s ease both;
+}
+
+/* ---------- SMOOTH SCROLL INDICATOR ---------- */
+@keyframes scrollHint{
+  0%,100%{opacity:.5; transform:translateY(0);}
+  50%{opacity:1; transform:translateY(5px);}
+}
+
+/* ---------- REDUCED MOTION ---------- */
+@media(prefers-reduced-motion:reduce){
+  section.block, .card, .chart-wrap, .table-scroll, .note-box, .formula-box,
+  .stat-card, .course-tile, .thankyou, .hero, .navlist a, .back-btn{
+    transition:none !important;
+    animation:none !important;
+    transform:none !important;
+    opacity:1 !important;
+  }
+}
 </style>
 </head>
 <body>
@@ -1132,6 +1271,103 @@ themeToggle.addEventListener('click', ()=>{
   localStorage.setItem('theme', next);
   applyTheme(next);
 });
+
+// ---- Parallax Section Scaling on Scroll ----
+const allSections = Array.from(document.querySelectorAll('section.block'));
+const heroEl = document.querySelector('.hero');
+const thankyouEl = document.querySelector('.thankyou');
+
+function updateSectionParallax(){
+  const viewH = window.innerHeight;
+  const viewCenter = viewH / 2;
+
+  allSections.forEach((sec, i) => {
+    const rect = sec.getBoundingClientRect();
+
+    sec.classList.remove('parallax-active','parallax-above','parallax-below','parallax-far');
+
+    const coversCenter = rect.top <= viewCenter && rect.bottom >= viewCenter;
+
+    if(coversCenter){
+      sec.classList.add('parallax-active');
+    } else {
+      const distToEdge = rect.bottom < viewCenter ? viewCenter - rect.bottom : rect.top - viewCenter;
+      if(distToEdge < viewH * 0.25){
+        if(rect.bottom < viewCenter){
+          sec.classList.add('parallax-above');
+        } else {
+          sec.classList.add('parallax-below');
+        }
+      } else {
+        sec.classList.add('parallax-far');
+      }
+    }
+  });
+
+  if(heroEl){
+    const hRect = heroEl.getBoundingClientRect();
+    if(hRect.bottom > 0 && hRect.top < viewH){
+      const coversCenter = hRect.top <= viewCenter && hRect.bottom >= viewCenter;
+      heroEl.classList.toggle('parallax-hero-up', coversCenter);
+    }
+  }
+}
+
+// ---- Scroll-triggered reveal for inner elements ----
+const revealSelectors = '.chart-wrap, .table-scroll, .note-box, .formula-box, .stat-card, .course-tile, .stat-row, .legend-row, .course-legend, .sec-kicker, .sec-sub, .sec-title, .bullet-list, .icon-orb, .card, .thankyou';
+const revealElements = document.querySelectorAll(revealSelectors);
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if(e.isIntersecting){
+      e.target.classList.add('revealed');
+      revealObserver.unobserve(e.target);
+    }
+  });
+}, {threshold: 0.08, rootMargin: '0px 0px -40px 0px'});
+
+revealElements.forEach((el, i) => {
+  el.style.transitionDelay = (i % 6) * 60 + 'ms';
+  revealObserver.observe(el);
+});
+
+// ---- Also reveal .reveal elements ----
+document.querySelectorAll('.reveal').forEach(el => {
+  el.classList.add('revealed');
+});
+
+// ---- Hero pill stagger ----
+const heroPills = document.querySelectorAll('.hero .pill');
+heroPills.forEach((p, i) => {
+  p.style.opacity = '0';
+  p.style.transform = 'translateY(12px)';
+  p.style.transition = 'opacity .4s ease, transform .4s ease';
+  p.style.transitionDelay = (300 + i * 100) + 'ms';
+  setTimeout(() => { p.style.opacity = '1'; p.style.transform = 'translateY(0)'; }, 50);
+});
+
+// ---- TOC card stagger on home ----
+const tocCardsAnim = document.querySelectorAll('.toc-card');
+tocCardsAnim.forEach((c, i) => {
+  c.style.opacity = '0';
+  c.style.transform = 'translateY(16px) scale(0.95)';
+  c.style.transition = 'opacity .35s ease, transform .35s cubic-bezier(.25,.46,.45,.94), box-shadow .15s ease, border-color .15s ease';
+  c.style.transitionDelay = (i * 50) + 'ms';
+  setTimeout(() => { c.style.opacity = '1'; c.style.transform = 'translateY(0) scale(1)'; }, 80);
+});
+
+// ---- Scroll event with passive ----
+let ticking = false;
+function onParallaxScroll(){
+  if(!ticking){
+    requestAnimationFrame(() => {
+      updateSectionParallax();
+      ticking = false;
+    });
+    ticking = true;
+  }
+}
+window.addEventListener('scroll', onParallaxScroll, {passive: true});
+updateSectionParallax();
 </script>
 </body>
 </html>

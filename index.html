@@ -69,11 +69,22 @@ h1,h2,h3,h4{font-family:'Outfit',system-ui,sans-serif; margin:0; letter-spacing:
 p{line-height:1.6;}
 a{color:inherit;}
 
+/* ---------- PAGE TRANSITION ---------- */
+.page-enter{animation:pageIn .5s ease both;}
+@keyframes pageIn{
+  from{opacity:0; transform:translateY(24px);}
+  to{opacity:1; transform:translateY(0);}
+}
+
 /* ---------- LAYOUT ---------- */
 .container{
   max-width:1100px; margin:0 auto; padding:40px 48px 90px;
   position:relative; z-index:1;
 }
+
+/* ---------- SCROLL REVEAL ---------- */
+.reveal{opacity:0; transform:translateY(30px); transition:opacity .6s ease, transform .6s ease;}
+.reveal.visible{opacity:1; transform:translateY(0);}
 
 /* ---------- HERO ---------- */
 .hero{
@@ -96,7 +107,9 @@ a{color:inherit;}
 .pill{
   background:var(--paper); border:2px solid var(--ink); border-radius:12px;
   padding:10px 16px; font-size:13px; font-weight:600;
+  transition:transform .15s ease, box-shadow .15s ease;
 }
+.pill:hover{transform:translateY(-2px); box-shadow:0 4px 12px rgba(36,28,61,0.12);}
 .pill b{font-family:'Outfit'; display:block; font-size:14px; margin-bottom:1px;}
 
 /* ---------- TOC GRID ---------- */
@@ -109,9 +122,10 @@ a{color:inherit;}
   padding:16px 14px; text-decoration:none; color:var(--ink);
   display:flex; flex-direction:column; gap:10px;
   box-shadow:2px 2px 0 var(--ink);
-  transition:transform .12s ease, box-shadow .12s ease;
+  transition:transform .3s ease, box-shadow .3s ease, border-color .3s ease;
+  will-change:transform;
 }
-.toc-card:hover{transform:translate(-1px,-1px); box-shadow:3px 3px 0 var(--ink);}
+.toc-card:hover{transform:translate(-2px,-2px) scale(1.03); box-shadow:4px 4px 0 var(--ink); border-color:var(--pink-deep);}
 .toc-num{
   width:28px;height:28px;border-radius:8px; background:var(--blue);
   border:2px solid var(--ink); display:flex; align-items:center; justify-content:center;
@@ -179,6 +193,52 @@ footer{
   .hero{padding:32px 20px;}
   .card-body{padding:18px;}
 }
+/* ---------- TOC CARD PARALLAX FOCUS ---------- */
+.toc-card.parallax-focus{transform:scale(1.08); box-shadow:0 10px 32px rgba(36,28,61,0.2); border-color:var(--pink-deep); z-index:2;}
+.toc-card.parallax-far{transform:scale(0.93); opacity:0.65;}
+
+/* ---------- HERO ENTRANCE ---------- */
+.hero{
+  opacity:0; transform:translateY(30px) scale(0.97);
+  transition:opacity .6s ease, transform .6s cubic-bezier(.25,.46,.45,.94), box-shadow .3s ease;
+}
+.hero.revealed{opacity:1; transform:translateY(0) scale(1);}
+
+/* ---------- CARD ENTRANCE ---------- */
+.card{
+  opacity:0; transform:translateY(24px) scale(0.98);
+  transition:opacity .5s ease, transform .5s cubic-bezier(.25,.46,.45,.94), box-shadow .2s ease;
+}
+.card.revealed{opacity:1; transform:translateY(0) scale(1);}
+
+/* ---------- PILL HOVER ---------- */
+.pill{
+  transition:transform .15s ease, box-shadow .15s ease;
+}
+.pill:hover{transform:translateY(-3px); box-shadow:0 6px 16px rgba(36,28,61,0.14);}
+
+/* ---------- SUB-PILL FLOAT ---------- */
+@keyframes floatPill{
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(-4px);}
+}
+.sub-pill{animation:floatPill 2.5s ease-in-out infinite;}
+
+/* ---------- FOOTER ENTRANCE ---------- */
+footer{
+  opacity:0; transform:translateY(16px);
+  transition:opacity .5s ease .3s, transform .5s ease .3s;
+}
+footer.revealed{opacity:1; transform:translateY(0);}
+
+/* ---------- REDUCED MOTION ---------- */
+@media(prefers-reduced-motion:reduce){
+  .hero, .card, .toc-card, footer, .pill, .sub-pill{
+    transition:none !important; animation:none !important;
+    transform:none !important; opacity:1 !important;
+  }
+}
+
 @media print{
   .theme-toggle{display:none;}
   .container{max-width:100%; padding:0;}
@@ -190,21 +250,21 @@ footer{
 
 <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">🌙</button>
 
-<div class="container">
+<div class="container page-enter">
   <div class="logo-corner logo-ugac"><img src="images/ugac.jpg" alt="UGAC" class="logo-light"><img src="images/ugac.jpg" alt="UGAC" class="logo-dark"></div>
   <div class="logo-corner logo-dav"><img src="images/dav.png" alt="DAV Team"></div>
 
-  <section class="hero">
+  <section class="hero reveal">
     <h1>Grading Stats<br>Report 3.0</h1>
     <div class="sub"><span class="sub-pill">Data Analytics and Visualization Team</span></div>
     <div class="hero-meta">
       <div class="pill"><b>Contributed by</b>Harsh, Ummehani, Vishakha, Zubair</div>
       <div class="pill"><b>Project Led By</b>Rakshana</div>
-      <a href="dept.html" class="pill" style="cursor:pointer;text-decoration:none;background:var(--ink);color:var(--cream);transition:transform .12s ease, box-shadow .12s ease;" onmouseover="this.style.transform='translate(-2px,-2px)';this.style.boxShadow='4px 4px 0 var(--yellow)'" onmouseout="this.style.transform='';this.style.boxShadow=''"><b>Explore →</b>Department Dashboard</a>
+      <a href="dept.html" class="pill" style="cursor:pointer;text-decoration:none;background:var(--ink);color:var(--cream);transition:transform .15s ease, box-shadow .15s ease;" onmouseover="this.style.transform='translate(-2px,-2px)';this.style.boxShadow='4px 4px 0 var(--yellow)'" onmouseout="this.style.transform='';this.style.boxShadow=''"><b>Explore →</b>Department Dashboard</a>
     </div>
   </section>
 
-  <div class="card">
+  <div class="card reveal">
     <div class="card-header yellow">
       <h2>Topics Covered</h2>
       <span class="tag">Click any card to view report</span>
@@ -227,7 +287,7 @@ footer{
     </div>
   </div>
 
-  <footer style="margin-top:26px;">
+  <footer style="margin-top:26px;" class="reveal">
     Web edition generated from the original PDF report, all figures reproduced as published by the DAV Team.
   </footer>
 </div>
@@ -285,6 +345,71 @@ themeToggle.addEventListener('click', ()=>{
   const next = htmlEl.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
   localStorage.setItem('theme', next);
   applyTheme(next);
+});
+
+// ---- Scroll Reveal ----
+const revealEls = document.querySelectorAll('.reveal');
+const revealObs = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){ e.target.classList.add('visible'); revealObs.unobserve(e.target); }
+  });
+},{threshold:0.15});
+revealEls.forEach(el=> revealObs.observe(el));
+
+// ---- Hero + Card entrance reveal ----
+const heroReveal = document.querySelector('.hero');
+const cardReveal = document.querySelector('.card');
+const footerReveal = document.querySelector('footer');
+setTimeout(() => { if(heroReveal) heroReveal.classList.add('revealed'); }, 100);
+setTimeout(() => { if(cardReveal) cardReveal.classList.add('revealed'); }, 250);
+setTimeout(() => { if(footerReveal) footerReveal.classList.add('revealed'); }, 400);
+
+// ---- Parallax on toc-cards ----
+const tocCards = document.querySelectorAll('.toc-card');
+function updateParallax(){
+  const viewH = window.innerHeight;
+  const center = viewH / 2;
+  tocCards.forEach(card=>{
+    const rect = card.getBoundingClientRect();
+    const cardCenter = rect.top + rect.height / 2;
+    const dist = Math.abs(center - cardCenter);
+    const maxDist = viewH * 0.5;
+    if(dist < maxDist * 0.3){
+      card.classList.add('parallax-focus');
+      card.classList.remove('parallax-far');
+    } else if(dist > maxDist){
+      card.classList.add('parallax-far');
+      card.classList.remove('parallax-focus');
+    } else {
+      card.classList.remove('parallax-focus');
+      card.classList.remove('parallax-far');
+    }
+  });
+}
+window.addEventListener('scroll', updateParallax, {passive:true});
+updateParallax();
+
+// ---- Staggered entrance for toc-cards ----
+tocCards.forEach((card, i) => {
+  card.style.opacity = '0';
+  card.style.transform = 'translateY(18px) scale(0.95)';
+  card.style.transition = 'opacity .4s ease, transform .4s cubic-bezier(.25,.46,.45,.94), box-shadow .2s ease, border-color .2s ease';
+  card.style.transitionDelay = (350 + i * 60) + 'ms';
+  setTimeout(() => { card.style.opacity = '1'; card.style.transform = 'translateY(0) scale(1)'; }, 80);
+});
+
+// ---- Pill hover 3D tilt ----
+const pills = document.querySelectorAll('.pill');
+pills.forEach(p => {
+  p.addEventListener('mousemove', e => {
+    const rect = p.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    p.style.transform = `translateY(-2px) perspective(400px) rotateX(${-y*6}deg) rotateY(${x*6}deg)`;
+  });
+  p.addEventListener('mouseleave', () => {
+    p.style.transform = '';
+  });
 });
 </script>
 </body>
