@@ -1147,11 +1147,11 @@ Chart.register(tickHoverPlugin);
 function groupedBar(canvasId, labels, seriesA, seriesB, nameA, nameB, colorA, colorB, nA, nB){
   const ctx = document.getElementById(canvasId);
   if(!ctx) return;
-  new Chart(ctx, {
+  const chart = new Chart(ctx, {
     type:'bar',
     data:{ labels, datasets:[
-      {label:nameA, data:seriesA, backgroundColor:colorA, borderColor:PALETTE.ink, borderWidth:1.5, borderRadius:4, meta:nA},
-      {label:nameB, data:seriesB, backgroundColor:colorB, borderColor:PALETTE.ink, borderWidth:1.5, borderRadius:4, meta:nB},
+      {label:nameA, data:[...seriesA], backgroundColor:colorA, borderColor:PALETTE.ink, borderWidth:1.5, borderRadius:4, meta:nA},
+      {label:nameB, data:[...seriesB], backgroundColor:colorB, borderColor:PALETTE.ink, borderWidth:1.5, borderRadius:4, meta:nB},
     ]},
     options:{
       responsive:true,
@@ -1199,9 +1199,9 @@ function fourYearBar(canvasId, labels, yearsData, years){
   const ctx = document.getElementById(canvasId);
   if(!ctx) return;
   const cols = [PALETTE.pink, PALETTE.yellow, PALETTE.blue, PALETTE.green];
-  new Chart(ctx, {
+  const chart = new Chart(ctx, {
     type:'bar',
-    data:{ labels, datasets: years.map((y,i)=>({label:String(y), data:yearsData[y], backgroundColor:cols[i%4], borderColor:PALETTE.ink, borderWidth:1.2, borderRadius:3})) },
+    data:{ labels, datasets: years.map((y,i)=>({label:String(y), data:[...yearsData[y]], backgroundColor:cols[i%4], borderColor:PALETTE.ink, borderWidth:1.2, borderRadius:3})) },
     options:{ responsive:true,
       plugins:{legend:{position:'top', labels:{boxWidth:12,font:{weight:'600'}},
         onClick:(e, legendItem, legend)=>{
@@ -1265,10 +1265,10 @@ butterflyChart('chartAvsG2', CHART_DATA.avsG2.labels, CHART_DATA.avsG2.a24, CHAR
 // ---- AA% histogram ----
 (function(){
   const ctx = document.getElementById('chartAA');
-  new Chart(ctx, { type:'bar',
+  const chart = new Chart(ctx, { type:'bar',
     data:{ labels: CHART_DATA.aa.labels, datasets:[
-      {label:'2024', data:CHART_DATA.aa.y2024, backgroundColor:PALETTE.blue, borderColor:PALETTE.ink, borderWidth:1.2, borderRadius:4},
-      {label:'2025', data:CHART_DATA.aa.y2025, backgroundColor:PALETTE.pink, borderColor:PALETTE.ink, borderWidth:1.2, borderRadius:4},
+      {label:'2024', data:[...CHART_DATA.aa.y2024], backgroundColor:PALETTE.blue, borderColor:PALETTE.ink, borderWidth:1.2, borderRadius:4},
+      {label:'2025', data:[...CHART_DATA.aa.y2025], backgroundColor:PALETTE.pink, borderColor:PALETTE.ink, borderWidth:1.2, borderRadius:4},
     ]},
     options:{ responsive:true,
       plugins:{legend:{position:'top',
@@ -1568,38 +1568,10 @@ function animateCounters(){
 }
 animateCounters();
 
-// ---- Click-to-Highlight on Bar Charts ----
-function addBarClickHighlight(chart){
-  if(!chart || chart._hasClickHighlight) return;
-  chart._hasClickHighlight = true;
-  chart.options.onClick = (evt, elements) => {
-    if(!elements || !elements.length){
-      chart.data.datasets.forEach(ds => {
-        if(ds._originalBg) ds.backgroundColor = JSON.parse(JSON.stringify(ds._originalBg));
-      });
-      chart.update('none');
-      return;
-    }
-    const idx = elements[0].index;
-    const dsIdx = elements[0].datasetIndex;
-    chart.data.datasets.forEach((ds, i) => {
-      if(!ds._originalBg) ds._originalBg = JSON.parse(JSON.stringify(ds.backgroundColor));
-      if(Array.isArray(ds.backgroundColor)){
-        ds.backgroundColor = ds.backgroundColor.map((c, j) => {
-          if(j === idx) return c;
-          return i === dsIdx ? 'rgba(200,200,200,0.3)' : 'rgba(200,200,200,0.15)';
-        });
-      }
-    });
-    chart.update('none');
-  };
-}
-
 // ---- Enhance all existing charts ----
 setTimeout(() => {
   Object.values(Chart.instances || {}).forEach(chart => {
     if(chart.config.type === 'bar'){
-      addBarClickHighlight(chart);
       chart.options.plugins.tooltip = chart.options.plugins.tooltip || {};
       chart.options.plugins.tooltip.backgroundColor = 'rgba(24,16,58,0.95)';
       chart.options.plugins.tooltip.titleColor = '#fff';
