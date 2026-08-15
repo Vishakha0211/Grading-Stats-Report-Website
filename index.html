@@ -426,9 +426,18 @@ updateParallax();
 tocCards.forEach((card, i) => {
   card.style.opacity = '0';
   card.style.transform = 'translateY(18px) scale(0.95)';
-  card.style.transition = 'opacity .4s ease, transform .4s cubic-bezier(.25,.46,.45,.94), box-shadow .2s ease, border-color .2s ease';
-  card.style.transitionDelay = (350 + i * 60) + 'ms';
-  setTimeout(() => { card.style.opacity = '1'; card.style.transform = 'translateY(0) scale(1)'; }, 80);
+  const delay = 350 + i * 60;
+  setTimeout(() => {
+    card.style.transition = 'opacity .4s ease, transform .4s cubic-bezier(.25,.46,.45,.94)';
+    card.style.opacity = '1';
+    card.style.transform = 'translateY(0) scale(1)';
+    setTimeout(() => {
+      card.style.removeProperty('opacity');
+      card.style.removeProperty('transform');
+      card.style.removeProperty('transition');
+      card.style.removeProperty('transition-delay');
+    }, 450);
+  }, 80);
 });
 
 // ---- Pill hover 3D tilt ----

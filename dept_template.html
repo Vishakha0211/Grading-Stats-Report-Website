@@ -254,13 +254,6 @@ canvas{max-width:100%;}
 /* ---------- FLOATING BADGE ---------- */
 @keyframes floatBadge{0%,100%{transform:translateY(0);}50%{transform:translateY(-5px);}}
 
-/* ---------- DEPT CARD STAGGER ---------- */
-.dept-card{
-  opacity:0; transform:translateY(14px) scale(0.96);
-  transition:opacity .35s ease, transform .35s cubic-bezier(.25,.46,.45,.94), box-shadow .15s ease, border-color .15s ease;
-}
-.dept-card.revealed{opacity:1; transform:translateY(0) scale(1);}
-
 /* ---------- CARD PARALLAX SCALING ---------- */
 .card{
   transition:transform .45s cubic-bezier(.25,.46,.45,.94), opacity .45s ease, filter .45s ease, box-shadow .2s ease;
@@ -300,6 +293,7 @@ canvas{max-width:100%;}
 
 /* ---------- DEPT CARD HOVER 3D ---------- */
 .dept-card{transition:opacity .35s ease, transform .35s cubic-bezier(.25,.46,.45,.94), box-shadow .15s ease, border-color .15s ease; will-change:transform;}
+.dept-card:hover{transform:translateY(-4px) scale(1.05) !important; box-shadow:0 6px 18px rgba(36,28,61,0.25) !important;}
 .dept-card.parallax-focus{transform:scale(1.08); box-shadow:0 10px 32px rgba(36,28,61,0.2); border-color:var(--pink-deep); z-index:2;}
 .dept-card.parallax-far{transform:scale(0.93); opacity:0.65;}
 
@@ -798,8 +792,21 @@ setTimeout(() => {
 // ---- Dept card stagger ----
 const deptCards = document.querySelectorAll('.dept-card');
 deptCards.forEach((c, i) => {
-  c.style.transitionDelay = (300 + i * 40) + 'ms';
-  setTimeout(() => c.classList.add('revealed'), 100);
+  c.style.opacity = '0';
+  c.style.transform = 'translateY(14px) scale(0.96)';
+  const delay = 300 + i * 40;
+  setTimeout(() => {
+    c.style.transition = 'opacity .3s ease, transform .3s cubic-bezier(.25,.46,.45,.94)';
+    c.style.opacity = '1';
+    c.style.transform = 'translateY(0) scale(1)';
+    setTimeout(() => {
+      c.classList.add('revealed');
+      c.style.removeProperty('opacity');
+      c.style.removeProperty('transform');
+      c.style.removeProperty('transition');
+      c.style.removeProperty('transition-delay');
+    }, 350);
+  }, 100);
 });
 
 // ---- Chart/table/note reveal ----
