@@ -254,7 +254,7 @@ canvas{max-width:100%;}
 .logo-dark{display:none;}
 [data-theme="dark"] .logo-light{display:none;}
 [data-theme="dark"] .logo-dark{display:block;}
-@media(max-width:700px){.logo-corner img{height:38px;}}
+@media(max-width:700px){.logo-corner img{height:38px; mix-blend-mode:normal;} .dav-name{display:none!important;} .logo-dav{right:130px;}}
 
 /* ---------- PAGE ENTRANCE ---------- */
 .container{opacity:0; transform:translateY(20px); transition:opacity .5s ease, transform .5s ease;}
@@ -324,7 +324,7 @@ canvas{max-width:100%;}
 
 <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">🌙</button>
 <div class="logo-corner logo-ugac"><img src="images/ugac.jpg" alt="UGAC" class="logo-light"><img src="images/ugac.jpg" alt="UGAC" class="logo-dark"></div>
-<div class="logo-corner logo-dav" style="display:flex;align-items:center;gap:8px;"><span style="font-size:12px;font-weight:700;color:var(--ink-soft);white-space:nowrap;">Data Analytics and Visualization Team</span><img src="images/dav.png" alt="DAV Team"></div>
+<div class="logo-corner logo-dav" style="display:flex;align-items:center;gap:8px;"><span class="dav-name" style="font-size:12px;font-weight:700;color:var(--ink-soft);white-space:nowrap;">Data Analytics and Visualization Team</span><img src="images/dav.png" alt="DAV Team"></div>
 
 <div class="container" style="padding-top:80px;">
   <div class="topbar">
